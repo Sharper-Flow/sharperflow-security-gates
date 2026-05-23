@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "id": "ws-o-gKAG",
+      "type": "gotcha",
+      "content": "In this repo, Trivy scanner scope differs by workflow: Python filesystem gate scans `vuln,secret,misconfig`, while container image gate scans `vuln,secret` only. Roadmap/docs should preserve that asymmetry instead of summarizing both as the same scan.",
+      "source_task": "tk-73f8f451b778",
+      "recorded_at": "2026-05-23T00:33:49.185Z"
+    }
+  ],
+  "count": 1
+}
