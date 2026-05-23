@@ -3,6 +3,11 @@ name: Security Gates Pilot
 # Non-required pilot for Sharper Flow reusable security gates. Use this to
 # measure false positives, suppressions, runtime, and failure modes before
 # considering required branch protection.
+#
+# Non-blocking semantics come from NOT being in branch protection's required
+# checks list — failures are visible signals, not merge blockers. Do not add
+# `continue-on-error: true` to the reusable-workflow job: GitHub rejects it as
+# invalid syntax for `uses:` jobs and the entire workflow refuses to start.
 on:
   workflow_dispatch:
   pull_request:
@@ -18,10 +23,18 @@ permissions: {}
 
 jobs:
   python-security:
-    # TODO: pin to SHA instead of @main once the reusable workflow is stable
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@main
+    name: Python security gates pilot
+    # Pin to @v0 floating major tag (auto-rolled by sec-gates auto-release).
+    # Pin to @v0.1.0 for full immutability or @<sha> for a specific commit.
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@v0
+    permissions:
+      contents: read
     with:
       python-version: "3.13"
       scan-paths: "api services clients models core common repositories integrations utils"
       lockfile-path: "uv.lock"
       bandit-config: "configs/security/bandit.yaml"
+      run-trivy-fs: true
+      # Optional: suppress known-FP misconfigs/CVEs (e.g. Trivy AZU-0013 for ARM
+      # `format()` Key Vault network ACLs).
+      # trivy-ignorefile: ".trivyignore.yaml"

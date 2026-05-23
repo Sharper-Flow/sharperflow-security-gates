@@ -38,6 +38,15 @@ on:
         required: false
         type: string
         default: "zricethezav/gitleaks:v8.30.0"
+      trivy-ignorefile:
+        description: |
+          Comma-separated relative paths to Trivy ignore file(s) in the caller
+          repository. Pass either one or more `.trivyignore` files or a single
+          `.trivyignore.yaml`. Use to suppress known false positives that the
+          gate would otherwise fail on. Empty (default) means no suppressions.
+        required: false
+        type: string
+        default: ""
 
 permissions: {}
 
@@ -157,3 +166,4 @@ jobs:
           ignore-unfixed: true
           exit-code: "1"
           hide-progress: true
+          trivyignores: ${{ inputs.trivy-ignorefile }}

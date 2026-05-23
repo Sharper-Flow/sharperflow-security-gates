@@ -17,6 +17,15 @@ on:
         required: false
         type: boolean
         default: true
+      trivy-ignorefile:
+        description: |
+          Comma-separated relative paths to Trivy ignore file(s) in the caller
+          repository. Pass either one or more `.trivyignore` files or a single
+          `.trivyignore.yaml`. Use to suppress known false positives that the
+          gate would otherwise fail on. Empty (default) means no suppressions.
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -27,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Checkout caller repository
+        if: inputs.trivy-ignorefile != ''
+        uses: actions/checkout@v6
+
       - name: Run Trivy image scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -36,3 +49,4 @@ jobs:
           ignore-unfixed: ${{ inputs.ignore-unfixed }}
           exit-code: "1"
           hide-progress: true
+          trivyignores: ${{ inputs.trivy-ignorefile }}
