@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Run Trivy image scanner
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.33.1
         with:
           image-ref: ${{ inputs.image-ref }}
           scanners: vuln,secret
