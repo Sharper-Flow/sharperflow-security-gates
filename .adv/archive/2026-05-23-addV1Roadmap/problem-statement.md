@@ -1,0 +1,1 @@
+The repo needs a compact V1 roadmap so future work can be sequenced without guessing which security-gate improvements are reusable now, which belongs in the PokeEdge pilot, and which is intentionally deferred.

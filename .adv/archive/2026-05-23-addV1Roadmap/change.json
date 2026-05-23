@@ -1,0 +1,480 @@
+{
+  "id": "addV1Roadmap",
+  "title": "Add v1 roadmap",
+  "status": "archived",
+  "created_at": "2026-05-23T00:23:50.093Z",
+  "tasks": [
+    {
+      "id": "tk-1fe9ac0ffe2f",
+      "title": "Create root ROADMAP.md from approved design",
+      "type": "code",
+      "section": "Implementation",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-05-23T00:29:30.311Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4"
+        ],
+        "verifies": [],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "DONT1",
+          "DONT2",
+          "DONT3"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-05-23T00:31:46.501Z",
+      "verification": "Read ROADMAP.md after creation and inspected git diff. Documentation-only task; executable verification is covered by follow-up verification task.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Added compact root ROADMAP.md with source-of-truth note, current state, V1 goals/non-goals, milestone buckets, hardening candidates, deferred PokeEdge Web follow-up, and CI verification guidance. Preserved workflow behavior details and avoided workflow/config changes.",
+      "filesTouched": [
+        "ROADMAP.md"
+      ],
+      "touched_files": [
+        "ROADMAP.md"
+      ],
+      "checkpointSha": "75c9b0298e4b218c28fd133ab62faae0aab93b45",
+      "completedAt": "2026-05-23T00:32:45.267Z",
+      "completed_at": "2026-05-23T00:32:45.267Z",
+      "notes": "Created root ROADMAP.md and checkpointed commit 75c9b0298e4b218c28fd133ab62faae0aab93b45.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-05-23T00:32:53.978Z"
+    },
+    {
+      "id": "tk-73f8f451b778",
+      "title": "Verify ROADMAP.md against contract and CI lint",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-05-23T00:29:43.191Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1fe9ac0ffe2f"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [],
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "DONT1",
+          "DONT2",
+          "DONT3"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-05-23T00:33:09.615Z",
+      "verification": "actionlint Docker command passed with exitCode 0 via adv_run_test; ROADMAP.md reviewed against contract; grep found no invented package-manager commands beyond documented uv.lock lockfile.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Reviewed ROADMAP.md against the approved contract and design guardrails. Confirmed V1 goals/non-goals, reusable/pilot/container/hardening/deferred buckets, no behavior changes, no invented package-manager commands, and exact CI actionlint command. Ran actionlint successfully.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "75c9b0298e4b218c28fd133ab62faae0aab93b45",
+      "completedAt": "2026-05-23T00:33:32.143Z",
+      "completed_at": "2026-05-23T00:33:32.143Z",
+      "notes": "Verified ROADMAP.md. actionlint passed with exitCode 0; worktree clean at 75c9b0298e4b218c28fd133ab62faae0aab93b45.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-05-23T00:33:43.439Z"
+    }
+  ],
+  "deltas": {},
+  "wisdom": [
+    {
+      "id": "ws-o-gKAG",
+      "type": "gotcha",
+      "content": "In this repo, Trivy scanner scope differs by workflow: Python filesystem gate scans `vuln,secret,misconfig`, while container image gate scans `vuln,secret` only. Roadmap/docs should preserve that asymmetry instead of summarizing both as the same scan.",
+      "source_task": "tk-73f8f451b778",
+      "recorded_at": "2026-05-23T00:33:49.185Z"
+    }
+  ],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-05-23T00:24:55.757Z",
+      "completed_by": "user:jon",
+      "approval_evidence": "User approved proposal direction by replying 'approve'.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/proposal.md",
+        "content_hash": "80388f5b4c8454092fce6cbbba5eac286020a60dbfec7dd95fd818821a9a3f84",
+        "non_whitespace_chars": 1408,
+        "checked_at": "2026-05-23T00:24:55.864Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "started_at": "2026-05-23T00:26:44.713Z",
+      "completed_at": "2026-05-23T00:26:54.853Z",
+      "completed_by": "user:jon",
+      "approval_evidence": "User approved agreement checkpoint by replying 'approve'. Typed contract minted with 11 items from agreement.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/agreement.md",
+        "content_hash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "non_whitespace_chars": 1129,
+        "checked_at": "2026-05-23T00:26:54.918Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-05-23T00:29:13.089Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design completed. Independent adv-researcher validator returned PASS; WARN guardrails incorporated into design artifact.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/design.md",
+        "content_hash": "d627b490332a244b9d7526bbafbea52dc3710aadd9df9e4e9f6c96e77f250017",
+        "non_whitespace_chars": 1657,
+        "checked_at": "2026-05-23T00:29:13.230Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-05-23T00:31:34.373Z",
+      "completed_by": "user:jon",
+      "approval_evidence": "User approved prep task graph by replying 'approve'. Two tasks: create ROADMAP.md and verify against contract/actionlint."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-05-23T00:33:54.458Z",
+      "completed_by": "agent",
+      "approval_evidence": "All tasks complete. ROADMAP.md created and verified; actionlint passed exitCode 0."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-05-23T00:41:01.875Z",
+      "completed_by": "user:jon",
+      "approval_evidence": "User approved acceptance checkpoint by replying 'approve'. Independent reviewer PASS with no findings; contract review matrix has 11 passing rows; actionlint passed exitCode 0.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/acceptance.md",
+        "content_hash": "1fe13e4bab5d3ccd54d879758530e4b6566aa8900f14f6291eef4ba13027394a",
+        "non_whitespace_chars": 2194,
+        "checked_at": "2026-05-23T00:41:02.145Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "triage",
+    "issue_number": 999999,
+    "source_artifact": "user request: lets layout the roadmap for v1"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+      "approvedAt": "2026-05-23T00:26:50.218Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "`ROADMAP.md` exists at the repository root.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "It identifies V1 goals and non-goals.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "It separates reusable V1 work from PokeEdge backend pilot tasks and deferred frontend follow-up.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "It preserves the high-signal default posture: no paid GHAS/CodeQL/SARIF upload/SonarCloud/dashboard assumptions.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "It includes verification guidance that matches CI: `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7`.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "Treat workflow YAML and CI as executable source of truth when prose conflicts.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Do not change workflow behavior as part of this roadmap-only change.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "Keep the document compact; no exhaustive project plan or tutorial.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not introduce required paid services or hosted security dashboards.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not promote PokeEdge-specific settings into reusable defaults before pilot evidence.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "Do not invent package-manager commands; this repo has no app/package manifest.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "6bfe5432b4f05e4c9d216da7fe824190e54214124ffc9c8ffef31ec985b70410",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "Reviewer PASS: root ROADMAP.md exists; read evidence lines 1-109.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md includes `## V1 goals` lines 27-34 and `## V1 non-goals` lines 36-42.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md separates `Reusable workflow readiness`, `PokeEdge backend pilot`, `Container deploy gate`, and `Deferred PokeEdge Web follow-up` milestone sections.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md V1 non-goals include paid GHAS, CodeQL/SARIF upload, SonarCloud/dashboard, and Secret Protection push-blocking replacement exclusions.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "ROADMAP.md includes exact CI actionlint Docker command; adv_run_test executed it with exitCode 0.",
+          "notes": ""
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md states workflow YAML and CI override roadmap prose if they conflict.",
+          "notes": ""
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Reviewer reports git diff from main shows only ROADMAP.md added; no workflow behavior changes.",
+          "notes": ""
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Reviewer assessed roadmap as compact and focused at 109 lines.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md keeps paid GHAS, SonarCloud, CodeQL/SARIF upload, and dashboards out of V1 non-goals.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md keeps PokeEdge-specific tuning in examples until backend pilot evidence exists and lists pilot tasks separately.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "ROADMAP.md includes only actionlint Docker command for this repo and says deferred web work must preserve existing commands instead of inventing flow.",
+          "notes": ""
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "`ROADMAP.md` exists at the repository root.",
+    "It identifies V1 goals and non-goals.",
+    "It separates reusable V1 work from PokeEdge backend pilot tasks and deferred frontend follow-up.",
+    "It preserves the high-signal default posture: no paid GHAS/CodeQL/SARIF upload/SonarCloud/dashboard assumptions.",
+    "It includes verification guidance that matches CI: `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7`."
+  ],
+  "documents": {},
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/proposal.md",
+      "updatedAt": "2026-05-23T00:37:39.220Z"
+    },
+    "problemStatement": {
+      "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/problem-statement.md",
+      "updatedAt": "2026-05-23T00:37:39.276Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/agreement.md",
+      "updatedAt": "2026-05-23T00:37:39.327Z"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/design.md",
+      "updatedAt": "2026-05-23T00:37:39.434Z"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addV1Roadmap/executive-summary.md",
+      "updatedAt": "2026-05-23T00:37:39.534Z"
+    }
+  },
+  "lastSignalAt": "2026-05-23T00:41:01.875Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_MISSING_SUCCESS_CRITERIA",
+      "severity": "warning",
+      "message": "Proposal has no Success Criteria section. How will we know this change is done?",
+      "recorded_at": "2026-05-23T00:24:37.846Z",
+      "resolved": true,
+      "resolved_at": "2026-05-23T00:26:26.718Z"
+    },
+    {
+      "code": "CLARIFY_UNCLEAR_SCOPE",
+      "severity": "warning",
+      "message": "Proposal has no Scope section. What files and modules will be affected?",
+      "recorded_at": "2026-05-23T00:24:37.846Z",
+      "resolved": true,
+      "resolved_at": "2026-05-23T00:26:26.718Z"
+    },
+    {
+      "code": "CLARIFY_MISSING_ERROR_HANDLING",
+      "severity": "warning",
+      "message": "Proposal describes behavior that could fail but doesn't mention error handling or rollback. What happens when things go wrong?",
+      "recorded_at": "2026-05-23T00:24:37.846Z",
+      "resolved": true,
+      "resolved_at": "2026-05-23T00:26:26.718Z"
+    }
+  ],
+  "worktree_auto_managed": true
+}
