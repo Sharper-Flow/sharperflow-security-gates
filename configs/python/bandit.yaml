@@ -1,0 +1,17 @@
+# Conservative Bandit profile for CI gating.
+#
+# The reusable workflow already runs with:
+#   -lll = high severity only
+#   -iii = high confidence only
+#
+# Keep skips sparse. Prefer inline `# nosec Bxxx` with justification in caller
+# repos when a specific finding is intentionally accepted.
+
+exclude_dirs:
+  - tests
+  - .venv
+  - .tox
+  - build
+  - dist
+
+skips: []

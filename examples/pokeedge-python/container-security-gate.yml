@@ -1,0 +1,10 @@
+name: Container Security Gate Example
+
+on:
+  workflow_dispatch:
+
+jobs:
+  image-security:
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@main
+    with:
+      image-ref: "ghcr.io/Sharper-Flow/pokeedge-api:${{ github.sha }}"

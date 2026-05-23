@@ -1,0 +1,21 @@
+# Baseline Trivy config for local experiments.
+# Reusable workflows keep key gate behavior in YAML inputs so caller repos can
+# tune severity without copying this file.
+
+severity:
+  - HIGH
+  - CRITICAL
+
+ignore-unfixed: true
+
+scanners:
+  - vuln
+  - secret
+  - misconfig
+
+skip-dirs:
+  - .git
+  - .venv
+  - node_modules
+  - dist
+  - build

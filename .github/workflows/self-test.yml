@@ -1,0 +1,44 @@
+name: Self Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: Actionlint reusable workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run actionlint
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            -v "$PWD:/repo" \
+            --workdir /repo \
+            rhysd/actionlint:1.7.7
+
+  docs-check:
+    name: Basic docs/config checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check required files
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f docs/pokeedge-backend-pilot.md
+          test -f .github/workflows/python-security-gate.yml
+          test -f .github/workflows/container-security-gate.yml
+          test -f configs/python/bandit.yaml
+          test -f configs/gitleaks/gitleaks.toml
+          test -f configs/trivy/trivy.yaml

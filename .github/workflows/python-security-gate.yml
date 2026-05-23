@@ -1,0 +1,176 @@
+name: Python Security Gate
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: Python version used to run Python-native tools.
+        required: false
+        type: string
+        default: "3.13"
+      scan-paths:
+        description: Space-separated paths to scan.
+        required: false
+        type: string
+        default: "."
+      lockfile-path:
+        description: Dependency lockfile for OSV scanning.
+        required: false
+        type: string
+        default: "uv.lock"
+      semgrep-configs:
+        description: Space-separated Semgrep configs.
+        required: false
+        type: string
+        default: "p/python p/fastapi"
+      semgrep-excludes:
+        description: Space-separated paths to exclude from Semgrep.
+        required: false
+        type: string
+        default: "tests scripts migrations"
+      bandit-config:
+        description: Optional Bandit config path in caller repository.
+        required: false
+        type: string
+        default: ""
+      run-trivy-fs:
+        description: Run Trivy filesystem scan for vulnerabilities, secrets, and IaC misconfig.
+        required: false
+        type: boolean
+        default: true
+      trivy-severity:
+        description: Trivy severities that fail the gate.
+        required: false
+        type: string
+        default: "HIGH,CRITICAL"
+      gitleaks-image:
+        description: Pinned Gitleaks container image.
+        required: false
+        type: string
+        default: "zricethezav/gitleaks:v8.30.0"
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep-bandit:
+    name: Semgrep + Bandit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install pipx runner
+        run: python -m pip install --user pipx
+
+      - name: Semgrep security scan
+        env:
+          SEMGREP_CONFIGS: ${{ inputs.semgrep-configs }}
+          SEMGREP_EXCLUDES: ${{ inputs.semgrep-excludes }}
+          SCAN_PATHS: ${{ inputs.scan-paths }}
+        run: |
+          set -euo pipefail
+          config_args=()
+          for config in ${SEMGREP_CONFIGS}; do
+            config_args+=(--config "${config}")
+          done
+
+          exclude_args=()
+          for path in ${SEMGREP_EXCLUDES}; do
+            exclude_args+=(--exclude "${path}")
+          done
+
+          # shellcheck disable=SC2153 # Provided by workflow env.
+          read -r -a scan_paths <<< "${SCAN_PATHS}"
+          python -m pipx run semgrep "${config_args[@]}" --error "${exclude_args[@]}" "${scan_paths[@]}"
+
+      - name: Bandit high-signal scan
+        env:
+          BANDIT_CONFIG: ${{ inputs.bandit-config }}
+          SCAN_PATHS: ${{ inputs.scan-paths }}
+        run: |
+          set -euo pipefail
+          # shellcheck disable=SC2153 # Provided by workflow env.
+          read -r -a scan_paths <<< "${SCAN_PATHS}"
+          bandit_args=(-r "${scan_paths[@]}" -lll -iii)
+          if [[ -n "${BANDIT_CONFIG}" && -f "${BANDIT_CONFIG}" ]]; then
+            bandit_args+=(-c "${BANDIT_CONFIG}")
+          fi
+          python -m pipx run --spec 'bandit[toml]' bandit "${bandit_args[@]}"
+
+  dependencies:
+    name: OSV dependency scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@v6
+
+      - name: Check lockfile exists
+        id: lockfile
+        env:
+          LOCKFILE_PATH: ${{ inputs.lockfile-path }}
+        run: |
+          if [[ -f "${LOCKFILE_PATH}" ]]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Lockfile ${LOCKFILE_PATH} not found; skipping OSV scan."
+          fi
+
+      - name: OSV Scanner
+        if: steps.lockfile.outputs.exists == 'true'
+        uses: google/osv-scanner-action/osv-scanner-action@v2.3.8
+        with:
+          scan-args: |
+            --lockfile=${{ inputs.lockfile-path }}
+            --format=table
+
+  secrets:
+    name: Gitleaks secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks CLI
+        env:
+          GITLEAKS_IMAGE: ${{ inputs.gitleaks-image }}
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            -v "$PWD:/repo" \
+            --workdir /repo \
+            "${GITLEAKS_IMAGE}" detect \
+            --source=/repo \
+            --redact \
+            --exit-code=1
+
+  trivy-fs:
+    name: Trivy filesystem scan
+    if: inputs.run-trivy-fs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@v6
+
+      - name: Run Trivy filesystem scanner
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: ${{ inputs.trivy-severity }}
+          ignore-unfixed: true
+          exit-code: "1"
+          hide-progress: true

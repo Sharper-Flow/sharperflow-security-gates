@@ -1,0 +1,38 @@
+name: Container Security Gate
+
+on:
+  workflow_call:
+    inputs:
+      image-ref:
+        description: Fully qualified image reference to scan.
+        required: true
+        type: string
+      severity:
+        description: Severities that fail the gate.
+        required: false
+        type: string
+        default: "HIGH,CRITICAL"
+      ignore-unfixed:
+        description: Ignore vulnerabilities without upstream fixes.
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  trivy-image:
+    name: Trivy image scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Run Trivy image scanner
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: ${{ inputs.image-ref }}
+          scanners: vuln,secret
+          severity: ${{ inputs.severity }}
+          ignore-unfixed: ${{ inputs.ignore-unfixed }}
+          exit-code: "1"
+          hide-progress: true

@@ -1,0 +1,11 @@
+title = "Sharper Flow Gitleaks baseline"
+
+[allowlist]
+description = "Global low-risk generated/test fixtures"
+paths = [
+  '''(^|/)\.venv/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)dist/''',
+  '''(^|/)build/''',
+  '''(^|/)coverage/''',
+]
