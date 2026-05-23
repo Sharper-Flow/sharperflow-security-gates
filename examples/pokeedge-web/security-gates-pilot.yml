@@ -1,0 +1,27 @@
+name: Security Gates Pilot
+
+# Non-required pilot for Sharper Flow reusable security gates. Use this to
+# measure false positives, suppressions, runtime, and failure modes before
+# considering required branch protection.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  web-security:
+    name: Web security gates pilot
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@main
+    permissions:
+      contents: read
+    with:
+      scan-paths: "src scripts infra"
+      lockfile-path: "bun.lock"
+      semgrep-excludes: "src/lib/api/generated .svelte-kit build coverage playwright-report test-results node_modules"
+      run-trivy-fs: true

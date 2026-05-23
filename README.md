@@ -5,9 +5,10 @@ Reusable, low-cost security gates for Sharper Flow repositories.
 This repo is the test bed before integrating the package into PokeEdge backend
 and PokeEdge Web.
 
-## Initial target
+## Initial targets
 
-Python API repositories, especially PokeEdge backend.
+- Python API repositories, especially PokeEdge backend.
+- JavaScript/TypeScript web repositories, especially PokeEdge Web.
 
 ## Gates included
 
@@ -39,6 +40,21 @@ jobs:
     uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@main
     with:
       image-ref: "ghcr.io/OWNER/IMAGE:${{ github.sha }}"
+```
+
+JavaScript/TypeScript gate:
+
+```yaml
+permissions: {}
+
+jobs:
+  security:
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@main
+    permissions:
+      contents: read
+    with:
+      scan-paths: "src scripts infra"
+      lockfile-path: "bun.lock"
 ```
 
 ## Design posture
