@@ -37,6 +37,12 @@ Reusable GitHub Actions security gate workflows for the Sharper-Flow org.
 
 All three accept a `trivy-ignorefile` input (added in `v0.2.0`) for `.trivyignore.yaml`-based FP suppression.
 
+Python and JavaScript gates additionally accept (added in `v0.3.0`):
+- `gitleaks-config` — caller's `.gitleaks.toml` is mounted and passed via `--config`, honoring `[allowlist]` rules.
+- `sbom-format` — when set to `cyclonedx` or `spdx`, Trivy emits an SBOM uploaded as a workflow artifact (`sbom-<format>`).
+
+Container gate accepts `sbom-format` for image SBOMs.
+
 ## Domain knowledge
 
 - **Trivy and ARM templates**: Trivy cannot statically evaluate ARM `format()` functions. Misconfigs derived from `format()` parameters (e.g. AZU-0013 on Azure Key Vault networkAcls) report as FPs. Suppress via caller's `.trivyignore.yaml` + the `trivy-ignorefile` input.

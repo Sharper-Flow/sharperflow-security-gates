@@ -26,6 +26,14 @@ on:
         required: false
         type: string
         default: ""
+      sbom-format:
+        description: |
+          When set, the Trivy image scan also emits a Software Bill of Materials
+          (SBOM) for the scanned image and uploads it as a workflow artifact.
+          Allowed values: `cyclonedx`, `spdx`. Empty (default) means no SBOM.
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -50,3 +58,20 @@ jobs:
           exit-code: "1"
           hide-progress: true
           trivyignores: ${{ inputs.trivy-ignorefile }}
+
+      - name: Generate SBOM
+        if: inputs.sbom-format != ''
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ inputs.image-ref }}
+          format: ${{ inputs.sbom-format }}
+          output: sbom-${{ inputs.sbom-format }}.json
+          hide-progress: true
+
+      - name: Upload SBOM artifact
+        if: inputs.sbom-format != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: sbom-${{ inputs.sbom-format }}
+          path: sbom-${{ inputs.sbom-format }}.json
+          if-no-files-found: error
