@@ -38,3 +38,7 @@ jobs:
       # Optional: suppress known-FP misconfigs/CVEs (e.g. Trivy AZU-0013 for ARM
       # `format()` Key Vault network ACLs).
       # trivy-ignorefile: ".trivyignore.yaml"
+      # Optional: respect caller's Gitleaks config (e.g. `[allowlist]` rules).
+      # gitleaks-config: ".gitleaks.toml"
+      # Optional: emit SBOM as a workflow artifact (`cyclonedx` or `spdx`).
+      # sbom-format: "cyclonedx"

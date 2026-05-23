@@ -57,6 +57,23 @@ on:
         required: false
         type: string
         default: ""
+      gitleaks-config:
+        description: |
+          Relative path to the caller's Gitleaks config (e.g. `.gitleaks.toml`).
+          When set, the Gitleaks job mounts the config into the container and
+          passes `--config <path>` so caller-defined `[allowlist]` rules are
+          respected. Empty (default) runs Gitleaks with built-in rules only.
+        required: false
+        type: string
+        default: ""
+      sbom-format:
+        description: |
+          When set, the Trivy filesystem scan also emits a Software Bill of
+          Materials (SBOM) and uploads it as a workflow artifact. Allowed
+          values: `cyclonedx`, `spdx`. Empty (default) means no SBOM.
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -154,15 +171,26 @@ jobs:
       - name: Run Gitleaks CLI
         env:
           GITLEAKS_IMAGE: ${{ inputs.gitleaks-image }}
+          GITLEAKS_CONFIG: ${{ inputs.gitleaks-config }}
         run: |
           set -euo pipefail
+          config_args=()
+          if [[ -n "${GITLEAKS_CONFIG}" ]]; then
+            if [[ ! -f "${GITLEAKS_CONFIG}" ]]; then
+              echo "::error::gitleaks-config path '${GITLEAKS_CONFIG}' does not exist in caller repository"
+              exit 1
+            fi
+            echo "Using caller gitleaks config: ${GITLEAKS_CONFIG}"
+            config_args+=(--config "/repo/${GITLEAKS_CONFIG}")
+          fi
           docker run --rm \
             -v "$PWD:/repo" \
             --workdir /repo \
             "${GITLEAKS_IMAGE}" detect \
             --source=/repo \
             --redact \
-            --exit-code=1
+            --exit-code=1 \
+            "${config_args[@]}"
 
   trivy-fs:
     name: Trivy filesystem scan
@@ -184,3 +212,21 @@ jobs:
           exit-code: "1"
           hide-progress: true
           trivyignores: ${{ inputs.trivy-ignorefile }}
+
+      - name: Generate SBOM
+        if: inputs.sbom-format != ''
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: ${{ inputs.sbom-format }}
+          output: sbom-${{ inputs.sbom-format }}.json
+          hide-progress: true
+
+      - name: Upload SBOM artifact
+        if: inputs.sbom-format != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: sbom-${{ inputs.sbom-format }}
+          path: sbom-${{ inputs.sbom-format }}.json
+          if-no-files-found: error
