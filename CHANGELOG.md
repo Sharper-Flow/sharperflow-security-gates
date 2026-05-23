@@ -1,3 +1,9 @@
+## 2026-05-23 (v0.2.0)
+
+### Added
+
+- add trivy-ignorefile input + fix stale examples (#2)
+
 ## 2026-05-23 (v0.1.0)
 
 ### Added
