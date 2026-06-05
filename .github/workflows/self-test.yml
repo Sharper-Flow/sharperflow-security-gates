@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
 
       - name: Run actionlint
         run: |
@@ -30,15 +30,53 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
 
       - name: Check required files
         run: |
           set -euo pipefail
+          # Core docs/config
           test -f README.md
+          test -f docs/ci-standard.md
           test -f docs/pokeedge-backend-pilot.md
           test -f .github/workflows/python-security-gate.yml
+          test -f .github/workflows/javascript-security-gate.yml
           test -f .github/workflows/container-security-gate.yml
           test -f configs/python/bandit.yaml
           test -f configs/gitleaks/gitleaks.toml
           test -f configs/trivy/trivy.yaml
+          # Standard building blocks
+          test -f .github/actions/setup-python-uv/action.yml
+          test -f .github/actions/setup-bun-node/action.yml
+          test -f rulesets/sharperflow-app-protection.json
+          test -f scripts/apply-ruleset.sh
+
+      - name: Validate ruleset JSON
+        run: |
+          set -euo pipefail
+          python3 -c '
+          import json, sys
+          d = json.load(open("rulesets/sharperflow-app-protection.json"))
+          assert d["target"] == "branch", "ruleset target must be branch"
+          assert d["enforcement"] == "active", "ruleset must be active"
+          assert d["bypass_actors"] == [], "bypass_actors must be empty (enforce for admins)"
+          types = [r["type"] for r in d["rules"]]
+          assert "required_status_checks" in types, "missing required_status_checks rule"
+          rsc = next(r for r in d["rules"] if r["type"] == "required_status_checks")
+          ctxs = [c["context"] for c in rsc["parameters"]["required_status_checks"]]
+          assert ctxs == ["Sharperflow CI Gate"], f"required check must be the summary only, got {ctxs}"
+          assert rsc["parameters"]["strict_required_status_checks_policy"] is True, "strict policy required"
+          print("ruleset JSON valid:", types, ctxs)
+          '
+
+  shellcheck:
+    name: Shellcheck scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+
+      - name: Run shellcheck
+        run: |
+          set -euo pipefail
+          shellcheck scripts/apply-ruleset.sh
