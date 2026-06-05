@@ -4,7 +4,7 @@ Planning entrypoint for making these reusable security gates safe to roll out
 across Sharper Flow repos.
 
 > **Status update:** the pilot phase is complete. The reusable security gate is
-> now **permanent and required** under the **[Sharperflow CI Standard](ci-standard.md)**.
+> now **permanent and required** under the **[Sharperflow CI Standard](docs/ci-standard.md)**.
 > App repos conform to that standard (single `Sharperflow CI Gate` summary check,
 > shared setup composites, org ruleset). Remaining items below are
 > follow-ups, not blockers.
