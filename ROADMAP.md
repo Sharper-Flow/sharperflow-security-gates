@@ -3,6 +3,12 @@
 Planning entrypoint for making these reusable security gates safe to roll out
 across Sharper Flow repos.
 
+> **Status update:** the pilot phase is complete. The reusable security gate is
+> now **permanent and required** under the **[Sharperflow CI Standard](ci-standard.md)**.
+> App repos conform to that standard (single `Sharperflow CI Gate` summary check,
+> shared setup composites, org ruleset). Remaining items below are
+> follow-ups, not blockers.
+
 Source of truth: workflow YAML and CI override this roadmap if they conflict.
 Update this file when executable behavior changes.
 
@@ -50,18 +56,19 @@ Update this file when executable behavior changes.
 - [x] Provide container image reusable workflow that scans a supplied image ref;
   it does not build or publish images.
 - [x] Add self-test workflow for actionlint and required docs/config presence.
-- [ ] Tag a first stable release ref after pilot validation, so callers do not
-  need to depend on `@main`.
-- [ ] Document expected caller-owned suppressions and config paths after pilot
-  findings are known.
+- [x] Tag stable release refs (latest `v0.3.1`); callers pin by SHA + version
+  comment instead of `@main`.
+- [ ] Document expected caller-owned suppressions and config paths as findings
+  accumulate.
 
-### PokeEdge backend pilot
+### PokeEdge backend conformance (was: pilot)
 
 - [x] Keep example wiring in `examples/pokeedge-python/`.
-- [ ] Run the Python gate as non-required CI in PokeEdge backend.
-- [ ] Triage false positives and review suppressions.
-- [ ] Measure runtime and document failure modes.
-- [ ] Decide whether the gate is ready to become required in PokeEdge backend.
+- [x] Run the Python gate as CI in PokeEdge backend (pilot).
+- [x] Promote the gate to **permanent + required** via the CI standard.
+- [ ] Conform PokeEdge backend CI to the standard (single `Sharperflow CI Gate`
+  summary, fold security into CI, shared composite, org ruleset) — Change B.
+- [ ] Triage false positives and review suppressions as they surface.
 
 ### Container deploy gate
 
@@ -82,13 +89,15 @@ These are roadmap items, not behavior changes in this docs-only update.
   become configurable hard failures.
 - [ ] Decide release/tag pinning guidance for downstream callers.
 
-### Deferred PokeEdge Web follow-up
+### PokeEdge Web conformance — Change C
 
-- [ ] Start a separate web workflow after the backend pilot stabilizes.
-- [ ] Resolve package manager and lockfile source of truth.
+- [x] JS/TS reusable gate exists and runs in PokeEdge Web (pilot).
+- [ ] Conform PokeEdge Web CI to the standard (single `Sharperflow CI Gate`
+  summary, fold security into CI, `setup-bun-node` composite, org ruleset,
+  require the real fast-checks/test/build jobs) — Change C.
 - [ ] Decide whether frontend deploy scan targets an image or static artifact.
-- [ ] Preserve existing web lint/type/test commands instead of inventing new
-  verification flow here.
+- [ ] Preserve existing web lint/type/test commands; do not invent new
+  verification flow.
 
 ## Verification for this repo
 

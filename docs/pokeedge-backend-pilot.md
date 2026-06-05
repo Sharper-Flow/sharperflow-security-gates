@@ -1,55 +1,70 @@
-# PokeEdge Backend Pilot
+# PokeEdge Backend Conformance
 
-Goal: prove a no-GHAS/no-Sonar security package on a smaller reusable repo
-before changing PokeEdge backend CI.
+> History: this began as the backend security-gate *pilot*. The pilot proved the
+> reusable package; the gate is now **permanent and required** under the
+> [Sharperflow CI Standard](ci-standard.md). This doc now describes how the
+> backend conforms to that standard (Change B), not a trial.
 
-## Phase 1: package validation
+Goal: bring PokeEdge backend CI into conformance with the org CI standard using a
+no-GHAS/no-Sonar security package.
 
-- Validate reusable workflow syntax with `actionlint`.
-- Keep defaults high signal:
+## Package validation (done)
+
+- Reusable workflow syntax validated with `actionlint`.
+- Defaults stay high-signal:
   - Bandit: high severity + high confidence only.
   - Trivy: HIGH/CRITICAL only, ignore unfixed.
   - Semgrep: Python + FastAPI rules.
-- Avoid SARIF upload assumptions because private-repo GitHub code scanning is
-  not enabled.
+- No SARIF upload assumptions (private-repo GitHub code scanning is not enabled).
 
-## Phase 2: PokeEdge backend dry run
+## Conformance: fold the security gate into CI
 
-Add a non-required workflow in PokeEdge:
+Per the standard, the security gate is a **job inside the app CI workflow** (not a
+standalone `security-gates-pilot.yml`), and only the `Sharperflow CI Gate` summary
+is required. Pin by SHA + version comment.
 
 ```yaml
-name: Security Gates Pilot
-
-on:
-  workflow_dispatch:
-  pull_request:
-    branches: [main]
-
 jobs:
-  python-security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@main
+  security:
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    permissions:
+      contents: read
     with:
       python-version: "3.13"
       scan-paths: "api services clients models core common repositories integrations utils"
       lockfile-path: "uv.lock"
       bandit-config: "configs/security/bandit.yaml"
+
+  ci-gate:
+    name: Sharperflow CI Gate
+    if: ${{ !cancelled() }}
+    needs: [fast-checks, test, build, security]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify required jobs
+        env:
+          RESULTS: ${{ join(needs.*.result, ',') }}
+        run: |
+          IFS=','
+          for r in $RESULTS; do
+            case "$r" in success|skipped) ;; *) echo "::error::job result=$r"; exit 1 ;; esac
+          done
 ```
 
-Do not make it required until:
+Then apply the org ruleset and **remove the stale classic required-status-check
+contexts** (e.g. the ghost `Run Constitution §7.4 Quality Chain`) so the ruleset's
+`Sharperflow CI Gate` is the single source. Drop the inline OSV + generic Semgrep
+duplicated by the reusable gate; keep repo-custom `.semgrep/*` rules and the IaC
+`:latest` guardrail as a thin local job.
 
-1. false positives are triaged,
-2. suppressions are reviewed,
-3. runtime is measured,
-4. failure modes are documented.
+## Production deploy gate
 
-## Phase 3: production deploy gate
-
-After the PokeEdge deploy workflow builds an image, call:
+After the PokeEdge deploy workflow builds an image, call the container gate:
 
 ```yaml
 jobs:
   image-security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@main
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
     with:
       image-ref: "ghcr.io/Sharper-Flow/pokeedge-api:${{ github.sha }}"
 ```

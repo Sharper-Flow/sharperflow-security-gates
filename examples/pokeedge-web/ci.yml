@@ -1,0 +1,85 @@
+name: CI
+
+# Conformant Sharperflow app CI (JS/TS). The security gate is folded in as a job;
+# branch protection requires only the `Sharperflow CI Gate` summary.
+# See docs/ci-standard.md. Pin org `uses:` by SHA + version comment.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  fast-checks:
+    name: Fast Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-bun-node@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+        with:
+          node-version: "24"
+      - run: bun run lint
+      - run: bun run check
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-bun-node@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+      - run: bun run test:coverage
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-bun-node@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+      - run: bun run build
+
+  security:
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    permissions:
+      contents: read
+    with:
+      scan-paths: "src scripts infra"
+      lockfile-path: "bun.lock"
+      semgrep-excludes: "src/lib/api/generated .svelte-kit build coverage playwright-report test-results node_modules"
+
+  ci-gate:
+    name: Sharperflow CI Gate
+    if: ${{ !cancelled() }}
+    needs: [fast-checks, test, build, security]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Verify required jobs
+        env:
+          RESULTS: ${{ join(needs.*.result, ',') }}
+        run: |
+          set -euo pipefail
+          echo "needs results: $RESULTS"
+          IFS=','
+          for r in $RESULTS; do
+            case "$r" in
+              success|skipped) ;;
+              *) echo "::error::a required job result was '$r'"; exit 1 ;;
+            esac
+          done

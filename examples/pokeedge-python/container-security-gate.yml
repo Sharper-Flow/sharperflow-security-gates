@@ -1,10 +1,13 @@
 name: Container Security Gate Example
 
+# Deploy-time image scan. Call after the app's deploy workflow builds an image.
+# Pin org `uses:` by SHA + version comment (see docs/ci-standard.md).
+
 on:
   workflow_dispatch:
 
 jobs:
   image-security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@main
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
     with:
       image-ref: "ghcr.io/Sharper-Flow/pokeedge-api:${{ github.sha }}"
