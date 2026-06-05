@@ -1,0 +1,46 @@
+name: Setup Bun + Node
+description: >-
+  Shared Sharper Flow composite: install Bun and Node, then install JS/TS
+  dependencies. Consume cross-repo by SHA pin.
+
+inputs:
+  node-version:
+    description: Node.js version to install.
+    required: false
+    default: "24"
+  bun-version:
+    description: Bun version to install (default: latest resolved by setup-bun).
+    required: false
+    default: ""
+  install-mode:
+    description: >-
+      Dependency install mode. "ci" runs `bun ci` (lockfile-precise, default).
+      "install" runs `bun install`. "none" skips install.
+    required: false
+    default: "ci"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6  # v2
+      with:
+        bun-version: ${{ inputs.bun-version || 'latest' }}
+
+    - name: Set up Node
+      uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install dependencies
+      shell: bash
+      env:
+        INSTALL_MODE: ${{ inputs.install-mode }}
+      run: |
+        set -euo pipefail
+        case "${INSTALL_MODE}" in
+          ci) bun ci ;;
+          install) bun install ;;
+          none) echo "install-mode=none; skipping dependency install" ;;
+          *) echo "::error::invalid install-mode '${INSTALL_MODE}' (expected ci|install|none)"; exit 1 ;;
+        esac
