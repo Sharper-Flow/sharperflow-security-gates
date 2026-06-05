@@ -1,0 +1,888 @@
+{
+  "id": "addSharperflowCiStandard",
+  "title": "Add Sharperflow CI standard",
+  "status": "archived",
+  "created_at": "2026-06-05T15:41:28.407Z",
+  "tasks": [
+    {
+      "id": "tk-ca83cc5f2c19",
+      "title": "Author docs/ci-standard.md — the normative Sharperflow app CI contract",
+      "type": "code",
+      "section": "Standard contract",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-05T16:04:04.925Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1"
+        ],
+        "respects": [
+          "C1",
+          "C3",
+          "DONT1",
+          "DONT2",
+          "DONT3"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-05T16:05:20.199Z",
+      "verification": "Authored docs/ci-standard.md normative contract covering pipeline shape, single-summary required-check contract, hardened summary-gate snippet, permanent+required security gate, shared composites, SHA+comment pin policy, org-ruleset protection, optional conventions, app-owned gates, conformance checklist.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "2ffb2e542b3c40d4ab1672e50bca06c8198c3bc0",
+      "completedAt": "2026-06-05T16:07:02.789Z",
+      "completed_at": "2026-06-05T16:07:02.789Z"
+    },
+    {
+      "id": "tk-2b22fe2aae29",
+      "title": "Add cross-repo composite action .github/actions/setup-python-uv/action.yml",
+      "type": "code",
+      "section": "Building blocks",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-05T16:04:08.546Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "verifies": [
+          "AC2"
+        ],
+        "respects": [
+          "C4"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-05T16:07:08.982Z",
+      "verification": "Created .github/actions/setup-python-uv/action.yml (composite): inputs python-version (3.13), sync-args (--all-groups), cache-key-suffix; steps setup-python@SHA #v6, setup-uv@SHA #v7 (enable-cache), uv sync. SHA-pinned internal actions with version comments. actionlint run in T6 sweep.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/actions/setup-python-uv/action.yml"
+      ],
+      "touched_files": [
+        ".github/actions/setup-python-uv/action.yml"
+      ],
+      "checkpointSha": "1aa4e4be7f7a56a4abccf8e02d18f941b078c50e",
+      "completedAt": "2026-06-05T16:07:30.305Z",
+      "completed_at": "2026-06-05T16:07:30.305Z"
+    },
+    {
+      "id": "tk-3e0650f7bb30",
+      "title": "Add cross-repo composite action .github/actions/setup-bun-node/action.yml",
+      "type": "code",
+      "section": "Building blocks",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-05T16:04:11.368Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC3"
+        ],
+        "verifies": [
+          "AC3"
+        ],
+        "respects": [
+          "C4"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-05T16:07:39.663Z",
+      "verification": "Created .github/actions/setup-bun-node/action.yml (composite): inputs node-version (24), bun-version, install-mode (ci|install|none); steps setup-bun@SHA #v2, setup-node@SHA #v6, mode-dispatched install with invalid-mode guard. SHA-pinned with version comments. actionlint run in T6 sweep.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/actions/setup-bun-node/action.yml"
+      ],
+      "touched_files": [
+        ".github/actions/setup-bun-node/action.yml"
+      ],
+      "checkpointSha": "6b73634ec7340b3f700af03ca2388b673f811a83",
+      "completedAt": "2026-06-05T16:07:54.277Z",
+      "completed_at": "2026-06-05T16:07:54.277Z"
+    },
+    {
+      "id": "tk-05deb73f9248",
+      "title": "Add org Ruleset config + apply script",
+      "type": "code",
+      "section": "Protection-as-code",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-05T16:04:16.327Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC4"
+        ],
+        "verifies": [
+          "AC4"
+        ],
+        "respects": [
+          "DONT2"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-05T16:07:59.730Z",
+      "verification": "shellcheck clean on scripts/apply-ruleset.sh; bash -n syntax ok; script executable. Ruleset JSON parses; rules=[pull_request, required_status_checks, non_fast_forward], context='Sharperflow CI Gate', strict=true, bypass_actors=[], repository_name protected=true, ~DEFAULT_BRANCH. Auth model (admin:org / App Administration:write, not GITHUB_TOKEN) documented in script header; idempotent GET-by-name + PUT/POST; --dry-run.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "rulesets/sharperflow-app-protection.json",
+        "scripts/apply-ruleset.sh"
+      ],
+      "touched_files": [
+        "rulesets/sharperflow-app-protection.json",
+        "scripts/apply-ruleset.sh"
+      ],
+      "checkpointSha": "c14acec053aab60689dbc42a220f29e41de7a0a5",
+      "completedAt": "2026-06-05T16:08:54.658Z",
+      "completed_at": "2026-06-05T16:08:54.658Z"
+    },
+    {
+      "id": "tk-fd80791e92b9",
+      "title": "Reframe repo docs: retire \"pilot\", declare permanent+required",
+      "type": "code",
+      "section": "Doc reframe",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-05T16:04:22.864Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-ca83cc5f2c19"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC5"
+        ],
+        "respects": [
+          "DONT3"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-05T16:09:01.060Z",
+      "verification": "Reframed README.md (permanent+required, SHA pins, composites, ruleset, ci-standard pointer); ROADMAP.md (pilot closed/promoted, backend=Change B, web=Change C, stable releases done); docs/pokeedge-backend-pilot.md + docs/pokeedge-web-next.md (conformance framing, fold-into-CI, SHA pins, history notes). Converted examples to conformant ci.yml (security job + Sharperflow CI Gate summary, SHA-pinned actions incl. real actions/checkout@df4cb1c #v6); container example SHA-pinned (@main removed); old security-gates-pilot.yml examples git-removed. actionlint exit=0 over whole worktree.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "README.md",
+        "ROADMAP.md",
+        "docs/pokeedge-backend-pilot.md",
+        "docs/pokeedge-web-next.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-python/container-security-gate.yml",
+        "examples/pokeedge-python/security-gates-pilot.yml",
+        "examples/pokeedge-web/ci.yml",
+        "examples/pokeedge-web/security-gates-pilot.yml"
+      ],
+      "touched_files": [
+        "README.md",
+        "ROADMAP.md",
+        "docs/pokeedge-backend-pilot.md",
+        "docs/pokeedge-web-next.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-python/container-security-gate.yml",
+        "examples/pokeedge-python/security-gates-pilot.yml",
+        "examples/pokeedge-web/ci.yml",
+        "examples/pokeedge-web/security-gates-pilot.yml"
+      ],
+      "checkpointSha": "7e367a64a28ec6d342c6bdf6a6d6e854a4cf71f3",
+      "completedAt": "2026-06-05T16:12:27.884Z",
+      "completed_at": "2026-06-05T16:12:27.884Z"
+    },
+    {
+      "id": "tk-4827cbb4e065",
+      "title": "Extend self-test + run verification sweep",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 5,
+      "created_at": "2026-06-05T16:04:30.248Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-ca83cc5f2c19"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-2b22fe2aae29"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-3e0650f7bb30"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-05deb73f9248"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-fd80791e92b9"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC6"
+        ],
+        "verifies": [
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC6"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-05T16:12:37.618Z",
+      "verification": "Extended self-test.yml: docs-check now asserts presence of ci-standard.md, both composites, ruleset JSON, apply script + validates ruleset JSON (target/enforcement/empty-bypass/strict/context==[Sharperflow CI Gate]); new shellcheck job for scripts/apply-ruleset.sh; checkout pinned to SHA #v6. Local sweep: actionlint PASS, all 13 presence checks ok, ruleset JSON assertions PASS, shellcheck PASS.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/workflows/self-test.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/self-test.yml"
+      ],
+      "checkpointSha": "e0b3d0c1cda07016f45ab7b91093bd0ce69261c6",
+      "completedAt": "2026-06-05T16:13:12.823Z",
+      "completed_at": "2026-06-05T16:13:12.823Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "addSharperflowCiStandard",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:ci-standard-validation"
+      },
+      "agent": "adv-researcher",
+      "topic": "Org-wide GitHub Actions CI standard: cross-repo composites, reusable-workflow check names, summary gate, cross-workflow needs, Dependabot, branch-protection API auth",
+      "sources": [
+        {
+          "label": "Reusing workflow configurations (composite vs reusable, cross-repo checkout semantics)",
+          "locator": "https://docs.github.com/en/actions/sharing-automations/avoiding-duplication",
+          "summary": "Composite action = a separate repo OR directory with action.yml; called by referencing repo/directory. Reused workflow from a different repo: actions run as if part of caller (e.g. actions/checkout checks out CALLER repo, not the called workflow's repo)."
+        },
+        {
+          "label": "Workflow syntax — jobs.<id>.uses, supported keywords, secrets/permissions",
+          "locator": "https://github.com/github/docs/blob/main/content/actions/reference/workflows-and-actions/workflow-syntax.md",
+          "summary": "jobs.<id>.uses: location+version of reusable workflow file. uses for actions: 'a public repository, ... {owner}/{repo}/{path}@{ref}'. Caller GITHUB_TOKEN perms can only be downgraded not elevated by called workflow."
+        },
+        {
+          "label": "Create a composite action tutorial (cross-repo reference example)",
+          "locator": "https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action",
+          "summary": "Cross-repo composite called directly via 'uses: OWNER/hello-world-composite-action@SHA' (or @ref). Replace OWNER and SHA/ref. No manual checkout of the action repo required for the action to be fetched."
+        },
+        {
+          "label": "docs issue #34562 — Actions Engineering confirmation on private/internal actions",
+          "locator": "https://github.com/github/docs/issues/34562",
+          "summary": "Actions Engineer: 'Actions supporting private and internal actions as built-in feature' — regular 'uses: {owner}/{repo}/{path}@{ref}' works for private/internal action repos once org 'allow access to components' is configured; the old PAT-checkout example predates this."
+        },
+        {
+          "label": "About protected branches — required status checks + unique job name tip",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+          "summary": "Required checks must be successful/skipped/neutral to merge. TIP: make job names unique across all workflows; duplicate job names cause ambiguous status-check results and can block PRs."
+        },
+        {
+          "label": "Using jobs in a workflow — needs + always()",
+          "locator": "https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow",
+          "summary": "jobs.<id>.needs identifies jobs that must complete before this job. If a needed job fails/skips, dependents skip unless always(). always() form documented for run-regardless aggregation."
+        },
+        {
+          "label": "needs context reference (result values)",
+          "locator": "https://github.com/github/docs/blob/main/content/actions/reference/workflows-and-actions/contexts.md",
+          "summary": "needs.<job>.result ∈ {success, failure, cancelled, skipped}. needs allowed expression contexts limited to github + needs; needs references job_ids in the SAME workflow run only."
+        },
+        {
+          "label": "Keeping your actions up to date with Dependabot (github-actions ecosystem)",
+          "locator": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot",
+          "summary": "github-actions ecosystem keeps 'references to actions in a repository's workflow.yml file AND reusable workflows used inside workflows' up to date. directory must be '/' to scan .github/workflows."
+        },
+        {
+          "label": "REST API for protected branches (PUT update branch protection)",
+          "locator": "https://docs.github.com/rest/branches/branch-protection",
+          "summary": "PUT /repos/{owner}/{repo}/branches/{branch}/protection. 'Protecting a branch requires admin or owner permissions to the repository.' required_status_checks.contexts and enforce_admins are required body params."
+        },
+        {
+          "label": "Permissions required for fine-grained PATs (Administration)",
+          "locator": "https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens",
+          "summary": "PUT .../branches/{branch}/protection requires 'Administration' repository permission = write for a fine-grained PAT."
+        },
+        {
+          "label": "Terraform GitHub provider branch_protection_v3 (mirrors GH reusable-workflow check-name format)",
+          "locator": "https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch_protection_v3",
+          "summary": "Required-check context 'usual value is the job name. ... For workflows that use reusable workflows, the pattern is <caller job> / <reusable job>. This can extend multiple levels.' Matrix appends matrix values."
+        },
+        {
+          "label": "actions/runner issue #1917 — reusable workflow required checks behavior",
+          "locator": "https://github.com/actions/runner/issues/1917",
+          "summary": "Community + maintainer thread: required status checks for reusable workflows surface as composite names; on: pull_request required for checks to register on PR; aggregator/summary-job workaround widely used."
+        }
+      ],
+      "architecture_assessment": "The proposed standard largely HOLDS UP against GitHub's documented behavior, with two mandatory design corrections.\n\nQ1 CROSS-REPO COMPOSITE — CONFIRMED. A workflow in repo A can reference a composite action in repo B directly via 'uses: ownerB/repoB/.github/actions/<name>@<ref>'. ref may be a tag, branch, or full commit SHA (SHA recommended for supply-chain pinning). GitHub fetches the action by repo+path+ref; you do NOT manually checkout repo B for the action itself to resolve (the legacy PAT-checkout pattern is only needed when org access is not configured). Visibility: public works freely; private/internal repo B requires org-level 'allow access from outside repositories / Actions components' to be enabled — otherwise you fall back to actions/checkout with a PAT/GitHub App + relative 'uses: ./path'. The default GITHUB_TOKEN does NOT grant cross-repo read to arbitrary private repos; built-in private/internal action access is governed by org Actions settings, not by GITHUB_TOKEN scope. NOTE: docs are explicit that the action DIRECTORY is what is referenced; I did NOT find a single canonical doc sentence stating 'only the action subdirectory, not the whole repo, is checked out' — treat the precise on-disk checkout extent as UNCLEAR/implementation detail, but functionally the reference resolves to the action at that path.\n\nQ2 REUSABLE-WORKFLOW CHECK NAMES — CONFIRMED. Status-check context for a job that calls a reusable workflow is '<callerJobName> / <reusableJobName>' and nests multiple levels for chained reusable workflows; matrix combinations append matrix values. Branch-protection required contexts must list these composite names exactly. This is the #1 fragility: renaming a job in the reusable security workflow OR in the caller silently breaks the required-context string and can block or (worse) un-gate merges. GitHub's own tip: keep job names unique across workflows.\n\nQ3 SINGLE-SUMMARY-CHECK — CONFIRMED as the documented/idiomatic pattern. A final 'summary' job with `if: always()` + `needs: [all-upstream-jobs]`, then explicitly fail on needed results. Use needs.<job>.result (success|failure|cancelled|skipped). Correct fail logic must treat failure AND cancelled (and usually skipped, unless intentionally optional) as failing — do NOT rely on `success()`/`failure()` alone because `always()` makes the job run regardless. Known-good shape:\n  summary:\n    if: ${{ always() }}\n    needs: [semgrep, osv, gitleaks, trivy]\n    runs-on: ubuntu-latest\n    steps:\n      - run: |\n          results='${{ join(needs.*.result, ' ') }}'\n          for r in $results; do\n            if [ \"$r\" != \"success\" ] && [ \"$r\" != \"skipped\" ]; then\n              echo \"A required job did not succeed: $results\"; exit 1; fi\n          done\nMake ONLY this summary job the required branch-protection context.\n\nQ4 CROSS-WORKFLOW needs — CONFIRMED: NO. `needs` is intra-workflow only (needs context references job_ids within the same workflow run; allowed expression contexts are github + needs). A job in app-CI.yml CANNOT `needs:` a job defined in a separately-triggered security.yml. IMPLICATION (critical): you cannot fold a SEPARATELY-DEFINED/independently-triggered security workflow under the app-CI summary via needs. To aggregate under one summary you MUST call the security workflow as a REUSABLE WORKFLOW job inside the app CI workflow (uses: org/repo/.github/workflows/security.yml@ref) so it becomes a job in the SAME run and the summary job can `needs:` it. A standalone on: pull_request security workflow produces its OWN separate check contexts and cannot be summarized by the app workflow.\n\nQ5 DEPENDABOT — CONFIRMED for reusable-workflow pins; PARTIALLY CONFIRMED for composites. github-actions ecosystem (directory '/') updates action refs in .github/workflows/*.yml INCLUDING reusable-workflow 'uses: owner/repo/.github/workflows/x.yml@tag' pins and cross-repo composite 'uses: owner/repo/.github/actions/x@tag' pins referenced FROM workflow files. UNCLEAR/likely-gap: whether Dependabot bumps `uses:` pins INSIDE a composite action.yml that lives in another repo — that requires Dependabot configured in repo B itself scanning its action.yml; I did not find docs confirming github-actions ecosystem recurses into nested composite action.yml of EXTERNAL repos from the caller. Action: enable a github-actions Dependabot config in the shared-actions repo (repo B) too, not only in app repos.\n\nQ6 BRANCH-PROTECTION API AUTH — CONFIRMED. PUT /repos/{owner}/{repo}/branches/{branch}/protection requires repo admin/owner. Classic PAT: 'repo' scope on a user with admin. Fine-grained PAT: 'Administration' repository permission = write. The default Actions GITHUB_TOKEN does NOT suffice in the general case — it is scoped to the running repo and cannot reliably set branch protection across org repos, and even in-repo admin-level protection mutation typically needs an elevated token (PAT or GitHub App installation token with Administration: write). For a branch-protection-as-code script running in CI across many repos, use a GitHub App (Administration: write) or an org-admin fine-grained PAT, NOT GITHUB_TOKEN.",
+      "validation": {
+        "status": "caution",
+        "blockers": [
+          "Q4: A separately-defined/independently-triggered security workflow CANNOT be aggregated under the app-CI summary via needs. It must be invoked as a reusable-workflow JOB inside the app CI workflow, or it forms its own independent required check.",
+          "Q6: GITHUB_TOKEN does not suffice for branch-protection-as-code; requires GitHub App (Administration: write) or org-admin PAT."
+        ],
+        "notes": "Two assumptions, if present in the proposed standard, are CONTRADICTED and must change (Q4 aggregation mechanism, Q6 token). Cross-repo composite (Q1), summary gate (Q3), reusable-check naming (Q2), and Dependabot (Q5) are confirmed, with Q5 composite-internal recursion and Q1 exact-checkout-extent flagged UNCLEAR. Required-context string fragility (Q2) is the main operational risk."
+      },
+      "recommendation": "Adopt the standard with these corrections: (1) Make the security gate a REUSABLE WORKFLOW (on: workflow_call) and CALL it as a job inside each app's CI workflow, so a single `if: always()` summary job can `needs:` it — do not run security as a standalone independently-triggered workflow if you want it under one summary gate. (2) Set ONLY the summary job as the required branch-protection context; have the summary fail on any needs.*.result not in {success, skipped}, explicitly covering failure AND cancelled. (3) Pin all cross-repo composites and reusable-workflow uses to full commit SHAs and enable Dependabot github-actions (directory '/') in BOTH app repos and the shared-actions/shared-workflows repo. (4) For private/internal shared-actions repo, enable org-level Actions access so 'uses: org/repo/.github/actions/x@sha' resolves without PAT-checkout. (5) Run branch-protection-as-code with a GitHub App (Administration: write) or org-admin fine-grained PAT, never GITHUB_TOKEN. (6) Freeze job names in the reusable security workflow as part of the contract — renaming silently breaks required-context strings.",
+      "follow_ups": [
+        "UNCLEAR: exact on-disk checkout extent for cross-repo composite (whole repo vs action subdir) — verify empirically in a pilot run if it matters for size/secrets.",
+        "UNCLEAR: whether Dependabot github-actions recurses into nested `uses:` inside an EXTERNAL composite action.yml from the caller repo — mitigate by configuring Dependabot in the shared-actions repo itself.",
+        "Consider GitHub Rulesets (org-level) instead of legacy per-repo branch protection for the as-code gate; rulesets centralize required-check enforcement across many repos and reduce per-repo PUT drift.",
+        "Validate that the security reusable workflow runs on on: workflow_call AND that check contexts register on PR runs (community reports checks only register reliably when the run is PR-triggered)."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "addSharperflowCiStandard",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:org-ruleset-ci-gate-design-validation"
+      },
+      "agent": "adv-researcher",
+      "topic": "Validate org-wide GitHub Actions CI standard design (org ruleset JSON, enforce-for-admins, ruleset/classic coexistence, strict checks, summary-gate, SHA pinning, design risks)",
+      "sources": [
+        {
+          "label": "GitHub REST API — rules for orgs (POST /orgs/{org}/rulesets)",
+          "locator": "https://docs.github.com/en/rest/orgs/rules",
+          "summary": "Canonical request body. Conditions for org rulesets use repository_name (with include/exclude/protected) paired with ref_name. required_status_checks rule item key is 'context' with optional 'integration_id'; strict_required_status_checks_policy is the strict flag. pull_request parameters include required_approving_review_count, dismiss_stale_reviews_on_push, require_code_owner_review, require_last_push_approval, required_review_thread_resolution, allowed_merge_methods."
+        },
+        {
+          "label": "GitHub REST API — rules for repos (~DEFAULT_BRANCH sentinel)",
+          "locator": "https://docs.github.com/en/enterprise-server@3.21/rest/repos/rules",
+          "summary": "ref_name.include doc text: 'Also accepts ~DEFAULT_BRANCH to include the default branch or ~ALL to include all branches.' Confirms ~DEFAULT_BRANCH is the correct sentinel."
+        },
+        {
+          "label": "About rulesets — rule layering / coexistence",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets",
+          "summary": "'rulesets also layer with protection rules targeting the same branch... Where multiple different versions of the same rule exist, the result is that the most restrictive version of the rule applies.' Confirms classic branch protection AND rulesets both evaluate, most-restrictive-wins."
+        },
+        {
+          "label": "Available rules for rulesets — strict vs loose status checks",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets",
+          "summary": "Strict = 'Require branches to be up to date before merging' checked → topic branch must be up to date with base before merging. Maps to strict_required_status_checks_policy:true. Also: required reviewers approvals can be 0; 'Requiring zero approvals means the team will be added for visibility, but does not need to approve.'"
+        },
+        {
+          "label": "Creating rulesets for a repository — bypass / enforcement",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository",
+          "summary": "Bypass access is granted only to actors explicitly added to the bypass list (repo admins, org owners, etc. are ELIGIBLE but must be added). Active = enforced on creation. Implication: empty bypass_actors ⇒ no actor (including admins/owners) can bypass."
+        },
+        {
+          "label": "GitHub Changelog — Dependabot updates version comments",
+          "locator": "https://github.blog/changelog/2022-10-31-dependabot-now-updates-comments-in-github-actions-workflows-referencing-action-versions/",
+          "summary": "'Dependabot will now update the semver version in comments when updating Actions workflows with a commit SHA version.' Confirms github-actions ecosystem bumps SHA pins AND trailing version comments."
+        },
+        {
+          "label": "Jake Wharton — fan-in to a single required Action",
+          "locator": "https://jakewharton.com/fan-in-to-a-single-required-github-action/",
+          "summary": "Quotes GitHub docs: 'A job that is skipped will report its status as Success. It will not prevent a pull request from merging, even if it is a required check.' Canonical fan-in gate uses if: !cancelled() + a step that fails on failure/cancelled in toJSON(needs.*.result)."
+        },
+        {
+          "label": "actions/runner #2356 and #1540 — needs.* includes indirect deps in job-level if",
+          "locator": "https://github.com/actions/runner/issues/2356",
+          "summary": "GitHub maintainer confirmation: job-level if evaluation of needs.* pulls in BOTH direct and indirect (transitive) dependencies, so contains(needs.*.result, ...) can match upstream jobs not in the gate's own needs list. Affects gate correctness if intermediate jobs exist."
+        }
+      ],
+      "architecture_assessment": "Design is ~90% correct against authoritative GitHub docs. Two field-shape corrections required before implementation: (1) org-ruleset conditions MUST pair repository_name with ref_name (repository_name.include is valid for org rulesets; repository_id/repository_property are the documented alternatives) — confirmed valid as designed. (2) The summary-gate expression contract has a real expression-context pitfall: needs.* in a job-level if includes transitive deps, and skipped-job-as-success requires the gate to run under !cancelled()/always() and explicitly fail on failure AND cancelled. The pull_request required_approving_review_count:0 is documented and legal (visibility-only). enforce-for-admins via empty bypass_actors is correct. Ruleset+classic coexistence is most-restrictive-wins, so stale classic required-check contexts must be removed. ~DEFAULT_BRANCH and context/integration_id keys are confirmed correct. SHA pinning cross-repo + Dependabot comment bumping confirmed.",
+      "validation": {
+        "status": "caution",
+        "blockers": [],
+        "notes": "No hard CONFLICT. CAUTION: (a) verify the summary-gate fails on BOTH 'failure' and 'cancelled' and runs under !cancelled() (or always()); be aware needs.* in job-level if pulls transitive deps. (b) Remove stale classic required-status-check contexts when the ruleset adds the real check, else most-restrictive aggregation keeps the dead context required and blocks merges. (c) required_approving_review_count:0 means the pull_request rule still requires a PR but zero approvals — confirm that matches intent. (d) Uniform context name 'Sharperflow CI Gate' must be the exact job/check name emitted in every repo or the required check never reports and PRs are stuck pending."
+      },
+      "recommendation": "Proceed with the org-ruleset JSON as designed with these corrections: keep conditions.repository_name.include + conditions.ref_name.include=['~DEFAULT_BRANCH'] (both required, valid); keep required_status_checks item {context:'Sharperflow CI Gate'} (+ optional integration_id to lock the source App); keep strict_required_status_checks_policy:true (= branch-up-to-date). Set enforcement:'active' with bypass_actors:[] for full admin/owner enforcement (add an emergency break-glass bypass actor only if ops require it). Harden the summary gate: if: ${{ !cancelled() }}, then a step that exits 1 if toJSON(needs.*.result) contains failure or cancelled; pass on success/skipped; ensure the gate's needs list is exactly the leaf jobs (mind transitive needs.* in job-level if). Decommission stale classic required-check contexts on the same branches. Pin the composite action cross-repo by full 40-char commit SHA with a trailing '# vX.Y.Z' comment and enable Dependabot github-actions ecosystem.",
+      "follow_ups": [
+        "PACKET DEFECT (non-fatal): TASK_SCOPE/IN_SCOPE/OUT_OF_SCOPE/DONE_WHEN/STOP_WHEN/VERIFICATION anchors absent from orchestrator packet; proceeded with prompt scope, did not infer identity anchors (change_id/workdir/attempt were present and used verbatim).",
+        "Confirm the exact check/job name string emitted by the reusable workflow equals 'Sharperflow CI Gate' in every consuming repo (required-status-check matching is by string).",
+        "Decide whether to register the CI GitHub App as integration_id on the required_status_checks item to prevent any write-capable actor from spoofing the status.",
+        "Audit each target repo for residual classic branch-protection required contexts before activating the ruleset (most-restrictive aggregation will otherwise wedge merges)."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "addSharperflowCiStandard",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/addSharperflowCiStandard",
+      "scope": {
+        "kind": "change",
+        "scope_key": "review:acceptance"
+      },
+      "agent": "adv-reviewer",
+      "phase": "review",
+      "verdict": "READY",
+      "blocking_findings": [],
+      "nonblocking_findings": [],
+      "changes_made": [
+        {
+          "file": "ROADMAP.md",
+          "summary": "Fixed the Sharperflow CI Standard link from missing root-relative ci-standard.md to docs/ci-standard.md so ROADMAP.md points at the normative contract it references.",
+          "verification": "Reran actionlint, shellcheck scripts/apply-ruleset.sh, ruleset JSON assertions, and actual workflow uses-pin scan; all passed."
+        }
+      ],
+      "wisdom_candidates": [
+        {
+          "type": "gotcha",
+          "content": "For floating-pin checks in docs, scan actual workflow references such as `uses: ...@(main|v0)` rather than all prose; normative text may legitimately mention forbidden refs like `@main` or `@v0`."
+        }
+      ],
+      "verification": {
+        "tests_run": [
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "shellcheck scripts/apply-ruleset.sh",
+          "python3 ruleset JSON parse/assertions for target/enforcement/bypass/ref/repo/rules/status-check context",
+          "rg actual workflow uses floating pins: `uses:\\s+.*@(main|v0)([^0-9A-Za-z_]|$)` in examples docs README.md ROADMAP.md"
+        ],
+        "results": "pass",
+        "evidence": "actionlint: exit 0, no findings. shellcheck: exit 0, no findings. Ruleset assertions: `ruleset assertions passed`. Floating uses-pin scan: `no floating uses pins in examples/docs/readme/roadmap`. Broad prose grep surfaced only normative/documentary mentions of forbidden refs, not actual workflow `uses:` pins."
+      },
+      "scope_drift": null,
+      "risks": [
+        "Review did not apply the org ruleset to GitHub; contract only required source artifacts and apply script, and privileged org mutation stays orchestrator/runbook-owned."
+      ],
+      "required_main_agent_actions": [
+        "Review and commit the small ROADMAP.md link fix with the rest of change/addSharperflowCiStandard before acceptance."
+      ],
+      "consumer_warnings": []
+    }
+  ],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-05T15:50:43.569Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved proposal with 'approve'. Standard authored here; security gate promoted pilot->permanent+required; cross-repo composites + branch-protection-as-code + summary-gate contract. Apps conform via Changes B/C.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/proposal.md",
+        "content_hash": "20f5de2c55155b188e32e5b1c1cfd00576eca7ac13fefff3f5a6f034662002f8",
+        "non_whitespace_chars": 4936,
+        "checked_at": "2026-06-05T15:41:28.425Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-05T15:58:55.063Z",
+      "completed_by": "user",
+      "approval_evidence": "Agreement approved by user ('approve'); contract minted (16 items, standard rigor). Key sourced findings: security gate must be workflow_call job folded into app CI (needs is intra-workflow only); summary-gate if:always() fail on result not in {success,skipped}; reusable check names are caller/reusable-job (freeze names, require summary only); cross-repo composites work, SHA-pin + version comment reconciles LBP+supply-chain; branch protection via org Rulesets (verify schema in design); no required human review (web 1-review drops); protection auth = App/org-admin PAT not GITHUB_TOKEN.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/agreement.md",
+        "content_hash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "non_whitespace_chars": 2797,
+        "checked_at": "2026-06-05T15:41:28.426Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-05T16:03:38.916Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design persisted with independent validator (adv-researcher) verdict CAUTION (no CONFLICT). 4 corrections folded inline: hardened summary gate (!cancelled(), leaf-only needs, fail on failure+cancelled, skipped=Success noted); decommission stale classic required contexts when ruleset takes over (B/C step); lock 'Sharperflow CI Gate' exact check-name as frozen contract; add integration_id + protected:true ruleset hardening. Org ruleset JSON shape confirmed against REST docs (~DEFAULT_BRANCH sentinel, repository_name.include valid, context key, strict_required_status_checks_policy). No user-value tradeoff or contract-compromise → no design checkpoint required.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/design.md",
+        "content_hash": "dc271ab1fd126f8d58fe45ea4552632c5d9281c7efc9137466befebcb304990a",
+        "non_whitespace_chars": 7266,
+        "checked_at": "2026-06-05T15:41:28.427Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-05T16:05:04.702Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved 6-task prep contract with 'approve'. Coverage AC1-AC6 mapped; constraints carried on respecting tasks. Inline execution (docs/yaml/script, context-bound). Live org-ruleset apply documented as privileged runbook, out of automated scope."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-05T16:13:23.913Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 6 tasks done + checkpointed. Deliverables: docs/ci-standard.md (normative), .github/actions/setup-python-uv + setup-bun-node composites, rulesets/sharperflow-app-protection.json + scripts/apply-ruleset.sh, doc reframes (README/ROADMAP/pilot docs/examples → permanent+required, SHA pins, fold-into-CI), extended self-test. Local verification: actionlint PASS, presence PASS, ruleset JSON assertions PASS, shellcheck PASS. SHAs resolved via gh (not guessed); examples use real actions/checkout@df4cb1c #v6."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-05T16:19:27.749Z",
+      "completed_by": "user",
+      "approval_evidence": "User accepted with 'approve'. Contract matrix 16/16 pass; independent reviewer READY (broken-link fix committed). Executive summary persisted. Verification: actionlint/shellcheck/ruleset-JSON all pass.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/executive-summary.md",
+        "content_hash": "323e8a91f1313a7f1b88a7c25af5ea229b65e15ee18d7730e4909a12ca80386c",
+        "non_whitespace_chars": 1206,
+        "checked_at": "2026-06-05T15:41:28.428Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "adhoc"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+      "approvedAt": "2026-06-05T15:58:48.156Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** `docs/ci-standard.md` unambiguously defines: pipeline shape (setup → fast checks → tests+coverage → build → security → summary); the single stable summary required-check contract + always-report rule (`if: always()`, fail on `needs.*.result ∉ {success,skipped}`); security gate as a permanent+required `workflow_call` job folded into app CI (standalone pilot retired); pin policy = SHA + trailing `# vX.Y.Z` comment, Dependabot-bumped; protection via org Rulesets; no required human review; frozen reusable security job names as contract.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** `.github/actions/setup-python-uv` composite (inputs: python-version, sync-args, cache-key), self-contained + cross-repo consumable; `actionlint` clean.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** `.github/actions/setup-bun-node` composite (inputs: node-version, bun-version, install-mode); `actionlint` clean.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** Org Ruleset policy delivered as version-controlled JSON/config + documented apply procedure (`gh api .../rulesets`), implementing: required = summary check only, strict up-to-date, enforce-for-admins, no required reviews, targeting Sharperflow app repos; idempotent/dry-run guidance; auth model documented (GitHub App `Administration: write` or org-admin PAT — not `GITHUB_TOKEN`). Exact ruleset schema verified in design.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5** `README.md`/`ROADMAP.md`/`docs/pokeedge-backend-pilot.md`/`docs/pokeedge-web-next.md`/examples reframed: security gate permanent+required (not pilot); pilot→required milestones closed as promoted; SHA-pin caller guidance documented.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC6",
+        "kind": "acceptance_criterion",
+        "text": "**AC6** Self-test asserts presence of `ci-standard.md` + both composites + ruleset config; `actionlint` + `shellcheck` clean on changed files.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "No GHAS/Sonar/hosted-dashboard dependency in the standard.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Heartbeat/notify stay optional (no required per-app secrets).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "App-specific gates (coverage, migration-chain, contract, complexity) stay app-owned, not in the org standard.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "Composite actions self-contained; no app-specific assumptions.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C5",
+        "kind": "constraint",
+        "text": "Additive — do not break existing reusable gate consumers.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C6",
+        "kind": "constraint",
+        "text": "Reusable security job names frozen as a published contract.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "No monolithic single-reusable-CI-workflow that blocks repo-specific jobs.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "No `GITHUB_TOKEN` for branch-protection/ruleset application (use App / org-admin PAT).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "No floating tag/branch pins in the standard's own examples (SHA + version comment).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "No app conformance work in this change (that is Changes B/C).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-05T16:17:55.339Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "docs/ci-standard.md authored: pipeline shape, single 'Sharperflow CI Gate' summary contract, always-report rule, hardened summary snippet (!cancelled/leaf-needs/fail-on-failure+cancelled/skipped=Success), permanent+required security gate folded as workflow_call job, SHA+comment pin policy, org-ruleset protection+coexistence+auth, optional conventions, app-owned gates, conformance checklist."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": ".github/actions/setup-python-uv/action.yml composite (inputs python-version/sync-args/cache-key-suffix); setup-python@SHA #v6, setup-uv@SHA #v7; actionlint PASS."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": ".github/actions/setup-bun-node/action.yml composite (inputs node-version/bun-version/install-mode + invalid-mode guard); setup-bun@SHA #v2, setup-node@SHA #v6; actionlint PASS."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "rulesets/sharperflow-app-protection.json (active, bypass_actors[], ~DEFAULT_BRANCH, repository_name protected:true, pull_request review_count 0, required_status_checks strict + context 'Sharperflow CI Gate', non_fast_forward) — JSON assertions PASS; scripts/apply-ruleset.sh idempotent GET-by-name→PUT/POST + --dry-run, auth=admin:org/App documented — shellcheck PASS."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "README/ROADMAP/pokeedge-backend-pilot/pokeedge-web-next reframed permanent+required; examples converted to conformant ci.yml (security folded under summary, SHA-pinned, real actions/checkout@df4cb1c #v6); old pilot examples removed; floating-pin scan clean (only the prose rule mentions @v0/@main); reviewer-fixed ROADMAP link committed."
+        },
+        {
+          "contractId": "AC6",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "self-test.yml extended: presence of ci-standard.md + both composites + ruleset + script, ruleset JSON validation, shellcheck job; checkout SHA-pinned. Local sweep: actionlint PASS, 13 presence PASS, ruleset JSON PASS, shellcheck PASS."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No GHAS/Sonar/hosted-dashboard introduced; standard references only existing reusable gates (Semgrep/Bandit/OSV/Gitleaks/Trivy)."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Heartbeat/notify documented as optional in §7; no required per-app secrets added."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "App-owned gates (coverage, migration-chain, contract, complexity) explicitly excluded from the standard in 'App-owned gates' section."
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Composites take only generic inputs; no app-specific paths/assumptions baked in."
+        },
+        {
+          "contractId": "C5",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Additive: existing python/javascript/container security-gate workflows unchanged; new composites/ruleset/docs do not alter consumer behavior."
+        },
+        {
+          "contractId": "C6",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Reusable security job names documented as a frozen published contract in §3."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No monolithic single-reusable-CI-workflow mandated; standard ships a documented summary-job pattern + composites, apps keep repo-specific jobs."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "apply-ruleset.sh header + ci-standard §6 require admin:org PAT / App Administration:write; explicitly state GITHUB_TOKEN insufficient."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "All org uses: in examples/docs SHA-pinned with version comments; grep for @main/@v0 finds only the prose rule, no actual floating pins."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No app conformance implemented here; pokeedge change reframed as separate Change B (blocked on A); web is Change C."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** `docs/ci-standard.md` unambiguously defines: pipeline shape (setup → fast checks → tests+coverage → build → security → summary); the single stable summary required-check contract + always-report rule (`if: always()`, fail on `needs.*.result ∉ {success,skipped}`); security gate as a permanent+required `workflow_call` job folded into app CI (standalone pilot retired); pin policy = SHA + trailing `# vX.Y.Z` comment, Dependabot-bumped; protection via org Rulesets; no required human review; frozen reusable security job names as contract.",
+    "**AC2** `.github/actions/setup-python-uv` composite (inputs: python-version, sync-args, cache-key), self-contained + cross-repo consumable; `actionlint` clean.",
+    "**AC3** `.github/actions/setup-bun-node` composite (inputs: node-version, bun-version, install-mode); `actionlint` clean.",
+    "**AC4** Org Ruleset policy delivered as version-controlled JSON/config + documented apply procedure (`gh api .../rulesets`), implementing: required = summary check only, strict up-to-date, enforce-for-admins, no required reviews, targeting Sharperflow app repos; idempotent/dry-run guidance; auth model documented (GitHub App `Administration: write` or org-admin PAT — not `GITHUB_TOKEN`). Exact ruleset schema verified in design.",
+    "**AC5** `README.md`/`ROADMAP.md`/`docs/pokeedge-backend-pilot.md`/`docs/pokeedge-web-next.md`/examples reframed: security gate permanent+required (not pilot); pilot→required milestones closed as promoted; SHA-pin caller guidance documented.",
+    "**AC6** Self-test asserts presence of `ci-standard.md` + both composites + ruleset config; `actionlint` + `shellcheck` clean on changed files."
+  ],
+  "documents": {
+    "proposal": "## Problem\nSharper Flow app repos each shaped CI independently → ghost/fake required checks (pokeedge), build-only required set (web), duplicated/non-authoritative security scanning, copy-pasted setup, and ad-hoc branch-protection. The reusable security gate runs only as a **non-required \"pilot\"** in both apps despite being green — authoritative in neither. `sharperflow-security-gates` ships reusable gates but defines no overall CI standard. We want to deliberately SHAPE the intended CI configuration for Sharper Flow apps — including promoting the security gate from pilot to permanent/required — then conform the apps to it.\n\n## Chosen direction\nAuthor the **Sharperflow CI Standard** in this repo as the org source of truth: a documented contract plus reusable building blocks. The reusable security gate is declared **permanent and required** (pilot framing retired org-wide). Apps conform to the standard (Changes B/C) instead of inventing per-repo CI.\n\n## Scope\n1. **`docs/ci-standard.md`** — the canonical contract:\n   - Pipeline shape: setup → fast checks (fmt/lint/types) → tests+coverage → build → security gate → one stable summary gate.\n   - **Required-check contract**: a single org-standard summary check name per repo; branch protection requires only that name (drift-proof, scriptable). Internal jobs may change freely.\n   - **Always-report rule**: the summary emits a terminal status even when work is path-skipped (always-running `changes`/filter job, never a workflow-level `paths:` gate on the required job) — kills the \"stuck Expected\" → admin-bypass failure mode.\n   - **Security gate is permanent + required**: the reusable Sharperflow gate is folded into the app CI workflow as a first-class job under the summary, immutable pin (LBP-visible), Dependabot-bumped; no inline duplication. \"Pilot\" status and \"measure before making required\" hedging are retired. Repo-specific custom rules allowed as a thin local job.\n   - **Branch-protection policy**: `strict=true`, `enforce_admins=true`, required=summary-only, reviews policy stated explicitly.\n   - **Conventions**: Dependabot grouping, conventional-commit gate, heartbeat/notify, version-pin policy.\n2. **Org-shared composite actions** (cross-repo consumable via `uses: Sharper-Flow/sharperflow-security-gates/.github/actions/<name>@<ref>`):\n   - `.github/actions/setup-python-uv` (inputs: python-version, sync-args, cache-key).\n   - `.github/actions/setup-bun-node` (inputs: node-version, bun-version, install-mode).\n3. **`scripts/apply-branch-protection.sh`** — gh-api script that applies the standard protection policy to a target repo identically/repeatably (idempotent, `--dry-run`).\n4. **Summary-gate pattern reference** — documented standard snippet (true cross-workflow aggregation isn't reusable in Actions, so ship the in-workflow summary-job pattern as the convention) and decide whether to also provide a thin reusable status-aggregation workflow.\n5. **Retire pilot framing in this repo's docs**: `README.md`, `ROADMAP.md`, `docs/pokeedge-backend-pilot.md`, `docs/pokeedge-web-next.md`, examples — reframe the security gate as the permanent org standard; close the \"make required after pilot\" milestones as \"promoted to permanent.\"\n6. **Self-test/actionlint**: composites + script pass `actionlint`/`shellcheck`; self-test asserts new building blocks exist.\n\n## Success criteria\n- `docs/ci-standard.md` defines the required-check contract, pipeline shape, **permanent+required security-gate policy**, branch-protection policy, and pin/Dependabot conventions unambiguously enough for B/C to implement without per-repo invention.\n- The standard explicitly declares the reusable security gate permanent and required (not a pilot); README/ROADMAP/example docs no longer frame it as a pilot and the pilot→required milestones are closed as promoted.\n- Org-shared `setup-python-uv` and `setup-bun-node` composites exist and are referenceable cross-repo; `actionlint` clean.\n- `scripts/apply-branch-protection.sh` applies the standard policy via gh api (idempotent + `--dry-run`); `shellcheck` clean.\n- Self-test passes including presence checks for the new building blocks.\n\n## Avoidances\n- No GHAS / SonarCloud / hosted-dashboard dependency in the standard.\n- Don't make the standard require per-app secrets/infra (heartbeat/notify stay optional).\n- Don't fold app-specific gates (coverage thresholds, migration-chain, contract gate) into the org standard — those stay app-owned.\n- Don't break existing reusable gate consumers (promotion to permanent is additive at the package level; apps adopt required status in B/C, not retroactively here).\n- Don't mandate a heavyweight single reusable CI workflow that prevents repos from having repo-specific jobs.\n\n## Discovery agenda\n- Verify cross-repo composite-action ref semantics (`org/repo/.github/actions/x@tag` resolution, pinning, and Dependabot tracking of cross-repo composite consumers).\n- Decide summary-gate delivery: documented pattern only vs. also a thin reusable status-aggregation workflow; confirm Actions limits on cross-workflow `needs`.\n- Decide branch-protection script auth model (PAT vs `GITHUB_TOKEN` scope for `gh api .../protection`) and whether it runs locally, in CI, or both. (Resolves the proposal clarify warning about auth: it refers to the gh-api/branch-protection auth model, not app authn.)\n- Confirm whether \"permanent + required security gate\" should also retire the standalone `security-gates-pilot.yml` filename in apps (B/C) in favor of folding into app CI, or keep a stable `security-gates.yml` workflow name.\n- Confirm the standard's required-summary name and whether it is identical across repos or namespaced.",
+    "problemStatement": "Sharper Flow has multiple app repos (PokeEdge backend, PokeEdge Web, and more to come) whose CI was each shaped independently. Evidence from the two flagship repos shows the cost of having no deliberate org CI standard:\n\n- pokeedge `main` branch protection requires a ghost check (`Run Constitution §7.4 Quality Chain`, emitted by no job) and a fake gate (`Review dependency changes`, `continue-on-error`), with `enforce_admins=false` masking it. Required-check config drifts from emitted job names whenever job topology changes.\n- pokeedge-web `main` requires only `Build` — lint, types, format, API-drift, contract-sync, and unit tests are NOT required; the app can merge red as long as it compiles. `strict=false`.\n- Security scanning is inconsistent: pokeedge duplicates OSV+Semgrep inline AND runs the reusable Sharperflow gate as a non-required pilot; web runs the reusable JS gate as a non-required pilot only. The org reusable gate exists and is green in both pilots but is authoritative in neither.\n- Setup steps are copy-pasted (pokeedge python+uv ×5; web bun+node ×4) with no shared composite; every repo re-solves caching and runner setup.\n- Branch-protection policy (strict, enforce_admins, required set, reviews) is set ad hoc per repo with no repeatable source of truth.\n\n`sharperflow-security-gates` is the org CI source of truth but currently only ships reusable security gates. There is no authored, deliberate CI standard that defines the target shape every Sharper Flow app conforms to. Without it, each repo's CI keeps drifting and each new repo reinvents the pipeline. The org needs to SHAPE the intended CI configuration — required-check contract, pipeline shape, security-source policy, shared setup building blocks, branch-protection-as-code, and pin/Dependabot conventions — not retrofit whatever each app already has.",
+    "agreement": "# Agreement — addSharperflowCiStandard\n\n## Objectives\n1. Author `docs/ci-standard.md` as the canonical Sharperflow app CI contract.\n2. Ship cross-repo composite building blocks + a SHA-pin consumption convention.\n3. Standard mandates: single always-report summary required check; security gate permanent+required as a `workflow_call` job folded into app CI; org Rulesets protection; no required human review.\n4. Deliver the org Ruleset policy as version-controlled config + apply procedure.\n5. Retire \"pilot\" framing in this repo's docs/examples.\n\n## Acceptance Criteria\n- **AC1** `docs/ci-standard.md` unambiguously defines: pipeline shape (setup → fast checks → tests+coverage → build → security → summary); the single stable summary required-check contract + always-report rule (`if: always()`, fail on `needs.*.result ∉ {success,skipped}`); security gate as a permanent+required `workflow_call` job folded into app CI (standalone pilot retired); pin policy = SHA + trailing `# vX.Y.Z` comment, Dependabot-bumped; protection via org Rulesets; no required human review; frozen reusable security job names as contract.\n- **AC2** `.github/actions/setup-python-uv` composite (inputs: python-version, sync-args, cache-key), self-contained + cross-repo consumable; `actionlint` clean.\n- **AC3** `.github/actions/setup-bun-node` composite (inputs: node-version, bun-version, install-mode); `actionlint` clean.\n- **AC4** Org Ruleset policy delivered as version-controlled JSON/config + documented apply procedure (`gh api .../rulesets`), implementing: required = summary check only, strict up-to-date, enforce-for-admins, no required reviews, targeting Sharperflow app repos; idempotent/dry-run guidance; auth model documented (GitHub App `Administration: write` or org-admin PAT — not `GITHUB_TOKEN`). Exact ruleset schema verified in design.\n- **AC5** `README.md`/`ROADMAP.md`/`docs/pokeedge-backend-pilot.md`/`docs/pokeedge-web-next.md`/examples reframed: security gate permanent+required (not pilot); pilot→required milestones closed as promoted; SHA-pin caller guidance documented.\n- **AC6** Self-test asserts presence of `ci-standard.md` + both composites + ruleset config; `actionlint` + `shellcheck` clean on changed files.\n\n## Constraints\n- No GHAS/Sonar/hosted-dashboard dependency in the standard.\n- Heartbeat/notify stay optional (no required per-app secrets).\n- App-specific gates (coverage, migration-chain, contract, complexity) stay app-owned, not in the org standard.\n- Composite actions self-contained; no app-specific assumptions.\n- Additive — do not break existing reusable gate consumers.\n- Reusable security job names frozen as a published contract.\n\n## Avoidances\n- No monolithic single-reusable-CI-workflow that blocks repo-specific jobs.\n- No `GITHUB_TOKEN` for branch-protection/ruleset application (use App / org-admin PAT).\n- No floating tag/branch pins in the standard's own examples (SHA + version comment).\n- No app conformance work in this change (that is Changes B/C).\n\n## Verify in design\n- Exact org Ruleset schema for `required_status_checks` + repo targeting + admin enforcement.\n- Coexistence of org Rulesets with any residual classic branch protection on target repos.",
+    "design": "# Design — addSharperflowCiStandard\n\n> Validator verdict: CAUTION (no CONFLICT). Corrections folded: hardened summary gate (`!cancelled()`, leaf-only `needs`, fail on failure+cancelled), org-ruleset JSON shape confirmed + `integration_id`/`protected` added, classic-context decommission reinforced, uniform check-name locked as contract.\n\n## Architecture overview\nDelivered as **documentation + reusable building blocks** in `sharperflow-security-gates` (org source of truth). No app CI is rewritten here (that is Changes B/C).\n\nDeliverables:\n1. `docs/ci-standard.md` — normative contract.\n2. `.github/actions/setup-python-uv/action.yml` + `.github/actions/setup-bun-node/action.yml` — cross-repo composites.\n3. `rulesets/sharperflow-app-protection.json` (org Ruleset) + `scripts/apply-ruleset.sh` apply procedure.\n4. Doc reframes (README, ROADMAP, pilot docs, examples) retiring \"pilot\".\n5. `self-test.yml` presence + lint assertions.\n\n## 1. ci-standard.md (normative)\n- **Pipeline shape**: `setup → fast-checks (fmt/lint/types) → tests+coverage → build → security → summary`.\n- **Required-check contract**: protection requires exactly ONE stable context: **`Sharperflow CI Gate`** (the summary job). Uniform name across ALL Sharperflow apps so one org ruleset targets all repos. The name string is a FROZEN contract — every consuming repo MUST emit a job whose check name is exactly `Sharperflow CI Gate`, else the required check never reports and PRs wedge on \"Expected\".\n- **Always-report rule**: the summary workflow triggers on every PR to the protected branch with NO workflow-level `paths:` gate. Path scoping uses an always-running `changes` job (`dorny/paths-filter`) feeding downstream `if:`; the summary still runs/reports. Prevents \"stuck Expected\" → admin-bypass.\n- **Summary-gate canonical form** (hardened per validator — `!cancelled()`, leaf-only `needs`, fail on failure AND cancelled; note a SKIPPED job reports Success so the explicit loop is required):\n  ```yaml\n  ci-gate:\n    name: Sharperflow CI Gate          # FROZEN required-context string\n    if: ${{ !cancelled() }}\n    needs: [fast-checks, test, build, security]   # leaf jobs ONLY (needs.* is transitive in job-level if)\n    runs-on: ubuntu-latest\n    steps:\n      - name: Verify required jobs\n        env:\n          RESULTS: ${{ join(needs.*.result, ',') }}\n        run: |\n          echo \"needs results: $RESULTS\"\n          IFS=','\n          for r in $RESULTS; do\n            case \"$r\" in\n              success|skipped) ;;\n              *) echo \"::error::required job result=$r\"; exit 1 ;;\n            esac\n          done\n  ```\n- **Security gate = permanent + required**: existing `python-security-gate.yml` / `javascript-security-gate.yml` (`workflow_call`). Apps invoke it as a JOB named `security` inside their CI workflow (`uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/<lang>-security-gate.yml@<sha>`) and list it in the summary `needs`. Standalone `security-gates-pilot.yml` retired in apps (B/C). Reason: `needs:` is intra-workflow only.\n- **Frozen reusable job names**: the security gate's internal job names are published API; renaming changes `caller / reusable-job` contexts. Apps require only the summary, but reusable job names stay stable.\n- **Pin policy (LBP + supply-chain)**: every `uses:` of an org reusable/composite pins a full commit SHA with a trailing `# vX.Y.Z` comment. SHA = immutable supply-chain; comment = readable version (LBP). Dependabot `github-actions` updates BOTH the SHA and the comment. No floating tags/branches.\n- **Branch protection**: org Rulesets (§4). No required human review. Strict up-to-date on. Enforced for admins (empty bypass).\n- **Optional conventions**: conventional-commit gate, heartbeat/notify documented OPTIONAL (no required per-app secrets).\n- **App-owned (NOT standardized)**: coverage thresholds, migration-chain, contract gate, complexity — apps add these as extra jobs under their summary `needs`.\n\n## 2. Composite actions\n`/.github/actions/setup-python-uv/action.yml` (`runs.using: composite`):\n- inputs: `python-version` (default \"3.13\"), `sync-args` (default \"--all-groups\"), `cache-key-suffix` (optional).\n- steps: `actions/setup-python@<sha>` → `astral-sh/setup-uv@<sha>` (enable-cache) → `uv sync ${{ inputs.sync-args }}`. Pins internal actions SHA+comment.\n\n`/.github/actions/setup-bun-node/action.yml`:\n- inputs: `node-version` (default \"24\"), `bun-version` (optional), `install-mode` (default \"ci\" → `bun ci`; `install` → `bun install`).\n- steps: `oven-sh/setup-bun@<sha>` → `actions/setup-node@<sha>` → install per mode.\n\nConsumption: `uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@<sha> # vX.Y.Z`. Same-org private access works (Team plan).\n\n## 3. Pin convention reference\nWorked SHA+comment example; note Dependabot maintains both fields.\n\n## 4. Org Ruleset policy\n`rulesets/sharperflow-app-protection.json` (validator-confirmed shape; `bypass_actors: []` ⇒ admins enforced; `protected:true` blocks rename-evasion; optional `integration_id` locks the check to the CI App to prevent status spoofing):\n```json\n{\n  \"name\": \"Sharperflow App Protection\",\n  \"target\": \"branch\",\n  \"enforcement\": \"active\",\n  \"bypass_actors\": [],\n  \"conditions\": {\n    \"ref_name\": { \"include\": [\"~DEFAULT_BRANCH\"], \"exclude\": [] },\n    \"repository_name\": { \"include\": [\"PokeEdge\", \"PokeEdge-Web\"], \"exclude\": [], \"protected\": true }\n  },\n  \"rules\": [\n    { \"type\": \"pull_request\",\n      \"parameters\": { \"required_approving_review_count\": 0,\n                      \"dismiss_stale_reviews_on_push\": false,\n                      \"require_code_owner_review\": false,\n                      \"require_last_push_approval\": false,\n                      \"required_review_thread_resolution\": false } },\n    { \"type\": \"required_status_checks\",\n      \"parameters\": { \"strict_required_status_checks_policy\": true,\n                      \"required_status_checks\": [ { \"context\": \"Sharperflow CI Gate\" } ] } },\n    { \"type\": \"non_fast_forward\" }\n  ]\n}\n```\n- `required_status_checks[].integration_id: <ci_app_id>` is documented as a recommended hardening to bind the check to GitHub Actions (App id 15368 observed on pokeedge) — left as a documented option since app id can vary.\n- Apply: `scripts/apply-ruleset.sh` wraps `gh api orgs/Sharper-Flow/rulesets` — idempotent (GET by name → PUT update vs POST create) + `--dry-run`.\n- **Auth**: needs `admin:org` (org-admin PAT) or GitHub App `Administration: write` (+ org administration). NOT `GITHUB_TOKEN`. Verified: local token lacks `admin:org`, so live apply is an explicit privileged op, out of this change's automated scope (AC4 = config + procedure, not live org mutation). App permission-string exactness flagged as a runbook follow-up.\n- **Coexistence (validator-confirmed most-restrictive-wins)**: rulesets layer on top of classic protection. Stale classic required contexts (e.g. ghost `Run Constitution §7.4 Quality Chain`) survive aggregation and wedge merges. → Changes B/C MUST remove classic required-status-check entries when the ruleset takes over. Documented as a B/C migration step.\n\n## 5. Doc reframes\n- `README.md`: reframe gates/reusable section permanent+required; add SHA-pin guidance, composite usage, ruleset pointer.\n- `ROADMAP.md`: close \"first stable release\" + \"make required after pilot\" milestones as promoted; record the standard.\n- `docs/pokeedge-backend-pilot.md` / `docs/pokeedge-web-next.md`: relabel \"pilot\" → \"conformance to standard\"; keep history note.\n- `examples/*`: fold-into-CI + SHA pins.\n\n## 6. Self-test\nExtend `self-test.yml`: presence of `docs/ci-standard.md`, both composite `action.yml`, `rulesets/sharperflow-app-protection.json`, `scripts/apply-ruleset.sh`; run `actionlint` (workflows + composites) and `shellcheck` (scripts).\n\n## Verification strategy\n- `actionlint` on all workflows + composite action.yml.\n- `shellcheck` on `scripts/apply-ruleset.sh`.\n- Org ruleset live `--dry-run` needs `admin:org` (unavailable locally) → validate JSON against REST schema + ship a manual apply runbook. Live apply uses a privileged token.\n\n## Required corrections folded (validator)\n1. Hardened summary gate: `if: ${{ !cancelled() }}`, fail on failure+cancelled, leaf-only `needs` (transitive `needs.*` hazard), skipped=Success noted.\n2. Decommission stale classic required contexts on targeted branches (most-restrictive aggregation).\n3. Lock `Sharperflow CI Gate` exact check-name string in every consumer.\n4. Recommend `integration_id` on the required check to prevent status spoofing; `protected:true` targeting to resist repo-rename evasion.",
+    "executiveSummary": "Authored the Sharperflow CI Standard in sharperflow-security-gates (the org CI source of truth), shaping — not retrofitting — how Sharper Flow apps configure CI. Delivered docs/ci-standard.md as the normative contract: a single stable required check (`Sharperflow CI Gate`) that aggregates all jobs with a hardened always-report summary (`!cancelled()`, leaf-only needs, fail on failure/cancelled), the security gate promoted from non-required pilot to a permanent+required workflow_call job folded into app CI, an SHA+version-comment pin policy reconciling supply-chain immutability with LBP readability, and org-Ruleset branch protection (required=summary only, strict, enforced for admins, no required human review). Shipped two cross-repo composite actions (setup-python-uv, setup-bun-node), a version-controlled org ruleset JSON + idempotent apply-ruleset.sh (admin:org/App auth, --dry-run), reframed all repo docs/examples off the pilot framing to conformant fold-into-CI patterns, and extended self-test with presence + ruleset-JSON + shellcheck checks. Verification: actionlint, shellcheck, and ruleset JSON assertions all pass; action SHAs resolved via gh (not guessed). Independent reviewer verdict READY (one broken-link fix committed); contract matrix 16/16. App conformance is intentionally deferred to Change B (pokeedge, blocked on this) and Change C (pokeedge-web).",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-05T16:17:55.339Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1** `docs/ci-standard.md` unambiguously defines: pipeline shape (setup → fast checks → tests+coverage → build → security → summary); the single stable summary required-check contract + always-report rule (`if: always()`, fail on `needs.*.result ∉ {success,skipped}`); security gate as a permanent+required `workflow_call` job folded into app CI (standalone pilot retired); pin policy = SHA + trailing `# vX.Y.Z` comment, Dependabot-bumped; protection via org Rulesets; no required human review; frozen reusable security job names as contract. | pass | docs/ci-standard.md authored: pipeline shape, single 'Sharperflow CI Gate' summary contract, always-report rule, hardened summary snippet (!cancelled/leaf-needs/fail-on-failure+cancelled/skipped=Success), permanent+required security gate folded as workflow_call job, SHA+comment pin policy, org-ruleset protection+coexistence+auth, optional conventions, app-owned gates, conformance checklist. |\n| AC2 | acceptance_criterion | **AC2** `.github/actions/setup-python-uv` composite (inputs: python-version, sync-args, cache-key), self-contained + cross-repo consumable; `actionlint` clean. | pass | .github/actions/setup-python-uv/action.yml composite (inputs python-version/sync-args/cache-key-suffix); setup-python@SHA #v6, setup-uv@SHA #v7; actionlint PASS. |\n| AC3 | acceptance_criterion | **AC3** `.github/actions/setup-bun-node` composite (inputs: node-version, bun-version, install-mode); `actionlint` clean. | pass | .github/actions/setup-bun-node/action.yml composite (inputs node-version/bun-version/install-mode + invalid-mode guard); setup-bun@SHA #v2, setup-node@SHA #v6; actionlint PASS. |\n| AC4 | acceptance_criterion | **AC4** Org Ruleset policy delivered as version-controlled JSON/config + documented apply procedure (`gh api .../rulesets`), implementing: required = summary check only, strict up-to-date, enforce-for-admins, no required reviews, targeting Sharperflow app repos; idempotent/dry-run guidance; auth model documented (GitHub App `Administration: write` or org-admin PAT — not `GITHUB_TOKEN`). Exact ruleset schema verified in design. | pass | rulesets/sharperflow-app-protection.json (active, bypass_actors[], ~DEFAULT_BRANCH, repository_name protected:true, pull_request review_count 0, required_status_checks strict + context 'Sharperflow CI Gate', non_fast_forward) — JSON assertions PASS; scripts/apply-ruleset.sh idempotent GET-by-name→PUT/POST + --dry-run, auth=admin:org/App documented — shellcheck PASS. |\n| AC5 | acceptance_criterion | **AC5** `README.md`/`ROADMAP.md`/`docs/pokeedge-backend-pilot.md`/`docs/pokeedge-web-next.md`/examples reframed: security gate permanent+required (not pilot); pilot→required milestones closed as promoted; SHA-pin caller guidance documented. | pass | README/ROADMAP/pokeedge-backend-pilot/pokeedge-web-next reframed permanent+required; examples converted to conformant ci.yml (security folded under summary, SHA-pinned, real actions/checkout@df4cb1c #v6); old pilot examples removed; floating-pin scan clean (only the prose rule mentions @v0/@main); reviewer-fixed ROADMAP link committed. |\n| AC6 | acceptance_criterion | **AC6** Self-test asserts presence of `ci-standard.md` + both composites + ruleset config; `actionlint` + `shellcheck` clean on changed files. | pass | self-test.yml extended: presence of ci-standard.md + both composites + ruleset + script, ruleset JSON validation, shellcheck job; checkout SHA-pinned. Local sweep: actionlint PASS, 13 presence PASS, ruleset JSON PASS, shellcheck PASS. |\n| C1 | constraint | No GHAS/Sonar/hosted-dashboard dependency in the standard. | respected | No GHAS/Sonar/hosted-dashboard introduced; standard references only existing reusable gates (Semgrep/Bandit/OSV/Gitleaks/Trivy). |\n| C2 | constraint | Heartbeat/notify stay optional (no required per-app secrets). | respected | Heartbeat/notify documented as optional in §7; no required per-app secrets added. |\n| C3 | constraint | App-specific gates (coverage, migration-chain, contract, complexity) stay app-owned, not in the org standard. | respected | App-owned gates (coverage, migration-chain, contract, complexity) explicitly excluded from the standard in 'App-owned gates' section. |\n| C4 | constraint | Composite actions self-contained; no app-specific assumptions. | respected | Composites take only generic inputs; no app-specific paths/assumptions baked in. |\n| C5 | constraint | Additive — do not break existing reusable gate consumers. | respected | Additive: existing python/javascript/container security-gate workflows unchanged; new composites/ruleset/docs do not alter consumer behavior. |\n| C6 | constraint | Reusable security job names frozen as a published contract. | respected | Reusable security job names documented as a frozen published contract in §3. |\n| DONT1 | avoidance | No monolithic single-reusable-CI-workflow that blocks repo-specific jobs. | respected | No monolithic single-reusable-CI-workflow mandated; standard ships a documented summary-job pattern + composites, apps keep repo-specific jobs. |\n| DONT2 | avoidance | No `GITHUB_TOKEN` for branch-protection/ruleset application (use App / org-admin PAT). | respected | apply-ruleset.sh header + ci-standard §6 require admin:org PAT / App Administration:write; explicitly state GITHUB_TOKEN insufficient. |\n| DONT3 | avoidance | No floating tag/branch pins in the standard's own examples (SHA + version comment). | respected | All org uses: in examples/docs SHA-pinned with version comments; grep for @main/@v0 finds only the prose rule, no actual floating pins. |\n| DONT4 | avoidance | No app conformance work in this change (that is Changes B/C). | respected | No app conformance implemented here; pokeedge change reframed as separate Change B (blocked on A); web is Change C. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/proposal.md",
+      "updatedAt": "2026-06-05T15:42:05.770Z",
+      "contentHash": "20f5de2c55155b188e32e5b1c1cfd00576eca7ac13fefff3f5a6f034662002f8"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-05T15:41:28.447Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/agreement.md",
+      "updatedAt": "2026-06-05T15:58:43.932Z",
+      "contentHash": "efb9ea6d74bc515a2b7638e680323ba28a57f3855a628d103a3517193a38728e"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/design.md",
+      "updatedAt": "2026-06-05T16:03:32.321Z",
+      "contentHash": "dc271ab1fd126f8d58fe45ea4552632c5d9281c7efc9137466befebcb304990a"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/addSharperflowCiStandard/executive-summary.md",
+      "updatedAt": "2026-06-05T16:18:09.817Z",
+      "contentHash": "323e8a91f1313a7f1b88a7c25af5ea229b65e15ee18d7730e4909a12ca80386c"
+    }
+  },
+  "lastSignalAt": "2026-06-05T16:19:27.749Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "worktree_auto_managed": true
+}
