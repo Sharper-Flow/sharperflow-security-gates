@@ -30,7 +30,8 @@ Apps invoke it as a job inside their CI workflow and require only the single
 ## Reusable workflows
 
 Pin with a full commit SHA plus a `# vX.Y.Z` version comment (see
-[Pin policy](docs/ci-standard.md#5-pin-policy-lbp--supply-chain)). Dependabot
+[Pin policy](docs/ci-standard.md#5-pin-policy-lbp--supply-chain)). Renovate
+(org-wide, see [Dependency updates](docs/ci-standard.md#dependency-updates-renovate))
 maintains both.
 
 ```yaml

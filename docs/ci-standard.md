@@ -206,10 +206,42 @@ uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-
 - The **`# vX.Y.Z` comment** keeps the human-readable version local and visible
   (Locality of Behavior): the reader sees exactly which release is running without
   resolving the SHA.
-- **Dependabot maintains both** — the `github-actions` ecosystem bumps the SHA and
-  updates the trailing version comment.
+- **Renovate maintains both** — `helpers:pinGitHubActionDigests` bumps the SHA and
+  keeps the trailing version comment current (see
+  [Dependency updates](#dependency-updates-renovate)).
 - **No floating tags or branches** (`@v0`, `@main`) in app workflows or in this
   repo's examples.
+
+---
+
+## Dependency updates (Renovate)
+
+Sharper Flow uses **Renovate** (one updater, org-wide) — **not Dependabot** — for
+automated dependency updates across all ecosystems (uv via `pep621`, bun, pnpm,
+`github-actions`, docker). One tool covers them all, with the best bun support and
+a built-in supply-chain cooldown.
+
+- **Shared preset.** All repos extend one org preset:
+  ```json
+  { "extends": ["github>Sharper-Flow/sharperflow-security-gates"] }
+  ```
+  The preset lives at `default.json` in this repo. Repo-specific tweaks go in each
+  repo's `renovate.json`.
+- **Cooldown (supply-chain).** `minimumReleaseAge: "7 days"` — newly-published
+  versions wait 7 days before Renovate installs them (most malicious releases are
+  pulled within an hour). **Security fixes are exempt** (they skip the line).
+- **Automerge is gated on the required check.** Renovate uses GitHub native
+  auto-merge (`platformAutomerge`), so a PR merges only after the repo's required
+  check passes (`Sharperflow CI Gate` for apps; `self-test` here). Automerge is
+  scoped to **dev-dependency patch/minor + github-actions/docker digests +
+  lockfile maintenance**. **Major updates and production dependencies never
+  automerge** — they require a human PR.
+- **One updater per repo.** Do not run Dependabot alongside Renovate (duplicate
+  PRs + lockfile conflicts). Renovate ignores Dependabot PRs; remove
+  `.github/dependabot.yml` after Renovate onboarding.
+- **Install.** Renovate is the Mend GitHub App (org-admin install); each repo gets
+  a one-time onboarding PR. Enable "Allow auto-merge" in repo settings for the
+  automerge policy to take effect.
 
 ---
 
@@ -229,7 +261,7 @@ Policy:
   via [tag-only release](#release-automation) (the default); a bypass actor is an
   escape hatch only for repos that must push release commits to `main`.
 - **No required human review**: `required_approving_review_count: 0`. Automated
-  gates are the merge authority; this keeps Dependabot auto-merge clean. PRs are
+  gates are the merge authority; this keeps Renovate auto-merge clean. PRs are
   still required (no direct pushes to the default branch).
 - **Targeting**: by `repository_name.include` with `protected: true` (resists
   rename-evasion). Switch to a `repository_property` custom property as the app set
@@ -376,8 +408,8 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
       SHA-pinned with version comment; no standalone pilot, no inline duplicate
       scanners.
 - [ ] Setup via the shared `setup-python-uv` / `setup-bun-node` composite.
-- [ ] All org `uses:` SHA-pinned + version comment; Dependabot `github-actions`
-      enabled.
+- [ ] All org `uses:` SHA-pinned + version comment; Renovate enabled
+      (`renovate.json` extends the org preset).
 - [ ] Org ruleset applied (`apply-ruleset.sh --no-release-bypass` for the default
       tag-only release; `--bypass-app-id <App ID>` only if the repo must push
       release commits to `main`); classic required-check contexts removed.
