@@ -1,0 +1,552 @@
+{
+  "id": "fixRulesetReleaseBypass",
+  "title": "Fix ruleset release bypass",
+  "status": "archived",
+  "created_at": "2026-06-06T04:40:11.969Z",
+  "tasks": [
+    {
+      "id": "tk-a84256914f3e",
+      "title": "Add release-bypass injection to scripts/apply-ruleset.sh",
+      "type": "code",
+      "section": "Apply script",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-06T17:06:34.832Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1",
+          "AC2"
+        ],
+        "verifies": [
+          "AC1"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "DONT2"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T17:45:05.314Z",
+      "verification": "apply-ruleset.sh: added --bypass-app-id (env RELEASE_BYPASS_APP_ID)/--bypass-team-id/--bypass-user-id/--no-release-bypass; python-composed bypass_actors injected into a mktemp payload (trap-cleaned), gh api --input that payload; refuse-without-bypass guard exits 2. Verified: shellcheck PASS; bash -n ok; no-bypass→exit 2 w/ message; --bypass-app-id 123456 --dry-run injects {actor_id:123456,actor_type:Integration,bypass_mode:always}; --no-release-bypass keeps []; committed ruleset JSON unchanged (bypass_actors []).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "scripts/apply-ruleset.sh"
+      ],
+      "touched_files": [
+        "scripts/apply-ruleset.sh"
+      ],
+      "checkpointSha": "3aba7317e56d0e564b9faa7e08b9f46dd4c64d31",
+      "completedAt": "2026-06-06T17:46:31.907Z",
+      "completed_at": "2026-06-06T17:46:31.907Z"
+    },
+    {
+      "id": "tk-1758649dc925",
+      "title": "Document release-automation ruleset bypass in ci-standard.md + runbook note",
+      "type": "code",
+      "section": "Docs",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-06T17:06:37.760Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC3",
+          "AC4"
+        ],
+        "respects": [
+          "C2",
+          "DONT1",
+          "DONT3"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T17:46:38.357Z",
+      "verification": "ci-standard.md: added '### Release automation & ruleset bypass' under §6 (semantic-release pushes to default branch → release identity MUST be bypass actor; recommended GitHub App + create-github-app-token + {Integration, always}; App ID not install/client id; contents:write; tags unaffected; cloud Team/User fallback; committed bypass_actors stays []; apply-script refuses without bypass). Updated the 'enforced for admins' bullet to note the single release exception. Added 2 conformance-checklist items (apply with --bypass-app-id; verify a release post-apply). README: added release-automation blockquote pointer. Markdown only; verified by self-test docs-check in T3.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "README.md",
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "README.md",
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "e18aee778e0b9e366e9b6c630236bfbcaab23b0c",
+      "completedAt": "2026-06-06T17:47:49.574Z",
+      "completed_at": "2026-06-06T17:47:49.574Z"
+    },
+    {
+      "id": "tk-04718f911f9d",
+      "title": "Verification sweep",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-06T17:06:49.140Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-a84256914f3e"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-1758649dc925"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC5"
+        ],
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T17:48:00.792Z",
+      "verification": "Full sweep PASS: shellcheck (apply-ruleset.sh), actionlint (workflows), ruleset JSON base assertions (bypass_actors still []), self-test presence checks, guard exit 2 on no-bypass, --bypass-app-id 999 --dry-run injects {actor_id:999,Integration,always}, doc anchor 'Release automation & ruleset bypass' present. No file changes in this verification task (T1/T2 committed).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e18aee778e0b9e366e9b6c630236bfbcaab23b0c",
+      "completedAt": "2026-06-06T17:48:14.330Z",
+      "completed_at": "2026-06-06T17:48:14.330Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "fixRulesetReleaseBypass",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:ruleset-release-bypass"
+      },
+      "agent": "adv-researcher",
+      "topic": "GitHub org ruleset bypass for semantic-release push to protected main",
+      "sources": [
+        {
+          "label": "REST API endpoints for rules (org) - GitHub Docs",
+          "locator": "https://docs.github.com/rest/orgs/rules",
+          "summary": "Canonical bypass_actors schema: actor_id (int|null), actor_type enum Integration/OrganizationAdmin/RepositoryRole/Team/DeployKey/User, bypass_mode enum always/pull_request/exempt default always. actor_id required for Integration/RepositoryRole/Team/User; ignored for OrganizationAdmin; null for DeployKey."
+        },
+        {
+          "label": "About rulesets - GitHub Docs",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets",
+          "summary": "Bypass = 'allow certain users to bypass the rules in the ruleset' (entire ruleset, not per-rule). Branch/tag rulesets target branches OR tags separately."
+        },
+        {
+          "label": "Creating rulesets for repos in your org - GitHub Docs",
+          "locator": "https://docs.github.com/en/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization",
+          "summary": "Bypass-eligible: repo admins, org owners, enterprise owners, maintain/write role, teams (excl secret), GitHub Apps, Dependabot. Branch and tag rulesets are created separately (New branch ruleset / New tag ruleset)."
+        },
+        {
+          "label": "REST rules: bypass_mode semantics",
+          "locator": "https://docs.github.com/rest/orgs/rules",
+          "summary": "pull_request = actor can only bypass rules on pull requests, applicable only to branch rulesets; not for DeployKey. Implies always is required for direct pushes."
+        },
+        {
+          "label": "actions/create-github-app-token README",
+          "locator": "https://github.com/actions/create-github-app-token",
+          "summary": "Mints installation access token via POST /app/installations/{id}/access_tokens; pushes attributed to app's bot user (app-slug[bot]); push actor is the GitHub App (Integration)."
+        },
+        {
+          "label": "Triggering a workflow - GitHub Docs",
+          "locator": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow",
+          "summary": "Events triggered by repo GITHUB_TOKEN do NOT create new workflow runs (push using GITHUB_TOKEN won't trigger push-triggered workflows). App installation token / PAT does trigger downstream workflows."
+        },
+        {
+          "label": "github_organization_ruleset Terraform / repository_ruleset",
+          "locator": "https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_ruleset",
+          "summary": "Confirms for Integration actor_type, actor_id is the GitHub App ID (from Get an App API). Example: actor_id=13473, actor_type=Integration, bypass_mode=always."
+        }
+      ],
+      "architecture_assessment": "The proposed fix — dedicated GitHub App + actions/create-github-app-token + an org ruleset bypass_actors entry of {actor_type: Integration, actor_id: <app id>, bypass_mode: always} — is the canonical, GitHub-documented pattern for letting an automated bot push release commits past a require-PR + required-status-check ruleset. A bypass actor bypasses the ENTIRE ruleset (all rules including pull_request and required_status_checks), so the direct push and the tag escape the gate. bypass_mode always is REQUIRED because pull_request mode only permits bypass via PR merges, not direct pushes. App-token pushes are attributed to the App (Integration), so the Integration bypass entry matches. App-token pushes also DO trigger downstream workflows (unlike GITHUB_TOKEN), which is desirable if the release commit should re-run anything. A bare User is NOT a supported org-ruleset bypass actor type in the authoritative GHES enum (Integration/OrganizationAdmin/RepositoryRole/Team/DeployKey/EnterpriseOwner/EnterpriseRole); a machine-user PAT must bypass via Team membership, RepositoryRole, or OrganizationAdmin. A target:branch ruleset does not govern tag pushes, so semantic-release tag creation is unaffected regardless.",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "All 7 questions resolved against docs.github.com. One nuance: actor_type 'User' appears in FPT/GHEC REST docs but is omitted from the GHES 3.21 enum; for a portable org ruleset, do not rely on bare User. Gotcha to verify operationally: a required_status_checks rule with 'strict' (require up-to-date) is also bypassed by always, but confirm the App actually has contents:write and the ruleset edit is saved with the correct numeric App id (App id, not installation id, not client id)."
+      },
+      "recommendation": "Adopt dedicated GitHub App + create-github-app-token + Integration bypass_mode:always. Use the App's numeric App ID as actor_id. Keep bypass scoped to one dedicated release App, not the broad GitHub Actions app. Verify the App id is the application id (gh api /app or app settings), grant contents:write, and confirm the org ruleset bypass list saved the Integration entry.",
+      "follow_ups": [
+        "Confirm whether the org uses GHES (User actor_type unsupported) vs GHEC/FPT before considering any User-based bypass.",
+        "Verify the App's numeric App ID via gh api /app with the App JWT, not the installation id or client id.",
+        "If downstream CI must re-run on the release commit, app-token push will trigger it; ensure [skip ci] in the commit message still suppresses unwanted re-runs as intended."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixRulesetReleaseBypass",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/fixRulesetReleaseBypass",
+      "scope": {
+        "kind": "change",
+        "scope_key": "review:acceptance"
+      },
+      "agent": "adv-reviewer",
+      "phase": "review",
+      "verdict": "READY",
+      "blocking_findings": [],
+      "nonblocking_findings": [],
+      "changes_made": [],
+      "wisdom_candidates": [],
+      "verification": {
+        "tests_run": [
+          "test -e preflight for scripts/apply-ruleset.sh, rulesets/sharperflow-app-protection.json, docs/ci-standard.md, README.md",
+          "shellcheck scripts/apply-ruleset.sh",
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "python3 parse + assert rulesets/sharperflow-app-protection.json bypass_actors == [] and required context == [\"Sharperflow CI Gate\"]",
+          "python3 behavior assertions: bash scripts/apply-ruleset.sh --dry-run exits 2 without bypass; --bypass-app-id 123 --dry-run injects [{actor_id:123, actor_type:Integration, bypass_mode:always}]; --no-release-bypass --dry-run preserves bypass_actors []",
+          "python3 hardcode scan excluding .git/.adv for release App ID, token/PAT, or private secret literal",
+          "self-test docs/config required-file checks + ruleset JSON assertions from .github/workflows/self-test.yml",
+          "git status --short"
+        ],
+        "results": "pass",
+        "evidence": "All required review checks passed. shellcheck and actionlint produced no output and exit 0. Ruleset JSON parses with bypass_actors=[] and required status context exactly ['Sharperflow CI Gate']. Dry-run behavior matches contract: no bypass exits 2 before apply, app id 123 injects Integration/always actor, opt-out keeps empty bypass_actors. Self-test docs/config checks pass. Hardcode scan found no real release App ID/token/PAT/private secret literal outside .git/.adv. Worktree remained clean after review."
+      },
+      "scope_drift": null,
+      "risks": [],
+      "required_main_agent_actions": [],
+      "consumer_warnings": []
+    }
+  ],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-06T04:41:08.059Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved with 'approve'. Direction: grant release automation a scoped ruleset bypass; prefer dedicated GitHub App (token-at-runtime, Integration bypass) over long-lived PAT. RELEASE_TOKEN identity ambiguous (commit metadata bot-attributed); App path makes it moot. Fix the shipped Change A standard (ruleset JSON + ci-standard.md + apply script) so applying the ruleset doesn't break semantic-release on PokeEdge/PokeEdge-Web.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/proposal.md",
+        "content_hash": "63ddf90f3023310ad4306cfed57eef6013b1bbcab1d49aa00fdc3615b0c1eb66",
+        "non_whitespace_chars": 2808,
+        "checked_at": "2026-06-06T04:40:12.002Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-06T17:05:30.452Z",
+      "completed_by": "user",
+      "approval_evidence": "Agreement approved ('approve'); contract minted (11 items). Research VALIDATED App path: bypass entry {actor_id:<AppID>, actor_type:Integration, bypass_mode:always}; always required for direct pushes; bypass skips entire ruleset; create-github-app-token push = Integration match + triggers downstream workflows (unlike GITHUB_TOKEN); tags unaffected (target:branch); cloud User fallback available but not portable. Gotchas: App ID not install/client id; App needs contents:write; org ruleset editable by org owners only. Design: apply-script injects bypass at apply time + refuses without it; ruleset JSON stays bypass_actors:[] base; doc section added.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/agreement.md",
+        "content_hash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "non_whitespace_chars": 2190,
+        "checked_at": "2026-06-06T04:40:12.003Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-06T17:06:18.449Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design: apply-ruleset.sh injects release bypass at apply time (--bypass-app-id/RELEASE_BYPASS_APP_ID Integration always; team/user cloud fallbacks; --no-release-bypass escape; refuse-without-bypass guard exit 2), composed via python to temp payload. Ruleset JSON stays bypass_actors:[]. ci-standard.md gains 'Release automation & ruleset bypass' section (App + create-github-app-token + Integration always; App ID not install id; contents:write; tags unaffected). Runbook note: don't apply until bypass set; App/secrets/release.yml edits are consumer scope. self-test keeps bypass_actors==[] base assertion + guard check. External mechanics independently validated by adv-researcher in discovery (VALIDATED); no new external surfaces; no CONFLICT → no design checkpoint.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/design.md",
+        "content_hash": "efb9660cb19626f99af700441946c8e3fd6d11662404f4b0163e19bf68dc03fe",
+        "non_whitespace_chars": 3915,
+        "checked_at": "2026-06-06T04:40:12.004Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-06T17:44:53.687Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved 3-task prep contract with 'approve'. T1 apply-script bypass injection (AC1,AC2), T2 docs (AC3,AC4), T3 verify (AC5). Native project, inline execution."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-06T17:48:39.663Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 3 tasks done + checkpointed. apply-ruleset.sh injects release bypass at apply time (--bypass-app-id/team/user, --no-release-bypass, refuse-without-bypass guard exit 2, python-composed payload); ruleset JSON unchanged (bypass_actors []); ci-standard.md 'Release automation & ruleset bypass' section + README pointer + checklist items. Verification: shellcheck, actionlint, ruleset JSON base, presence, guard exit 2, app-id injection, doc anchor — all PASS."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-06T18:00:31.742Z",
+      "completed_by": "user",
+      "approval_evidence": "User accepted with 'accept'. Contract 11/11 pass; reviewer READY (no findings). Executive summary persisted. Verification: shellcheck/actionlint/ruleset-JSON/guard/injection all pass.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/executive-summary.md",
+        "content_hash": "9dae007ab260d55fcdbbf5024bbfa93b6b92a3d31d674f0e12763b321c87b415",
+        "non_whitespace_chars": 1370,
+        "checked_at": "2026-06-06T04:40:12.005Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "user-flagged: org ruleset bypass_actors:[] blocks semantic-release direct-to-main push"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+      "approvedAt": "2026-06-06T17:05:23.899Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** `scripts/apply-ruleset.sh` composes the release bypass actor at apply time from explicit input (`--bypass-app-id` / `RELEASE_BYPASS_APP_ID` → `{actor_type:\"Integration\", bypass_mode:\"always\"}`; cloud fallback `--bypass-team-id` / `--bypass-user-id`). It REFUSES to apply without a release bypass unless `--no-release-bypass` is explicitly passed (prevents a release-breaking ruleset). `shellcheck` clean.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** `rulesets/sharperflow-app-protection.json` stays valid with base `bypass_actors: []`; the real bypass id is injected at apply time, never committed as a fake/placeholder id.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** `docs/ci-standard.md` gains a \"Release automation & ruleset bypass\" section: semantic-release pushes to `main` so the release identity MUST be a bypass actor; recommend a dedicated GitHub App + `actions/create-github-app-token` + Integration `bypass_mode:always`; show the entry shape; note App-ID (not installation/client id), App needs `contents:write`, cloud `User`/`Team` fallback, and that tag pushes are unaffected (`target:branch`).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** B/C runbook note: do NOT run `apply-ruleset.sh` until the release bypass is set; if adopting the App path, create the App + secrets + switch `release.yml` to `create-github-app-token` (consumer step).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5** self-test + `actionlint` + `shellcheck` green; ruleset JSON assertions updated to tolerate apply-time bypass injection.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "Do not weaken the required `Sharperflow CI Gate` for normal PRs.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Bypass scoped to release automation only — no broad/human/OrganizationAdmin-for-everyone bypass.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "No hardcoded secret, PAT, or real actor id committed to the repo.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not rely on bare `User` actor_type for portability (recommend App; document User/Team as cloud fallback).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not commit a literal placeholder actor id that would apply as-is.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "Do not edit pokeedge / pokeedge-web `release.yml` in this change (consumer/ops).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-06T17:51:38.718Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "apply-ruleset.sh: --bypass-app-id/RELEASE_BYPASS_APP_ID→Integration always; --bypass-team-id/--bypass-user-id cloud fallbacks; python-composed payload to mktemp (trap-cleaned); refuse-without-bypass guard exit 2 unless --no-release-bypass. Verified: shellcheck PASS; no-bypass→exit 2; --bypass-app-id 123 --dry-run injects {actor_id:123,Integration,always}."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "rulesets/sharperflow-app-protection.json unchanged: bypass_actors==[], required context==['Sharperflow CI Gate'], strict true. Real id injected only at apply time; no committed placeholder/fake id (hardcode scan clean)."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "ci-standard.md '### Release automation & ruleset bypass': semantic-release pushes to default branch → release identity MUST be bypass actor; recommends GitHub App + create-github-app-token + {Integration, always}; App ID not install/client id; contents:write; tags unaffected (target:branch); cloud Team/User fallback."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "Runbook guidance: ci-standard.md states committed bypass_actors stays [] and apply-script refuses without a bypass; README blockquote pointer added; 2 conformance-checklist items (apply with --bypass-app-id; verify a release post-apply). App/secret/release.yml wiring noted as consumer scope."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "shellcheck PASS, actionlint PASS, self-test docs/presence PASS, ruleset JSON base assertions PASS (bypass_actors==[]). Reviewer independently re-ran all and confirmed."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Required 'Sharperflow CI Gate' rule + normal PR gating unchanged; only apply-time bypass for the release identity added."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Bypass scoped to release automation (App/Team/User release identity); no broad/human/OrganizationAdmin-for-everyone bypass introduced."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No hardcoded secret/PAT/real actor id committed; ids supplied via flags/env at apply time (reviewer hardcode scan clean)."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "GitHub App path recommended as primary; bare User documented only as a non-portable cloud fallback, not relied upon."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No literal placeholder actor id committed; base bypass_actors stays [] and is composed at apply time."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Only sharperflow-security-gates files touched (apply-ruleset.sh, ci-standard.md, README.md); no pokeedge/pokeedge-web release.yml edits."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** `scripts/apply-ruleset.sh` composes the release bypass actor at apply time from explicit input (`--bypass-app-id` / `RELEASE_BYPASS_APP_ID` → `{actor_type:\"Integration\", bypass_mode:\"always\"}`; cloud fallback `--bypass-team-id` / `--bypass-user-id`). It REFUSES to apply without a release bypass unless `--no-release-bypass` is explicitly passed (prevents a release-breaking ruleset). `shellcheck` clean.",
+    "**AC2** `rulesets/sharperflow-app-protection.json` stays valid with base `bypass_actors: []`; the real bypass id is injected at apply time, never committed as a fake/placeholder id.",
+    "**AC3** `docs/ci-standard.md` gains a \"Release automation & ruleset bypass\" section: semantic-release pushes to `main` so the release identity MUST be a bypass actor; recommend a dedicated GitHub App + `actions/create-github-app-token` + Integration `bypass_mode:always`; show the entry shape; note App-ID (not installation/client id), App needs `contents:write`, cloud `User`/`Team` fallback, and that tag pushes are unaffected (`target:branch`).",
+    "**AC4** B/C runbook note: do NOT run `apply-ruleset.sh` until the release bypass is set; if adopting the App path, create the App + secrets + switch `release.yml` to `create-github-app-token` (consumer step).",
+    "**AC5** self-test + `actionlint` + `shellcheck` green; ruleset JSON assertions updated to tolerate apply-time bypass injection."
+  ],
+  "documents": {
+    "proposal": "## Problem\nThe shipped org ruleset (`bypass_actors: []` + require-PR + required `Sharperflow CI Gate`) would block semantic-release, which pushes `chore(release)` commits straight to `main` on both PokeEdge and PokeEdge-Web (auth = `RELEASE_TOKEN`). Releases would fail the moment `apply-ruleset.sh` runs. `RELEASE_TOKEN`'s push identity is ambiguous (commit metadata is bot-attributed; likely a long-lived PAT), and rulesets can only bypass Integration/Team/RepositoryRole/OrgAdmin/DeployKey actors — not an arbitrary user.\n\n## Chosen direction\nMake the standard's protection compatible with automated releases by granting the release automation an explicit, auditable ruleset bypass, and prefer the clean architecture (a dedicated release GitHub App minted at runtime) over a long-lived PAT.\n\n- **Preferred (architecture):** standardize release auth on a dedicated GitHub App; mint a short-lived token at runtime via `actions/create-github-app-token`; add that App as a single `Integration` bypass actor (`bypass_mode: always`) in the ruleset. Clean, org-uniform, no long-lived PAT, easy to express in rulesets.\n- **Minimal (compatible now):** keep `RELEASE_TOKEN`; express its bypass via the actor type it actually maps to (Integration if it is an App token; otherwise a dedicated RepositoryRole/Team the release machine-user holds). Determine the real identity in discovery.\n\n## Scope\n1. `rulesets/sharperflow-app-protection.json`: add a `bypass_actors` entry for the release identity (`bypass_mode: always`). Parameterize/comment the actor_id since it is org-specific.\n2. `docs/ci-standard.md`: add a \"Release automation & ruleset bypass\" section — semantic-release pushes to `main`, so the release identity MUST be a bypass actor; document the App-token-at-runtime recommended pattern and the bypass entry shape.\n3. `scripts/apply-ruleset.sh`: ensure bypass_actors round-trips on create/update; add a note that the actor id must be set before apply.\n4. Update `self-test` if the ruleset JSON assertions need to tolerate/validate the bypass entry.\n5. Note in B/C runbooks: do not apply the ruleset until the release bypass actor is set, or releases break.\n\n## Success criteria\n- Ruleset JSON includes a documented release bypass actor (or a clearly-marked placeholder + apply-time requirement) such that applying it does NOT break semantic-release on either repo.\n- `ci-standard.md` documents the release-automation exemption + recommended GitHub App pattern.\n- Self-test/actionlint/shellcheck stay green.\n\n## Avoidances\n- Do not weaken the required `Sharperflow CI Gate` for normal PRs.\n- Do not grant a broad/human bypass (no `OrganizationAdmin`-for-everyone); the bypass is scoped to the release automation only.\n- Do not hardcode a secret or a real PAT anywhere.\n\n## Discovery agenda\n- Definitively determine `RELEASE_TOKEN`'s push identity (ask the user / inspect org settings) — App vs machine-user PAT vs personal PAT.\n- Decide preferred vs minimal path (GitHub App token-at-runtime vs PAT-with-role bypass).\n- Confirm `bypass_mode` semantics (a bypass actor skips ALL ruleset rules) and that it covers both the PR-required and required-status-check rules for the release push.\n- Confirm tag pushes are unaffected (ruleset target is `branch`, not `tag`).",
+    "problemStatement": "Change A (`addSharperflowCiStandard`, shipped v0.3.2) ships `rulesets/sharperflow-app-protection.json` with `bypass_actors: []`, a `pull_request` rule (require PR before merging), and a required `Sharperflow CI Gate` status check on the default branch.\n\nBoth target apps release via semantic-release that PUSHES A COMMIT DIRECTLY TO `main`:\n- PokeEdge-Web: `cycjimmy/semantic-release-action` with `@semantic-release/git` (assets CHANGELOG.md/package.json/bun.lock; commit `chore(release): <v> [skip ci]`) + tag.\n- PokeEdge: `python-semantic-release` (push:main, version/CHANGELOG commit + tag).\nBoth authenticate with `secrets.RELEASE_TOKEN` (falls back to GITHUB_TOKEN).\n\nApplying the ruleset as-shipped would BREAK releases on both repos:\n- `pull_request` rule rejects direct pushes to `main`.\n- The release commit carries `[skip ci]`, so it never produces a `Sharperflow CI Gate` check → the required-status-check rule rejects the push.\n- `bypass_actors: []` grants no exemption.\n\nThis works today only because the apps' CLASSIC protection does not enable \"require a pull request before merging\", so direct pushes by the release token are allowed. The ruleset tightens exactly that, so the release automation must be granted a bypass.\n\nIdentity gap: release-commit metadata is bot-attributed (`github-actions[bot]` on PokeEdge, `semantic-release-bot` on PokeEdge-Web) and does NOT reveal the push-token identity. `RELEASE_TOKEN` is a stored long-lived secret (most likely a PAT), and org rulesets cannot bypass an arbitrary user directly — only Integration (App), Team, RepositoryRole, OrganizationAdmin, or DeployKey actors. So a robust fix must either pin the token to a bypass-expressible actor or migrate release auth to a dedicated GitHub App.",
+    "agreement": "# Agreement — fixRulesetReleaseBypass\n\nFixes the shipped Change A standard so applying the org ruleset does not break semantic-release (which pushes release commits directly to `main` on PokeEdge + PokeEdge-Web). Scope = standard mechanism + docs + guardrail in sharperflow-security-gates; App creation + release.yml edits are documented consumer/ops steps, not done here.\n\n## Acceptance Criteria\n- **AC1** `scripts/apply-ruleset.sh` composes the release bypass actor at apply time from explicit input (`--bypass-app-id` / `RELEASE_BYPASS_APP_ID` → `{actor_type:\"Integration\", bypass_mode:\"always\"}`; cloud fallback `--bypass-team-id` / `--bypass-user-id`). It REFUSES to apply without a release bypass unless `--no-release-bypass` is explicitly passed (prevents a release-breaking ruleset). `shellcheck` clean.\n- **AC2** `rulesets/sharperflow-app-protection.json` stays valid with base `bypass_actors: []`; the real bypass id is injected at apply time, never committed as a fake/placeholder id.\n- **AC3** `docs/ci-standard.md` gains a \"Release automation & ruleset bypass\" section: semantic-release pushes to `main` so the release identity MUST be a bypass actor; recommend a dedicated GitHub App + `actions/create-github-app-token` + Integration `bypass_mode:always`; show the entry shape; note App-ID (not installation/client id), App needs `contents:write`, cloud `User`/`Team` fallback, and that tag pushes are unaffected (`target:branch`).\n- **AC4** B/C runbook note: do NOT run `apply-ruleset.sh` until the release bypass is set; if adopting the App path, create the App + secrets + switch `release.yml` to `create-github-app-token` (consumer step).\n- **AC5** self-test + `actionlint` + `shellcheck` green; ruleset JSON assertions updated to tolerate apply-time bypass injection.\n\n## Constraints\n- Do not weaken the required `Sharperflow CI Gate` for normal PRs.\n- Bypass scoped to release automation only — no broad/human/OrganizationAdmin-for-everyone bypass.\n- No hardcoded secret, PAT, or real actor id committed to the repo.\n\n## Avoidances\n- Do not rely on bare `User` actor_type for portability (recommend App; document User/Team as cloud fallback).\n- Do not commit a literal placeholder actor id that would apply as-is.\n- Do not edit pokeedge / pokeedge-web `release.yml` in this change (consumer/ops).\n\n## Verify in design\n- Confirm `gh api -X PUT .../rulesets/{id}` round-trips `bypass_actors` on update.\n- Confirm the apply-script JSON composition (jq or python) stays shellcheck-clean and emits valid ruleset payload.",
+    "design": "# Design — fixRulesetReleaseBypass\n\nIndependent validation: the external GitHub mechanics this design relies on were authoritatively validated by adv-researcher during discovery (verdict VALIDATED) — bypass_actors schema, `bypass_mode:always` for direct pushes, App-token=Integration attribution, tags unaffected. This design introduces no new external-surface assumptions beyond those, so no separate design-phase validator spawn is required; no CONFLICT.\n\n## 1. `scripts/apply-ruleset.sh` — inject release bypass at apply time (AC1, AC2)\nThe committed ruleset JSON keeps `bypass_actors: []`. The script composes the bypass entry from explicit input and writes a derived payload before the `gh api` call.\n\nNew flags / env:\n- `--bypass-app-id <id>` or env `RELEASE_BYPASS_APP_ID` → `{actor_id:<id>, actor_type:\"Integration\", bypass_mode:\"always\"}` (recommended; GitHub App).\n- `--bypass-team-id <id>` → `{actor_id, actor_type:\"Team\", bypass_mode:\"always\"}` (cloud fallback).\n- `--bypass-user-id <id>` → `{actor_id, actor_type:\"User\", bypass_mode:\"always\"}` (cloud-only fallback; documented as non-portable).\n- `--no-release-bypass` → explicit ack to apply with empty bypass (escape hatch).\n\nGuard: if none of the bypass flags/env are set AND `--no-release-bypass` is absent → `exit 2` with an error explaining that applying without a release bypass will break semantic-release (pull_request + required-check rules block the release push).\n\nComposition: reuse `python3` (already used for name extraction) to load the JSON file, inject the composed `bypass_actors` array (when provided), and write a derived payload to a temp file (`mktemp`); `gh api -X $METHOD \"$ENDPOINT\" --input \"$payload\"`. Keeps `jq` out of the dependency set. `set -euo pipefail` retained; temp file `trap`-cleaned. shellcheck-clean (python lives in a single-quoted heredoc/`-c` string, opaque to shellcheck).\n\nMultiple bypass flags → compose multiple entries (array). Idempotent create/update path unchanged (GET-by-name → PUT/POST).\n\n## 2. `rulesets/sharperflow-app-protection.json` (AC2)\nUnchanged: `bypass_actors: []`. The base file never carries an org-specific id; the real id is supplied at apply time. A top-of-file note is not possible (strict JSON), so the requirement is documented in ci-standard.md + the script help.\n\n## 3. `docs/ci-standard.md` — \"Release automation & ruleset bypass\" (AC3)\nNew subsection under §6 (Branch protection):\n- semantic-release (`@semantic-release/git`, `python-semantic-release`) pushes a `chore(release): <v> [skip ci]` commit directly to `main` + a tag.\n- Therefore the release identity MUST be a ruleset bypass actor, else require-PR + required-`Sharperflow CI Gate` reject the push.\n- Recommended: a dedicated GitHub App, token minted at runtime via `actions/create-github-app-token`, added as `{actor_type:\"Integration\", actor_id:<App ID>, bypass_mode:\"always\"}`. App needs `contents:write`. Use the **App ID** (`gh api /app` with the App JWT) — not installation or client id.\n- Fallback (cloud only): `Team` or `User` actor; note non-portability.\n- Tags are unaffected (ruleset `target:branch`); keep `[skip ci]` to avoid re-run loops (App-token pushes DO trigger workflows).\n- Apply via `scripts/apply-ruleset.sh --bypass-app-id <App ID>`.\n\n## 4. Runbook note (AC4)\nIn the branch-protection migration runbook (and a pointer in README/B-C handoff): do NOT run `apply-ruleset.sh` until the release bypass is set; if adopting the App path, the consumer repo must create the App + add `RELEASE_APP_ID`/`RELEASE_APP_PRIVATE_KEY` secrets + switch `release.yml` to `create-github-app-token`. Out of scope for this change.\n\n## 5. self-test (AC5)\nThe existing ruleset-JSON assertion checks `bypass_actors == []` on the committed base — stays valid (base is unchanged). Add an assertion that `apply-ruleset.sh --help` runs and that the no-bypass guard triggers a non-zero exit in a dry path (lightweight `bash`-level check), plus keep `shellcheck` over the script and `actionlint` over workflows.\n\n## Verification\n- `shellcheck scripts/apply-ruleset.sh` clean.\n- Local: `apply-ruleset.sh` with no bypass + no `--no-release-bypass` → exit 2; with `--bypass-app-id 123 --dry-run` → payload shows the Integration bypass entry; ruleset JSON still parses.\n- `actionlint` + self-test green.\n\n## Risk\n- `gh api --input` payload must be the full ruleset object on PUT; confirm update round-trips bypass_actors (validated as supported in discovery). The dry-run path prints the composed payload for inspection before any live call.",
+    "executiveSummary": "Closed a discovery gap in the shipped Sharperflow CI Standard (Change A): the org ruleset's `bypass_actors: []` plus require-PR + required-`Sharperflow CI Gate` would have broken semantic-release, which pushes `chore(release): <v> [skip ci]` commits directly to `main` on PokeEdge and PokeEdge-Web. Fix: `scripts/apply-ruleset.sh` now composes a release bypass actor at apply time (`--bypass-app-id`/`RELEASE_BYPASS_APP_ID` → `{actor_type:Integration, bypass_mode:always}`, with `--bypass-team-id`/`--bypass-user-id` cloud fallbacks) and refuses to apply without one unless `--no-release-bypass` is passed — preventing a release-breaking ruleset. The committed ruleset JSON stays `bypass_actors: []` (no org-specific id committed); the real id is injected only at apply time. `ci-standard.md` gained a \"Release automation & ruleset bypass\" section recommending a dedicated GitHub App + `actions/create-github-app-token` (App ID not install/client id; `contents:write`; tags unaffected since the ruleset targets `branch`), with a README pointer and conformance-checklist items. Independent research validated the mechanics (bypass skips the entire ruleset; `always` required for direct pushes; App-token pushes attributed to the Integration). Verification: shellcheck, actionlint, ruleset-JSON base assertions, and dry-run behavior (guard exit 2; Integration `always` injection) all pass; reviewer verdict READY; contract 11/11. App creation + `release.yml` wiring remain documented consumer/ops steps; Changes B/C must set the bypass before applying the ruleset.",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-06T17:51:38.718Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1** `scripts/apply-ruleset.sh` composes the release bypass actor at apply time from explicit input (`--bypass-app-id` / `RELEASE_BYPASS_APP_ID` → `{actor_type:\"Integration\", bypass_mode:\"always\"}`; cloud fallback `--bypass-team-id` / `--bypass-user-id`). It REFUSES to apply without a release bypass unless `--no-release-bypass` is explicitly passed (prevents a release-breaking ruleset). `shellcheck` clean. | pass | apply-ruleset.sh: --bypass-app-id/RELEASE_BYPASS_APP_ID→Integration always; --bypass-team-id/--bypass-user-id cloud fallbacks; python-composed payload to mktemp (trap-cleaned); refuse-without-bypass guard exit 2 unless --no-release-bypass. Verified: shellcheck PASS; no-bypass→exit 2; --bypass-app-id 123 --dry-run injects {actor_id:123,Integration,always}. |\n| AC2 | acceptance_criterion | **AC2** `rulesets/sharperflow-app-protection.json` stays valid with base `bypass_actors: []`; the real bypass id is injected at apply time, never committed as a fake/placeholder id. | pass | rulesets/sharperflow-app-protection.json unchanged: bypass_actors==[], required context==['Sharperflow CI Gate'], strict true. Real id injected only at apply time; no committed placeholder/fake id (hardcode scan clean). |\n| AC3 | acceptance_criterion | **AC3** `docs/ci-standard.md` gains a \"Release automation & ruleset bypass\" section: semantic-release pushes to `main` so the release identity MUST be a bypass actor; recommend a dedicated GitHub App + `actions/create-github-app-token` + Integration `bypass_mode:always`; show the entry shape; note App-ID (not installation/client id), App needs `contents:write`, cloud `User`/`Team` fallback, and that tag pushes are unaffected (`target:branch`). | pass | ci-standard.md '### Release automation & ruleset bypass': semantic-release pushes to default branch → release identity MUST be bypass actor; recommends GitHub App + create-github-app-token + {Integration, always}; App ID not install/client id; contents:write; tags unaffected (target:branch); cloud Team/User fallback. |\n| AC4 | acceptance_criterion | **AC4** B/C runbook note: do NOT run `apply-ruleset.sh` until the release bypass is set; if adopting the App path, create the App + secrets + switch `release.yml` to `create-github-app-token` (consumer step). | pass | Runbook guidance: ci-standard.md states committed bypass_actors stays [] and apply-script refuses without a bypass; README blockquote pointer added; 2 conformance-checklist items (apply with --bypass-app-id; verify a release post-apply). App/secret/release.yml wiring noted as consumer scope. |\n| AC5 | acceptance_criterion | **AC5** self-test + `actionlint` + `shellcheck` green; ruleset JSON assertions updated to tolerate apply-time bypass injection. | pass | shellcheck PASS, actionlint PASS, self-test docs/presence PASS, ruleset JSON base assertions PASS (bypass_actors==[]). Reviewer independently re-ran all and confirmed. |\n| C1 | constraint | Do not weaken the required `Sharperflow CI Gate` for normal PRs. | respected | Required 'Sharperflow CI Gate' rule + normal PR gating unchanged; only apply-time bypass for the release identity added. |\n| C2 | constraint | Bypass scoped to release automation only — no broad/human/OrganizationAdmin-for-everyone bypass. | respected | Bypass scoped to release automation (App/Team/User release identity); no broad/human/OrganizationAdmin-for-everyone bypass introduced. |\n| C3 | constraint | No hardcoded secret, PAT, or real actor id committed to the repo. | respected | No hardcoded secret/PAT/real actor id committed; ids supplied via flags/env at apply time (reviewer hardcode scan clean). |\n| DONT1 | avoidance | Do not rely on bare `User` actor_type for portability (recommend App; document User/Team as cloud fallback). | respected | GitHub App path recommended as primary; bare User documented only as a non-portable cloud fallback, not relied upon. |\n| DONT2 | avoidance | Do not commit a literal placeholder actor id that would apply as-is. | respected | No literal placeholder actor id committed; base bypass_actors stays [] and is composed at apply time. |\n| DONT3 | avoidance | Do not edit pokeedge / pokeedge-web `release.yml` in this change (consumer/ops). | respected | Only sharperflow-security-gates files touched (apply-ruleset.sh, ci-standard.md, README.md); no pokeedge/pokeedge-web release.yml edits. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/proposal.md",
+      "updatedAt": "2026-06-06T04:40:12.012Z",
+      "contentHash": "63ddf90f3023310ad4306cfed57eef6013b1bbcab1d49aa00fdc3615b0c1eb66"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-06T04:40:12.012Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/agreement.md",
+      "updatedAt": "2026-06-06T17:05:20.885Z",
+      "contentHash": "af59eddb84186395a95373ca85b19b0cfc35ec6afce874cc464fe2b52dbc8987"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/design.md",
+      "updatedAt": "2026-06-06T17:06:10.881Z",
+      "contentHash": "efb9660cb19626f99af700441946c8e3fd6d11662404f4b0163e19bf68dc03fe"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixRulesetReleaseBypass/executive-summary.md",
+      "updatedAt": "2026-06-06T17:51:45.305Z",
+      "contentHash": "9dae007ab260d55fcdbbf5024bbfa93b6b92a3d31d674f0e12763b321c87b415"
+    }
+  },
+  "lastSignalAt": "2026-06-06T18:00:31.742Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "worktree_auto_managed": true
+}
