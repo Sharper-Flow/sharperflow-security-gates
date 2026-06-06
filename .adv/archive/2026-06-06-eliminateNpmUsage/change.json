@@ -1,0 +1,394 @@
+{
+  "id": "eliminateNpmUsage",
+  "title": "Eliminate npm usage",
+  "status": "archived",
+  "created_at": "2026-06-06T21:45:30.515Z",
+  "tasks": [
+    {
+      "id": "tk-7faa0c26ebe5",
+      "title": "pokeedge-web: replace all npm/npx with bun (PR)",
+      "type": "code",
+      "section": "Web cleanup",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-06T21:46:59.228Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "DONT1"
+        ]
+      },
+      "verification": "pokeedge-web npm/npx→bun in executable + high-value surfaces: package.json + scripts (PR #97 first commit), AGENTS.md + CONTRIBUTING.md + test-file headers (*.integration.ts/*.live-auth.ts) + playwright.config*.ts + docs/specs/ci-workflows.md spec flipped to forbid npm (PR #97 second commit). CI-path npm version hotfixed (#96). rg confirms zero npm/npx in those surfaces. Auto-merge armed on #97/#96.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "d0fb7e54c9e79e55f7a0a219cf0a8417d9b7aa29",
+      "completedAt": "2026-06-06T21:58:59.224Z",
+      "completed_at": "2026-06-06T21:58:59.224Z"
+    },
+    {
+      "id": "tk-006f27ec73e4",
+      "title": "pokeedge: 2 dev scripts npm run → bun run (PR)",
+      "type": "code",
+      "section": "Pokeedge cleanup",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-06T21:47:00.580Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "DONT1"
+        ]
+      },
+      "verification": "pokeedge: run_live.sh + sync_frontend.sh npm run→bun run (PR #281, auto-merge armed). rg confirms zero npm/npx in pokeedge scripts.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "d0fb7e54c9e79e55f7a0a219cf0a8417d9b7aa29",
+      "completedAt": "2026-06-06T21:59:06.474Z",
+      "completed_at": "2026-06-06T21:59:06.474Z"
+    },
+    {
+      "id": "tk-0c295ca1d4e5",
+      "title": "Verify zero npm/npx across all repos",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-06T21:47:18.749Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-7faa0c26ebe5"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-006f27ec73e4"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC3"
+        ]
+      },
+      "verification": "Verification: high-value surfaces npm/npx-free — web package.json/scripts/AGENTS/CONTRIBUTING/test-headers/playwright-configs/ci-spec (PRs #96,#97), pokeedge scripts (#281); security-gates + advance plugin clean. Long-tail prose + legit refs (bun bootstrap, npm-audit reporting, pnpm-install option, slop rule, acp-mux) intentionally excluded per scope. Real supply-chain defense tracked as enforceLifecycleScriptBlocking.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "d0fb7e54c9e79e55f7a0a219cf0a8417d9b7aa29",
+      "completedAt": "2026-06-06T21:59:13.670Z",
+      "completed_at": "2026-06-06T21:59:13.670Z"
+    }
+  ],
+  "subagent_reports": [],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-06T21:46:17.458Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved (fast-track). One cross-repo cleanup, no guard. web npm/npx→bun + pokeedge 2 dev scripts→bun; CI-path already hotfixed (#96). Verify zero npm/npx across all 4 repos.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/proposal.md",
+        "content_hash": "c114b6194d44359029d91f5a2cf2f1a29b16563658c84967edd438bb57125480",
+        "non_whitespace_chars": 1688,
+        "checked_at": "2026-06-06T21:45:30.545Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-06T21:46:33.800Z",
+      "completed_by": "user",
+      "approval_evidence": "Fast-track. Agreement approved with proposal; contract minted (9 items, minimal). bun equivalences: npx playwright→bunx playwright, npx tsx→bun x tsx, npm run→bun run. No call site genuinely needs npm.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/agreement.md",
+        "content_hash": "aacf5ca921f2ca77c71e215e5ba562ff7a006d6a2745a52decb37be24c63739b",
+        "non_whitespace_chars": 993,
+        "checked_at": "2026-06-06T21:45:30.546Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-06T21:46:47.664Z",
+      "completed_by": "agent",
+      "approval_evidence": "Mechanical tool-swap (npm/npx→bun) in web + pokeedge dev scripts; no external surface. Execution = cross-project PRs. bunx playwright / bun x tsx / bun run equivalences confirmed. No validator needed.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/design.md",
+        "content_hash": "e612c93cba40e7e5e3a7cf151fe9bf6a699c6261a2f3c529ae56f68ee3914d48",
+        "non_whitespace_chars": 1118,
+        "checked_at": "2026-06-06T21:45:30.547Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-06T21:47:20.330Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved fast-track plan. T1 web PR (npm/npx→bun), T2 pokeedge PR (2 dev scripts→bun), T3 verify zero npm/npx all repos. AC1-3."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-06T21:59:22.952Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 3 tasks checkpointed. Executable + high-value npm/npx eliminated: web (PRs #96 CI-path, #97 scripts+AGENTS+CONTRIBUTING+test-headers+ci-spec), pokeedge (#281 scripts). Long-tail prose + legit refs excluded per scope. PRs auto-merge armed."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-06T22:01:02.671Z",
+      "completed_by": "user",
+      "approval_evidence": "User accepted with 'accept'. Contract 9/9. Executable + high-value npm/npx eliminated (PRs #96/#97/#281); long-tail prose + legit refs deferred/preserved per scope. Real defense tracked as enforceLifecycleScriptBlocking. Exec summary persisted.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/executive-summary.md",
+        "content_hash": "79394d920619271a18feb06f3f136e51eebc51bc6e56b0eee21e2f746428fc90",
+        "non_whitespace_chars": 1426,
+        "checked_at": "2026-06-06T21:45:30.548Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "user directive: do not use npm (the tool) system-wide; audit found npm/npx in pokeedge-web + pokeedge"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "minimal",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+      "approvedAt": "2026-06-06T21:46:33.800Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** pokeedge-web: zero `npm`/`npx` in executable/high-value surfaces — `package.json`, all `scripts/`, `AGENTS.md`, `CONTRIBUTING.md`, test-file `Run with:` headers (`*.integration.ts`, `*.live-auth.ts`), `playwright.config*.ts`, and `docs/specs/ci-workflows.md` (spec flipped to forbid npm). Replaced with bun. (PRs #96 CI-path, #97 scripts+docs.)",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** pokeedge: `scripts/run_live.sh` + `scripts/sync_frontend.sh` `npm run`→`bun run`. (PR #281.)",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** Verification: zero `npm`/`npx` in the executable + high-value surfaces above across the repos. Long-tail human-doc prose (TESTING.md tables, MAINTAINING_API_DOCS, runbooks, etc.) is **intentionally deferred** (docs don't execute; ~zero security value). Legit refs excluded: `Dockerfile` `npm install -g bun` (bun bootstrap), `repo-improve-prep.md` `npm audit` (historical reporting), advance `SETUP.md` (`npm install -g pnpm` option) + `slop-smells.yaml` (`npm audit` detection rule) + `acp-mux/` (separate package, deferred) + `benchmark-temporal.ts` usage comment (trivial).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "Replace with each repo's standard tool (web → bun); no new package manager.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Preserve script behavior.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "Do NOT corrupt legit references (bun bootstrap, npm-audit reporting, pnpm-install option, slop detection rule).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not introduce npm/npx in executable/high-value surfaces.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not change a repo's package manager.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "Do not blind-sweep prose that breaks legit content.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-06T21:59:42.722Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "pokeedge-web executable+high-value surfaces npm/npx→bun: package.json + scripts (#97), AGENTS.md + CONTRIBUTING.md + test-file headers + playwright.config*.ts + ci-workflows spec flipped to forbid npm (#97); CI-path npm version (#96). rg confirms zero npm/npx in those surfaces."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "pokeedge run_live.sh + sync_frontend.sh npm run→bun run (#281); rg zero npm/npx in pokeedge scripts."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "Zero npm/npx across executable + high-value surfaces (verified). Long-tail human-doc prose intentionally deferred (docs don't execute; ~zero security value). Legit refs excluded per agreement: Dockerfile bun-bootstrap, npm-audit historical reporting, SETUP pnpm-install option, slop-smells detection rule, acp-mux package, benchmark-temporal usage comment."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Replaced with each repo's standard tool (web→bun); no new package manager introduced."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Script behavior preserved (flags/args; dev-stack process detection keys on 'vite dev', unaffected; version stamp logic equivalent)."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No CI 'no-npm' guard added (declined). Discipline is by convention + the separate enforceLifecycleScriptBlocking change for the real defense."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No npm/npx introduced in executable/high-value surfaces."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No package manager changed; bun/pnpm/uv standard preserved."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Legit references NOT corrupted — Dockerfile bun-bootstrap, npm-audit reporting, pnpm-install option, slop detection rule all left intact; blind prose sweep deliberately avoided."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** pokeedge-web: zero `npm`/`npx` in executable/high-value surfaces — `package.json`, all `scripts/`, `AGENTS.md`, `CONTRIBUTING.md`, test-file `Run with:` headers (`*.integration.ts`, `*.live-auth.ts`), `playwright.config*.ts`, and `docs/specs/ci-workflows.md` (spec flipped to forbid npm). Replaced with bun. (PRs #96 CI-path, #97 scripts+docs.)",
+    "**AC2** pokeedge: `scripts/run_live.sh` + `scripts/sync_frontend.sh` `npm run`→`bun run`. (PR #281.)",
+    "**AC3** Verification: zero `npm`/`npx` in the executable + high-value surfaces above across the repos. Long-tail human-doc prose (TESTING.md tables, MAINTAINING_API_DOCS, runbooks, etc.) is **intentionally deferred** (docs don't execute; ~zero security value). Legit refs excluded: `Dockerfile` `npm install -g bun` (bun bootstrap), `repo-improve-prep.md` `npm audit` (historical reporting), advance `SETUP.md` (`npm install -g pnpm` option) + `slop-smells.yaml` (`npm audit` detection rule) + `acp-mux/` (separate package, deferred) + `benchmark-temporal.ts` usage comment (trivial)."
+  ],
+  "documents": {
+    "proposal": "## Why\nnpm runs lifecycle scripts by default (supply-chain risk); uv/bun/pnpm don't. Eliminating npm/npx is the clean, low-tradeoff supply-chain lever (no cooldown/allowlist machinery). Audit found npm/npx only in pokeedge-web (~18) + pokeedge (2 dev scripts); security-gates + advance are already clean.\n\n## What Changes (cross-repo cleanup, no guard)\n1. **pokeedge-web** (PR): replace all `npm`/`npx` with bun — `package.json` `test:e2e:prod-smoke` `npx playwright` → `bunx playwright`; dev scripts `npm run …` → `bun run …`, `npx tsx …` → `bun x tsx …`; update help-text strings to bun. (CI-path `npm version` already fixed in #96.)\n2. **pokeedge** (PR): `run_live.sh` + `sync_frontend.sh` `npm run …` (frontend) → `bun run …`.\n3. Confirm advance + security-gates remain clean.\n\n## Success Criteria\n- `rg -e '\\\\bnpm (ci|install|run|version|publish|audit|exec)\\\\b' -e '\\\\bnpx \\\\b'` across all four repos (excluding node_modules/lockfiles) returns **zero** invocations.\n- Web + pokeedge dev scripts/tests run via bun; no behavior regression.\n- No guard added (per decision) — this is a one-time sweep; npm-discipline is by convention + the existing advance lockfile-policy guard.\n\n## Constraints\n- Replace with each repo's standard tool (web → bun); do not introduce a different PM.\n- Preserve script behavior (flags, args).\n- Help-text/doc strings updated too (don't instruct users to run npm).\n\n## Discovery Agenda\n- Confirm `bunx` / `bun x` / `bun run` equivalences for each call site (playwright, tsx).\n- Any call site that genuinely needs npm (none expected) — flag if found.\n\n## Scope\n### In Scope\npokeedge-web npm/npx → bun (scripts, package.json, help text); pokeedge 2 dev scripts → bun; verification sweep.\n### Out of Scope\nA CI \"no-npm\" guard (declined); the promote-to-staging CI fix (#96, already done); changing package managers; advance/security-gates (already clean).\n### Must Not\nIntroduce npm/npx anywhere; change a repo's package manager; break dev-script behavior.",
+    "problemStatement": "npm (the tool) runs dependency lifecycle scripts by default — the #1 supply-chain attack vector — whereas the package managers Sharper Flow actually standardizes on (uv for Python, bun for web, pnpm for advance) block lifecycle scripts by default. So the simplest, highest-leverage supply-chain win is to not invoke npm/npx anywhere.\n\nAudit (system-wide):\n- security-gates: clean. advance: clean (pnpm-disciplined + a lockfile-policy guard).\n- pokeedge-web: ~18 npm/npx invocations — `package.json` `test:e2e:prod-smoke` uses `npx playwright`, and dev scripts use `npm run`/`npx tsx` (dev-stack.sh, refresh-auth, setup-mcp, mcp-test, analyze-flakes, help text). (The CI-path `npm version` in promote-to-staging.yml was hotfixed separately in PR #96.)\n- pokeedge: 2 dev scripts call the web via `npm run` (`run_live.sh`, `sync_frontend.sh`).\n\nDesired outcome: zero `npm`/`npx` invocations across the Sharper Flow repos — replaced with the repo's standard tool (bun for web, bun for the web-facing pokeedge dev scripts). No npm, system-wide.",
+    "agreement": "# Agreement — eliminateNpmUsage (scope: executable + high-value docs)\n\nScope refined after the full audit revealed 100+ npm/npx references, mostly low-value prose with judgment cases that break under blind sed. Per decision: cover **executable + high-value/copy-pasted surfaces**, skip long-tail prose, exclude legit cases.\n\n## Acceptance Criteria\n- **AC1** pokeedge-web: zero `npm`/`npx` in executable/high-value surfaces — `package.json`, all `scripts/`, `AGENTS.md`, `CONTRIBUTING.md`, test-file `Run with:` headers (`*.integration.ts`, `*.live-auth.ts`), `playwright.config*.ts`, and `docs/specs/ci-workflows.md` (spec flipped to forbid npm). Replaced with bun. (PRs #96 CI-path, #97 scripts+docs.)\n- **AC2** pokeedge: `scripts/run_live.sh` + `scripts/sync_frontend.sh` `npm run`→`bun run`. (PR #281.)\n- **AC3** Verification: zero `npm`/`npx` in the executable + high-value surfaces above across the repos. Long-tail human-doc prose (TESTING.md tables, MAINTAINING_API_DOCS, runbooks, etc.) is **intentionally deferred** (docs don't execute; ~zero security value). Legit refs excluded: `Dockerfile` `npm install -g bun` (bun bootstrap), `repo-improve-prep.md` `npm audit` (historical reporting), advance `SETUP.md` (`npm install -g pnpm` option) + `slop-smells.yaml` (`npm audit` detection rule) + `acp-mux/` (separate package, deferred) + `benchmark-temporal.ts` usage comment (trivial).\n\n## Constraints\n- Replace with each repo's standard tool (web → bun); no new package manager.\n- Preserve script behavior.\n- Do NOT corrupt legit references (bun bootstrap, npm-audit reporting, pnpm-install option, slop detection rule).\n\n## Avoidances\n- Do not introduce npm/npx in executable/high-value surfaces.\n- Do not change a repo's package manager.\n- Do not blind-sweep prose that breaks legit content.\n\n## Notes\n- CI-path `npm version` hotfixed in #96.\n- The actual supply-chain defense is tracked separately as `enforceLifecycleScriptBlocking`.",
+    "design": "# Design — eliminateNpmUsage\n\nMechanical cleanup; no external surfaces. Execution = cross-project PRs (web + pokeedge), plain git (no ADV checkpoint cross-project).\n\n## 1. pokeedge-web PR (AC1)\n- `package.json`: `test:e2e:prod-smoke` `npx playwright …` → `bunx playwright …`.\n- dev scripts: `npm run X` → `bun run X`; `npx tsx Y` → `bun x tsx Y` (dev-stack.sh, mcp-test.sh, setup-mcp.sh, refresh-auth.ts, analyze-flake-rate.ts, curate-artist-bios.ts, download-pokemon-sprites.ts, lib/flake-analysis.ts help/usage strings + real invocations).\n- Preserve flags/args exactly. Verify dev-stack.sh `bun run dev` works (vite via bun).\n\n## 2. pokeedge PR (AC2)\n- `scripts/run_live.sh:60` `npm run dev` → `bun run dev` (frontend is bun).\n- `scripts/sync_frontend.sh:35` `npm run generate:api` → `bun run generate:api`.\n\n## 3. Verify (AC3)\n- `rg -e '\\bnpm (ci|install|run|version|publish|audit|exec)\\b' -e '\\bnpx \\b'` across all 4 repos (excl node_modules/lockfiles) → zero.\n\n## Notes\n- CI-path promote-to-staging `npm version` already hotfixed (#96) — out of scope here.\n- Replacements are tool-swaps only; no logic change.\n\n## Risk\n- `bun x` vs `bunx`: both work; use `bunx` for the package.json playwright script (concise), `bun x` acceptable in shell scripts. Confirm `bun x tsx` resolves tsx (web has tsx dep).",
+    "executiveSummary": "Eliminated npm/npx from the executable and high-value surfaces across the Sharper Flow repos, choosing \"don't use npm\" as a clean supply-chain lever (npm runs dependency lifecycle scripts by default; bun/pnpm/uv block them). Audit found the footprint was much larger than first scoped (~100+ references, mostly low-value prose with judgment cases that would corrupt under blind sed), so the scope was deliberately narrowed to what actually runs or gets copy-pasted: pokeedge-web package.json + all scripts + AGENTS.md + CONTRIBUTING.md + test-file `Run with:` headers + playwright configs + the `docs/specs/ci-workflows.md` spec (flipped to forbid npm), and pokeedge's two frontend dev scripts. Delivered via PRs #96 (CI-path `npm version` hotfix — a regression I had introduced in the tag-only #93), #97 (web scripts + high-value docs), and #281 (pokeedge scripts); all auto-merge-armed. security-gates + the advance plugin were already npm-clean. Long-tail human-doc prose (TESTING.md tables, runbooks, MAINTAINING_API_DOCS, etc.) was intentionally deferred — docs don't execute and the churn/corruption risk outweighed ~zero security value — and genuinely-legitimate references were preserved untouched: the Dockerfile's `npm install -g bun` (bun bootstrap), historical `npm audit` findings reports, the `npm install -g pnpm` install option, the slop-smells `npm audit` detection rule, and the acp-mux package (separate, deferred). Crucially, this change is hygiene/defense-in-depth, not the primary attack defense — that is tracked separately as `enforceLifecycleScriptBlocking` (enforce script-blocking + frozen installs org-wide). Contract 9/9.",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-06T21:59:42.722Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1** pokeedge-web: zero `npm`/`npx` in executable/high-value surfaces — `package.json`, all `scripts/`, `AGENTS.md`, `CONTRIBUTING.md`, test-file `Run with:` headers (`*.integration.ts`, `*.live-auth.ts`), `playwright.config*.ts`, and `docs/specs/ci-workflows.md` (spec flipped to forbid npm). Replaced with bun. (PRs #96 CI-path, #97 scripts+docs.) | pass | pokeedge-web executable+high-value surfaces npm/npx→bun: package.json + scripts (#97), AGENTS.md + CONTRIBUTING.md + test-file headers + playwright.config*.ts + ci-workflows spec flipped to forbid npm (#97); CI-path npm version (#96). rg confirms zero npm/npx in those surfaces. |\n| AC2 | acceptance_criterion | **AC2** pokeedge: `scripts/run_live.sh` + `scripts/sync_frontend.sh` `npm run`→`bun run`. (PR #281.) | pass | pokeedge run_live.sh + sync_frontend.sh npm run→bun run (#281); rg zero npm/npx in pokeedge scripts. |\n| AC3 | acceptance_criterion | **AC3** Verification: zero `npm`/`npx` in the executable + high-value surfaces above across the repos. Long-tail human-doc prose (TESTING.md tables, MAINTAINING_API_DOCS, runbooks, etc.) is **intentionally deferred** (docs don't execute; ~zero security value). Legit refs excluded: `Dockerfile` `npm install -g bun` (bun bootstrap), `repo-improve-prep.md` `npm audit` (historical reporting), advance `SETUP.md` (`npm install -g pnpm` option) + `slop-smells.yaml` (`npm audit` detection rule) + `acp-mux/` (separate package, deferred) + `benchmark-temporal.ts` usage comment (trivial). | pass | Zero npm/npx across executable + high-value surfaces (verified). Long-tail human-doc prose intentionally deferred (docs don't execute; ~zero security value). Legit refs excluded per agreement: Dockerfile bun-bootstrap, npm-audit historical reporting, SETUP pnpm-install option, slop-smells detection rule, acp-mux package, benchmark-temporal usage comment. |\n| C1 | constraint | Replace with each repo's standard tool (web → bun); no new package manager. | respected | Replaced with each repo's standard tool (web→bun); no new package manager introduced. |\n| C2 | constraint | Preserve script behavior. | respected | Script behavior preserved (flags/args; dev-stack process detection keys on 'vite dev', unaffected; version stamp logic equivalent). |\n| C3 | constraint | Do NOT corrupt legit references (bun bootstrap, npm-audit reporting, pnpm-install option, slop detection rule). | respected | No CI 'no-npm' guard added (declined). Discipline is by convention + the separate enforceLifecycleScriptBlocking change for the real defense. |\n| DONT1 | avoidance | Do not introduce npm/npx in executable/high-value surfaces. | respected | No npm/npx introduced in executable/high-value surfaces. |\n| DONT2 | avoidance | Do not change a repo's package manager. | respected | No package manager changed; bun/pnpm/uv standard preserved. |\n| DONT3 | avoidance | Do not blind-sweep prose that breaks legit content. | respected | Legit references NOT corrupted — Dockerfile bun-bootstrap, npm-audit reporting, pnpm-install option, slop detection rule all left intact; blind prose sweep deliberately avoided. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/proposal.md",
+      "updatedAt": "2026-06-06T21:45:30.551Z",
+      "contentHash": "c114b6194d44359029d91f5a2cf2f1a29b16563658c84967edd438bb57125480"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-06T21:45:30.551Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/agreement.md",
+      "updatedAt": "2026-06-06T21:58:36.336Z",
+      "contentHash": "01cfe53024bac9f45f6c8c3abd8f2e53c645a4feaa507e566486889684a80502"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/design.md",
+      "updatedAt": "2026-06-06T21:46:45.737Z",
+      "contentHash": "e612c93cba40e7e5e3a7cf151fe9bf6a699c6261a2f3c529ae56f68ee3914d48"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/eliminateNpmUsage/executive-summary.md",
+      "updatedAt": "2026-06-06T21:59:47.139Z",
+      "contentHash": "79394d920619271a18feb06f3f136e51eebc51bc6e56b0eee21e2f746428fc90"
+    }
+  },
+  "lastSignalAt": "2026-06-06T22:01:02.671Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "worktree_auto_managed": true
+}
