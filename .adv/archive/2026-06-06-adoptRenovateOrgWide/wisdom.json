@@ -1,0 +1,11 @@
+{
+  "entries": [
+    {
+      "id": "ws-5UcjLz",
+      "type": "convention",
+      "content": "Automerge policy amended mid-execution (user decision, supersedes AC1/DONT2 \"never automerge major/prod\"). New policy: preset sets top-level automerge:true → ALL update types (incl. majors + production deps) auto-merge once the repo's required check is green. Justification: pokeedge+web require Sharperflow CI Gate = a real functional suite (unit+integration(pgvector)+e2e(playwright)+contract), and Renovate only merges GREEN — a breaking update fails the suite, the PR stays open red, and never merges. The human review being removed was low-value (user would never perform it). 7-day cooldown (minimumReleaseAge) retained; security fixes exempted via vulnerabilityAlerts.minimumReleaseAge \"0 days\". advance is the exception: no Sharperflow CI Gate yet (deferred until conformAdvanceCi) → its renovate.json sets automerge:false + repo allow_auto_merge stays off (double guard). An LLM merge-reviewer was considered and deferred to a separate change: the test suite is the load-bearing gate; an agent adds only marginal changelog/deprecation signal, not safety.",
+      "recorded_at": "2026-06-06T23:39:57.301Z"
+    }
+  ],
+  "count": 1
+}

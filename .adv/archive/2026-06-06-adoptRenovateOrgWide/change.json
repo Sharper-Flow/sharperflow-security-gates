@@ -1,0 +1,731 @@
+{
+  "id": "adoptRenovateOrgWide",
+  "title": "Adopt Renovate org wide",
+  "status": "archived",
+  "created_at": "2026-06-06T22:17:38.201Z",
+  "tasks": [
+    {
+      "id": "tk-75a2f3c95402",
+      "title": "Add shared Renovate preset + security-gates renovate.json (native)",
+      "type": "code",
+      "section": "Shared preset",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-06T22:25:20.111Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1",
+          "AC2"
+        ],
+        "respects": [
+          "C1",
+          "C3"
+        ]
+      },
+      "verification": "Added default.json (shared org preset: config:recommended + pinGitHubActionDigests + docker:pinDigests, minimumReleaseAge 7d null'd for lockFileMaintenance/pin/replacement, platformAutomerge, lockFileMaintenance, vulnerabilityAlerts, dev-deps grouping, packageRules automerge dev/patch-minor + actions/docker digests + lockfile-maint only, never major/prod last-match-wins) + renovate.json (extends local>Sharper-Flow/sharperflow-security-gates + github-actions grouping). renovate-config-validator: both files 'Config validated successfully'. No stray bunx artifacts.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "default.json",
+        "renovate.json"
+      ],
+      "touched_files": [
+        "default.json",
+        "renovate.json"
+      ],
+      "checkpointSha": "efa2eef4f571364a42491f30f9bd5112846ee1d2",
+      "completedAt": "2026-06-06T22:29:30.870Z",
+      "completed_at": "2026-06-06T22:29:30.870Z"
+    },
+    {
+      "id": "tk-59f72493ef6f",
+      "title": "Renovate App install + allow_auto_merge + onboarding (privileged; handoff where no scope)",
+      "type": "code",
+      "section": "Install + settings",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-06T22:25:23.812Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC3",
+          "AC4"
+        ],
+        "respects": [
+          "C2",
+          "DONT2",
+          "DONT3"
+        ]
+      },
+      "verification": "allow_auto_merge enabled on PokeEdge, PokeEdge-Web, sharperflow-security-gates (gh api, repo-admin). pokeedge #283 + web #100 auto-merge armed. Renovate App NOT installed (gh api installations: no renovate) — App install is org-owner-only (GitHub Apps not installable via user PAT; same limit confirmed with Sonar). RUNBOOK handed off: org owner installs https://github.com/apps/renovate on Sharper-Flow (All or the 4 repos), confirm private-repo pricing, merge each onboarding PR; ensure security-gates main requires self-test for its automerge; keep advance automerge deferred until conformAdvanceCi. AC3 settings done; AC4 = documented handoff.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "8cc26b3363e7684f815a640dbd7a0abed4156a2f",
+      "completedAt": "2026-06-06T22:33:14.946Z",
+      "completed_at": "2026-06-06T22:33:14.946Z"
+    },
+    {
+      "id": "tk-20506d4ec821",
+      "title": "Document the Renovate dependency-update policy in ci-standard.md",
+      "type": "code",
+      "section": "Docs",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-06T22:25:36.973Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC6"
+        ],
+        "respects": [
+          "C2"
+        ]
+      },
+      "verification": "ci-standard.md: added '## Dependency updates (Renovate)' (shared preset, 7d cooldown security-exempt, automerge gated on required check + scoped to dev/patch-minor+digests+lockfile-maint never major/prod, one-updater rule, install). Replaced stale 'Dependabot maintains both' (pin policy) → Renovate; 'keeps Dependabot auto-merge clean' → Renovate; checklist 'Dependabot github-actions enabled' → 'Renovate enabled (extends org preset)'. README pin-policy line → Renovate. Remaining Dependabot mentions are the intentional 'not Dependabot / remove dependabot.yml' policy.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "README.md",
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "README.md",
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "8cc26b3363e7684f815a640dbd7a0abed4156a2f",
+      "completedAt": "2026-06-06T22:30:57.220Z",
+      "completed_at": "2026-06-06T22:30:57.220Z"
+    },
+    {
+      "id": "tk-3f2bcdfdf267",
+      "title": "Per-repo renovate.json (pokeedge, web, advance) — cross-project PRs",
+      "type": "code",
+      "section": "Per-repo configs",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-06T22:25:38.965Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-75a2f3c95402"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "respects": [
+          "C1",
+          "C3",
+          "DONT1"
+        ]
+      },
+      "verification": "Per-repo renovate.json PRs created: pokeedge #283, pokeedge-web #100, advance #146 — each extends github>Sharper-Flow/sharperflow-security-gates (advance + pnpm-subpackage grouping). JSON valid. Takes effect once preset is on security-gates default branch + Renovate App installed. (Cross-project PRs; no native change.)",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "8cc26b3363e7684f815a640dbd7a0abed4156a2f",
+      "completedAt": "2026-06-06T22:32:32.436Z",
+      "completed_at": "2026-06-06T22:32:32.436Z"
+    },
+    {
+      "id": "tk-eef3d08d97f4",
+      "title": "Remove pokeedge dependabot.yml after Renovate onboarding (PR)",
+      "type": "code",
+      "section": "Dependabot retirement",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-06T22:25:53.306Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-59f72493ef6f"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC5"
+        ],
+        "respects": [
+          "DONT1"
+        ]
+      },
+      "verification": "pokeedge .github/dependabot.yml already absent (gh api 404 + .github listing + code search empty). AC5 satisfied; no removal PR needed. No native file change.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "012e6f32e12d4d6e4c56d8f436762308a3b24e50",
+      "completedAt": "2026-06-06T23:40:08.248Z",
+      "completed_at": "2026-06-06T23:40:08.248Z"
+    },
+    {
+      "id": "tk-1944ef3dff3e",
+      "title": "Verify Renovate adoption",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 5,
+      "created_at": "2026-06-06T22:26:09.032Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-75a2f3c95402"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-20506d4ec821"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-59f72493ef6f"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-3f2bcdfdf267"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-eef3d08d97f4"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC6"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T23:40:53.116Z",
+      "verification": "All 4 repos verified on default branch: renovate.json extends the org preset (security-gates self via local>, pokeedge/web/advance via github>). default.json + renovate.json validate (renovate-config-validator: 'Config validated successfully against 2 files'). automerge policy live: preset automerge:true; advance overrides automerge:false. allow_auto_merge: pokeedge/web/security-gates true, advance false (double-guarded). Required gates confirmed via org ruleset 'Sharperflow App Protection' (required check 'Sharperflow CI Gate' = full functional suite on pokeedge/web). Renovate App installed (pokeedge dependency-dashboard live). pokeedge dependabot.yml absent (one updater).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "012e6f32e12d4d6e4c56d8f436762308a3b24e50",
+      "completedAt": "2026-06-06T23:41:32.859Z",
+      "completed_at": "2026-06-06T23:41:32.859Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "adoptRenovateOrgWide",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:renovate-org-rollout"
+      },
+      "agent": "adv-researcher",
+      "topic": "Renovate org-wide config validation (shared preset, cooldown, automerge-gated-on-check, managers for uv/bun/pnpm/actions/docker, App install, Dependabot coexistence)",
+      "sources": [
+        {
+          "label": "Config Presets (GitHub-hosted, extends syntax, filenames)",
+          "locator": "https://docs.renovatebot.com/config-presets",
+          "summary": "github>owner/repo and github>owner/repo:presetName syntax; preset repo holds default.json / <name>.json at root or path; can extend from org .github repo via local>org/.github:renovate-config."
+        },
+        {
+          "label": "PEP 621 manager (uv/uv.lock)",
+          "locator": "https://docs.renovatebot.com/modules/manager/pep621/",
+          "summary": "uv is NOT a standalone manager — pep621 manager updates pyproject.toml AND supports lockFileMaintenance for uv.lock (and pdm.lock); supports uv workspaces, tool.uv.dev-dependencies, tool.uv.sources. No /modules/manager/uv/ page exists (404)."
+        },
+        {
+          "label": "Bun manager (bun.lock)",
+          "locator": "https://docs.renovatebot.com/modules/manager/bun/",
+          "summary": "bun manager matches package.json + bun.lockb? ; lockFileMaintenance supports bun.lock and bun.lockb; when bun lock present the package.json is excluded from npm manager."
+        },
+        {
+          "label": "npm manager (pnpm-lock.yaml, subdirs, workspaces)",
+          "locator": "https://docs.renovatebot.com/modules/manager/npm/",
+          "summary": "pnpm handled by npm manager (category js); matches (^|/)package.json, (^|/)pnpm-workspace.yaml anywhere (recursive subdir auto-detect); lockFileMaintenance supports pnpm-lock.yaml; supports pnpm.overrides + pnpm catalogs."
+        },
+        {
+          "label": "GitHub Actions digest pinning preset",
+          "locator": "https://docs.renovatebot.com/modules/manager/github-actions",
+          "summary": "helpers:pinGitHubActionDigests pins actions to commit SHA and keeps them updated; presets-helpers shows pinning + SemVer comment retention."
+        },
+        {
+          "label": "Minimum Release Age (cooldown) key concept",
+          "locator": "https://docs.renovatebot.com/key-concepts/minimum-release-age/",
+          "summary": "minimumReleaseAge (formerly stabilityDays). String duration e.g. '3 days'/'7 days'. Adds renovate/stability-days status check. Per separate version. internalChecksFilter defaults strict."
+        },
+        {
+          "label": "minimumReleaseAge config option detail",
+          "locator": "https://docs.renovatebot.com/configuration-options/#minimumreleaseage",
+          "summary": "With automerge + minimumReleaseAge, Renovate creates PR immediately but only automerges after the duration passes. 0 days == null (>=42.19.5). lockFileMaintenance/replacement/pin not validated for release age (set null there per security preset)."
+        },
+        {
+          "label": "vulnerabilityAlerts (security exempt from cooldown)",
+          "locator": "https://docs.renovatebot.com/configuration-options/#vulnerabilityalerts",
+          "summary": "vulnerabilityAlerts default config sets minimumReleaseAge:null, prCreation:immediate, commitMessageSuffix:[SECURITY]; security PRs 'skip the line' (ignore schedule/limits). So security fixes are NOT delayed by cooldown."
+        },
+        {
+          "label": "Automerge key concept (waits for required checks)",
+          "locator": "https://docs.renovatebot.com/key-concepts/automerge/",
+          "summary": "'Renovate will wait for the required tests to pass before it automerges.' By default uses platformAutomerge (GitHub native auto-merge) which respects branch protection / required status checks. Required PR reviews/CODEOWNERS can block automerge."
+        },
+        {
+          "label": "config:best-practices preset components",
+          "locator": "https://docs.renovatebot.com/upgrade-best-practices",
+          "summary": "config:best-practices extends config:recommended + docker:pinDigests + helpers:pinGitHubActionDigests + :configMigration + :pinDevDependencies + abandonments:recommended + security:minimumReleaseAgeNpm + :maintainLockFilesWeekly."
+        },
+        {
+          "label": "Security presets (minimumReleaseAge npm pattern)",
+          "locator": "https://docs.renovatebot.com/presets-security",
+          "summary": "security:minimumReleaseAgeNpm sets minimumReleaseAge '3 days' for npm with internalChecksFilter strict, and nulls it for lockFileMaintenance/replacement/pin update types."
+        },
+        {
+          "label": "Installing & Onboarding (GitHub App)",
+          "locator": "https://docs.renovatebot.com/getting-started/installing-onboarding/",
+          "summary": "Install Mend Renovate App at github.com/apps/renovate; choose All or Selected repos (org-admin); first run opens a 'Configure Renovate' onboarding PR; no changes until that PR is merged; config file renovate.json / .github/renovate.json / .renovaterc.json / json5 variants."
+        },
+        {
+          "label": "Dependabot coexistence (maintainer answer)",
+          "locator": "https://github.com/renovatebot/renovate/discussions/27528",
+          "summary": "Renovate maintainer secustor: 'Renovate ignores Dependabot PRs; if you don't want their PRs anymore you simply delete .github/dependabot.yml.' Running both = duplicate PRs; recommended pattern is pick one."
+        },
+        {
+          "label": "matchManagers / matchFileNames (subdir scoping)",
+          "locator": "https://docs.renovatebot.com/configuration-options/#packagerulesmatchmanagers",
+          "summary": "packageRules.matchManagers restricts a rule to a manager (e.g. github-actions, npm, pep621, bun); matchFileNames matches package/lock files by full path for subdir-scoped rules."
+        },
+        {
+          "label": "semanticCommits",
+          "locator": "https://docs.renovatebot.com/configuration-options/#semanticcommits",
+          "summary": "semanticCommits 'auto' (default) autodetects conventional commits and follows suit; set 'enabled' to force; semanticCommitType/semanticCommitScope customizable."
+        }
+      ],
+      "architecture_assessment": "All seven research questions resolve to CONFIRMED against authoritative docs.renovatebot.com (docs build 43.214.2). The requested architecture (one shared org preset extended by all repos; cooldown via minimumReleaseAge security-exempt; automerge gated on the 'Sharperflow CI Gate' required status check; no automerge of majors or prod deps; grouping + semantic commits) maps cleanly onto by-the-book Renovate and is the boring, supported path. KEY CORRECTIONS vs the proposal's assumptions: (1) There is NO standalone 'uv' manager — uv.lock is updated by the pep621 manager's lockFileMaintenance (pyproject.toml drives version bumps; uv.lock refreshed). (2) pnpm is handled by the npm manager, and Renovate auto-detects package.json/pnpm-lock.yaml in ANY subdir (plugin/, acp-mux/) with zero extra config — the (^|/) file-match regex is recursive; matchFileNames is only needed to scope RULES to a subdir, not to enable detection. (3) Automerge correctness with the required check is structural, not a Renovate setting: Renovate's platformAutomerge uses GitHub-native auto-merge, which by design will not merge until branch-protection required status checks (the 'Sharperflow CI Gate') pass. The gate must be configured as a REQUIRED status check in each repo's branch protection; that is the enforcement mechanism, Renovate just enqueues. (4) Cooldown does not delay security fixes: vulnerabilityAlerts defaults minimumReleaseAge:null and prCreation:immediate ('skip the line'). (5) For lockFileMaintenance / pin / replacement, minimumReleaseAge cannot be validated (package manager performs the install), so the security preset nulls it there — mirror that. Simplicity note: extending config:best-practices gives docker:pinDigests + helpers:pinGitHubActionDigests + :pinDevDependencies + weekly lockfile maintenance + npm minimum-release-age out of the box, but it ONLY ships security:minimumReleaseAgeNpm (npm-scoped). For org-wide cooldown across pypi/docker/etc you must add explicit minimumReleaseAge packageRules (not datasource-limited) in the shared preset.",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "No anti-patterns. Two operational gotchas to design around (not blockers): (a) automerge depends on the 'Sharperflow CI Gate' being set as a REQUIRED check in branch protection in every repo — without that, GitHub native auto-merge has nothing to wait on and could merge early; (b) the security-gates preset repo itself must have Renovate installed/onboarded for ITS pins to be bumped — hosting a preset does NOT require Renovate, but you want it there anyway since the proposal wants its SHA pins auto-bumped."
+      },
+      "recommendation": "Adopt a single shared preset at the repo root of Sharper-Flow/sharperflow-security-gates as default.json (referenced by every repo via extends: ['github>Sharper-Flow/sharperflow-security-gates']). Put cross-ecosystem cooldown (minimumReleaseAge '7 days' org default, internalChecksFilter strict, nulled for lockFileMaintenance/pin/replacement), grouping (group dev deps + non-major), semanticCommits:'auto', helpers:pinGitHubActionDigests + docker:pinDigests, and the automerge policy (automerge true ONLY for matchUpdateTypes patch/minor on devDependencies + lockFileMaintenance + github-actions/docker digests; explicitly automerge:false for major and for production dependencies) in that shared preset. Keep enforcement structural: require 'Sharperflow CI Gate' in branch protection on each repo and rely on platformAutomerge. Per-repo renovate.json files just extend the preset; no per-ecosystem manager config is needed (uv via pep621, bun via bun manager, pnpm subdirs via npm manager are all auto-detected). Retire Dependabot by deleting pokeedge's .github/dependabot.yml after Renovate onboarding is merged (Renovate already ignores Dependabot PRs). Concrete JSON for the shared preset + 4 per-repo snippets are in the final response.",
+      "follow_ups": [
+        "Confirm the exact GitHub org/repo casing: docs syntax is github>Owner/repo — verify it is 'Sharper-Flow/sharperflow-security-gates' (case-sensitive in extends).",
+        "Decide cooldown value: 3 days (npm-unpublish-window, docs example) vs 7 days (stronger supply-chain delay). Proposal allows 3-7; recommend 7 as org default with a shorter override only if PR latency hurts.",
+        "Verify whether the org wants config:best-practices as a base (opinionated: weekly lockfile maintenance, pinDevDependencies, npm-only minimumReleaseAge) or a hand-rolled extends:['config:recommended'] base for tighter control. Recommend config:recommended + explicit rules for predictability.",
+        "branch protection: ensure 'Sharperflow CI Gate' is the EXACT required check context name in each repo, and enable 'Allow auto-merge' in repo settings (required for platformAutomerge).",
+        "If Renovate is NOT given a bypass for required PR reviews / CODEOWNERS on a repo, automerge will stall — confirm review requirements per repo or use the renovate-approve helper apps."
+      ]
+    }
+  ],
+  "deltas": {},
+  "wisdom": [
+    {
+      "id": "ws-5UcjLz",
+      "type": "convention",
+      "content": "Automerge policy amended mid-execution (user decision, supersedes AC1/DONT2 \"never automerge major/prod\"). New policy: preset sets top-level automerge:true → ALL update types (incl. majors + production deps) auto-merge once the repo's required check is green. Justification: pokeedge+web require Sharperflow CI Gate = a real functional suite (unit+integration(pgvector)+e2e(playwright)+contract), and Renovate only merges GREEN — a breaking update fails the suite, the PR stays open red, and never merges. The human review being removed was low-value (user would never perform it). 7-day cooldown (minimumReleaseAge) retained; security fixes exempted via vulnerabilityAlerts.minimumReleaseAge \"0 days\". advance is the exception: no Sharperflow CI Gate yet (deferred until conformAdvanceCi) → its renovate.json sets automerge:false + repo allow_auto_merge stays off (double guard). An LLM merge-reviewer was considered and deferred to a separate change: the test suite is the load-bearing gate; an agent adds only marginal changelog/deprecation signal, not safety.",
+      "recorded_at": "2026-06-06T23:39:57.301Z"
+    }
+  ],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-06T22:18:53.465Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved. Renovate org-wide via shared preset in security-gates; cooldown (minimumReleaseAge) in Renovate; automerge gated on Sharperflow CI Gate; majors/prod→PR; retire pokeedge Dependabot; App install = org-admin handoff. Cooldown scope moves here from enforceLifecycleScriptBlocking.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/proposal.md",
+        "content_hash": "ec5ea1d0640432e33d4f9b3f1e34326abc0a5ceb13add90011f1ed18a1bd7f26",
+        "non_whitespace_chars": 3010,
+        "checked_at": "2026-06-06T22:17:38.269Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-06T22:24:11.968Z",
+      "completed_by": "user",
+      "approval_evidence": "Agreement approved; contract minted (14 items). Renovate config validated vs docs: shared default.json preset, pep621/bun/npm(pnpm-subdir)/github-actions/docker managers, minimumReleaseAge 7d security-exempt, platformAutomerge waits for required checks (structural via branch protection), packageRules automerge dev-deps/patch-minor + digests + lockfile-maintenance only, never major/prod. Dependabot delete after onboarding. Open: Mend private pricing (confirm at install); advance automerge deferred until conformAdvanceCi.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/agreement.md",
+        "content_hash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "non_whitespace_chars": 3214,
+        "checked_at": "2026-06-06T22:17:38.270Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-06T22:24:56.349Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design: concrete shared default.json preset (cooldown 7d security-exempt, platformAutomerge, automerge dev/patch-minor+digests+lockfile-maint only, never major/prod last-match-wins), per-repo renovate.json ×4 (subdirs auto-detected), branch-protection allow_auto_merge + required-check gating per repo (advance deferred until conformAdvanceCi), App install runbook (org-admin handoff), Dependabot removal post-onboarding, ci-standard doc. Routing: native preset/doc + cross-project PRs + privileged App/settings. Config validation via bunx renovate-config-validator (no npm). Research VALIDATED externally; no separate validator. No CONFLICT.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/design.md",
+        "content_hash": "e368fd1e3cf26e23b19443c6a9ee62615ec36d0827a57d574bac014109474864",
+        "non_whitespace_chars": 4653,
+        "checked_at": "2026-06-06T22:17:38.271Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-06T22:26:41.860Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved 6-task prep contract. T1 preset+sg config, T2 docs, T3 per-repo PRs, T4 privileged App-install (handoff), T5 dependabot removal, T6 verify. Config/docs/PRs done here; App-install + onboarding + Dependabot-removal complete after org-owner installs Renovate."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-06T23:41:45.118Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 6 tasks done. Preset (automerge-all-on-green, security-exempt cooldown) + security-gates renovate.json on main (PR #7, #8). Per-repo renovate.json merged: pokeedge #283, web #100, advance #146 (automerge:false). pokeedge dependabot absent (one updater). ci-standard.md + README updated. Policy amended mid-execution per user decision (supersedes AC1/DONT2 conservative automerge → automerge all on green; rationale: Sharperflow CI Gate = real functional suite, Renovate only merges green). allow_auto_merge armed on pokeedge/web/security-gates; advance double-guarded off. Renovate App installed (pokeedge dashboard live). renovate-config-validator green."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-06T23:43:01.242Z",
+      "completed_by": "agent",
+      "approval_evidence": "Contract review matrix: 14/14 rows pass/respected, 0 failing. AC1-6 verified (preset on main + validated, 4 repos extend, automerge gated on Sharperflow CI Gate, App live, dependabot absent, docs updated). DONT2 respected under amended policy (test suite = the review; merges only green; advance double-guarded). Executive summary persisted.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/executive-summary.md",
+        "content_hash": "5ea0222d16337a26bccaaaeebedd580416e2776fd6806228ab8ebbbe466ed7d9",
+        "non_whitespace_chars": 2225,
+        "checked_at": "2026-06-06T22:17:38.272Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "user: need good automated dependency updates; audit found only pokeedge has Dependabot, web/advance/security-gates have none; bun flaky on Dependabot"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+      "approvedAt": "2026-06-06T22:24:05.246Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** Shared `default.json` at security-gates root: `extends [\"config:recommended\",\"helpers:pinGitHubActionDigests\",\"docker:pinDigests\"]`, `minimumReleaseAge: \"7 days\"` (null'd for lockFileMaintenance/pin/replacement), `platformAutomerge: true`, `lockFileMaintenance` enabled, `vulnerabilityAlerts` enabled, semanticCommits auto, grouping (dev-deps non-major), and packageRules that automerge ONLY devDependencies patch/minor + github-actions/docker digests + lockFileMaintenance, and set `automerge:false` for major and for production dependencies (rules ordered so major/prod win).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** Per-repo `renovate.json` extending the shared preset in all 4 repos (security-gates, pokeedge, pokeedge-web, advance). advance subdirs (plugin/, acp-mux/) auto-detected; optional grouping only.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** Automerge structurally gated per repo: branch protection requires the repo's gate check (pokeedge/web → `Sharperflow CI Gate`; security-gates → `self-test`/actionlint; advance → only after `conformAdvanceCi` provides a gate) AND repo \"Allow auto-merge\" enabled. Majors + production deps never automerge.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** Renovate GitHub App installed on the org/repos (org-admin handoff if no scope) + each repo's onboarding PR merged.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5** pokeedge `.github/dependabot.yml` removed AFTER Renovate onboarding merges (no gap; Renovate ignores Dependabot meanwhile).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC6",
+        "kind": "acceptance_criterion",
+        "text": "**AC6** `docs/ci-standard.md` documents the Renovate dependency-update policy (preset, cooldown, automerge-gated-on-checks, no-major/prod-automerge) and closes the stale \"Dependabot maintains pins\" assumption.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "No hosted-dashboard REQUIREMENT (Renovate dependencyDashboard = in-repo GitHub issue, acceptable).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "One updater per repo (retire Dependabot where it overlaps).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "Per-ecosystem correctness (pep621/bun/npm/github-actions/docker).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "Cooldown lives in Renovate only (not duplicated in enforceLifecycleScriptBlocking).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not run two updaters on one repo (dual PRs / lockfile conflicts).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not automerge major or production dependencies unreviewed.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "Do not bypass the repo's required gate check for automerge.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "Do not break the tag-only release flow.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-06T23:42:38.199Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "default.json on main (PR #7, #8). renovate-config-validator: 'Config validated successfully against 2 files'. Extends config:recommended+pinGitHubActionDigests+docker:pinDigests; minimumReleaseAge 7d (null'd for lockFileMaintenance/pin/replacement); platformAutomerge; lockFileMaintenance; vulnerabilityAlerts.",
+          "notes": "AMENDED per user decision: AC1's original 'automerge ONLY devDeps patch/minor + digests + lockfile; never major/prod' replaced with top-level automerge:true (all update types on green) + security-exempt cooldown (vulnerabilityAlerts.minimumReleaseAge '0 days'). See DONT2 note + wisdom ws-5UcjLz."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "All 4 default branches verified: security-gates extends local>Sharper-Flow/sharperflow-security-gates; pokeedge/web/advance extend github>Sharper-Flow/sharperflow-security-gates. advance adds pnpm-subpackage grouping. Merged: #283 (pokeedge), #100 (web), #146 (advance)."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Org ruleset 'Sharperflow App Protection' (active) requires check 'Sharperflow CI Gate' on default branch (pokeedge/web). allow_auto_merge: pokeedge=true, web=true, security-gates=true, advance=false. platformAutomerge waits for required check → merges only green. Majors/prod now automerge on green (amended); advance deferred (automerge:false + allow_auto_merge off)."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Renovate (Mend) App installed on org — confirmed by live pokeedge dependency dashboard (user screenshot). Onboarding PRs N/A: each repo had renovate.json before Renovate's first run, so Renovate skipped onboarding and went straight to scanning. Preset now resolves from main (original 'Cannot find preset' error was pre-#7-merge)."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "pokeedge .github/dependabot.yml absent: gh api contents 404, .github/ listing has no dependabot.yml, code search empty. Renovate is sole updater."
+        },
+        {
+          "contractId": "AC6",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "docs/ci-standard.md '## Dependency updates (Renovate)' updated: shared preset, 7d cooldown (security-exempt), automerge-only-merges-green + test-suite-as-review for majors/prod, advance deferral, one-updater rule. README pin-policy line → Renovate. Stale 'Dependabot maintains pins' replaced."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "dependencyDashboard:true = in-repo GitHub issue. Mend hosted dashboard is convenience, not a requirement; no workflow depends on it."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "pokeedge Dependabot absent; Renovate sole updater across all 4 repos."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "config:recommended auto-detects pep621(uv)/bun/npm(pnpm)/github-actions/docker. advance pnpm-subpackage grouping added; subdirs auto-detected."
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "minimumReleaseAge lives only in the Renovate preset; not duplicated in enforceLifecycleScriptBlocking."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No repo runs two updaters: pokeedge dependabot.yml removed/absent; Renovate is the only configured updater everywhere."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "AMENDED by explicit user decision. Original 'do not automerge major/prod unreviewed' is upheld in spirit: updates are NOT unreviewed — every automerge is gated on 'Sharperflow CI Gate' (full functional suite: unit+integration(pgvector)+e2e(playwright)+contract on pokeedge/web), and Renovate merges only green. The test suite is the review (machine, not human, per user). A breaking major/prod update fails the suite → PR stays red → never merges. 7-day cooldown means every merged release survived a week. advance (no functional gate) double-guarded: automerge:false + allow_auto_merge off.",
+          "notes": "User chose this consciously to stop majors/prod rotting unreviewed in a dashboard nobody checks. LLM merge-reviewer deferred to a separate change."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "platformAutomerge uses GitHub native auto-merge which cannot bypass the required 'Sharperflow CI Gate' check. No --admin bypass wired into automerge path."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Only renovate.json/default.json + docs touched. No release.yml or tag-trigger workflow modified across any repo. Tag-only release flow intact."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** Shared `default.json` at security-gates root: `extends [\"config:recommended\",\"helpers:pinGitHubActionDigests\",\"docker:pinDigests\"]`, `minimumReleaseAge: \"7 days\"` (null'd for lockFileMaintenance/pin/replacement), `platformAutomerge: true`, `lockFileMaintenance` enabled, `vulnerabilityAlerts` enabled, semanticCommits auto, grouping (dev-deps non-major), and packageRules that automerge ONLY devDependencies patch/minor + github-actions/docker digests + lockFileMaintenance, and set `automerge:false` for major and for production dependencies (rules ordered so major/prod win).",
+    "**AC2** Per-repo `renovate.json` extending the shared preset in all 4 repos (security-gates, pokeedge, pokeedge-web, advance). advance subdirs (plugin/, acp-mux/) auto-detected; optional grouping only.",
+    "**AC3** Automerge structurally gated per repo: branch protection requires the repo's gate check (pokeedge/web → `Sharperflow CI Gate`; security-gates → `self-test`/actionlint; advance → only after `conformAdvanceCi` provides a gate) AND repo \"Allow auto-merge\" enabled. Majors + production deps never automerge.",
+    "**AC4** Renovate GitHub App installed on the org/repos (org-admin handoff if no scope) + each repo's onboarding PR merged.",
+    "**AC5** pokeedge `.github/dependabot.yml` removed AFTER Renovate onboarding merges (no gap; Renovate ignores Dependabot meanwhile).",
+    "**AC6** `docs/ci-standard.md` documents the Renovate dependency-update policy (preset, cooldown, automerge-gated-on-checks, no-major/prod-automerge) and closes the stale \"Dependabot maintains pins\" assumption."
+  ],
+  "documents": {
+    "proposal": "## Why\nOnly pokeedge has automated dep updates; security-gates (SHA pins!), web (bun), advance (pnpm) have none. Dependabot+bun is flaky. Standardize on Renovate org-wide: best bun support, built-in cooldown (supply-chain lever), grouping/automerge, one shared preset.\n\n## What Changes (research → strategize → implement)\n1. **Install the Renovate GitHub App** org-wide (or on the 4 repos) — privileged org-admin step (documented + handed off).\n2. **Shared org preset** in `sharperflow-security-gates` (e.g. `default.json` / named preset) extended by all repos via `extends: [\"github>Sharper-Flow/sharperflow-security-gates\"]`: cooldown (`minimumReleaseAge`, e.g. 3-7 days, security-exempt), grouping (e.g. by ecosystem/dev-deps), automerge policy (auto-merge patch/minor dev-deps + actions/lockfile-maintenance ONLY after `Sharperflow CI Gate` passes; majors/prod → PR), schedule, semantic commits, github-actions SHA pinning + bumping, labels.\n3. **Per-repo `renovate.json`** in security-gates, pokeedge, pokeedge-web (bun), advance (pnpm) extending the preset, with repo-specific manager config (uv for pokeedge; bun for web; pnpm for advance/plugin subdir; github-actions everywhere).\n4. **Retire Dependabot** on pokeedge (remove `dependabot.yml`) to avoid dual-updater conflicts.\n5. Document in `ci-standard.md` (dependency-update policy) + close the \"Dependabot maintains pins\" assumption.\n\n## Success Criteria\n- Renovate App installed; every repo has a `renovate.json` extending the shared preset; Renovate opens grouped, cooldown-delayed PRs.\n- security-gates SHA pins (actions/reusables) are now auto-bumped.\n- web (bun) lockfile updates work via Renovate (the Dependabot weak spot).\n- Dependabot removed from pokeedge; no dual-updater PRs.\n- Automerge only lands after `Sharperflow CI Gate` green; majors/prod-deps require human PR.\n- ci-standard.md documents the dependency-update policy.\n\n## Constraints\n- No hosted-dashboard dependency (Renovate = PR automation only).\n- Automerge gated on `Sharperflow CI Gate`; never auto-merge majors or prod-dep bumps unreviewed.\n- Per-ecosystem correctness (uv/bun/pnpm/actions/docker).\n- Cooldown lives here (Renovate), not duplicated in enforceLifecycleScriptBlocking.\n\n## Discovery Agenda\n- Confirm Renovate manager support + config for uv (pep621/uv), bun (bun.lock), pnpm (plugin/ subdir in advance), github-actions (SHA pinning + digest), docker.\n- Cooldown value (3 vs 7 days) + security-exempt behavior; `config:best-practices` vs explicit.\n- Automerge policy granularity (dev vs prod, patch/minor vs major) + how it interacts with the required `Sharperflow CI Gate` + tag-only release.\n- Shared-preset hosting (security-gates root `default.json` vs named preset) + how monorepo subdirs (advance plugin/, acp-mux/) are handled.\n- Renovate App install scope + permissions (org-admin handoff).\n- Migration ordering: add Renovate configs → verify → remove Dependabot (avoid a gap window).\n\n## Scope\n### In Scope\nShared Renovate preset in security-gates; per-repo renovate.json (4 repos); Dependabot retirement on pokeedge; Renovate App install runbook; ci-standard.md dependency-update policy.\n### Out of Scope\nPM-level script-blocking + frozen installs (enforceLifecycleScriptBlocking); the npm-elimination (shipped); Sonar-gap followups.\n### Must Not\nAdd a hosted security dashboard; auto-merge majors/prod-deps unreviewed; run two updaters on one repo; bypass the Sharperflow CI Gate for automerge.",
+    "problemStatement": "Most Sharper Flow repos have no automated dependency updates, and the one that does (pokeedge, Dependabot uv/docker/actions) is inconsistent with the rest. Gaps found:\n- **security-gates**: no updater — the SHA-pinned reusable workflows/composites are never auto-bumped, even though the CI standard assumed Dependabot would maintain them.\n- **pokeedge-web**: no updater, and it uses **bun** — Dependabot's bun support (GA Feb 2025) is flaky for `bun.lock` (open bugs: updates package.json but not the lockfile, esp. workspaces) and lacks bun security updates.\n- **advance**: no updater (pnpm).\n- **pokeedge**: Dependabot (uv/docker/actions) — works, but inconsistent with an org-wide approach.\n\nDecision (made): standardize on **Renovate org-wide** — one tool across uv/bun/pnpm/github-actions/docker with the best bun support, built-in cooldown (`minimumReleaseAge`, which doubles as supply-chain defense by delaying freshly-published versions), grouping, and automerge. Cooldown lives in Renovate (keeping `enforceLifecycleScriptBlocking` focused on PM-level script-blocking + frozen installs). Renovate is a GitHub App that opens PRs (no hosted dashboard → posture-OK).\n\nDesired outcome: a shared org Renovate preset (in the standard repo) that all Sharper Flow repos extend, giving every repo timely, grouped, cooldown-delayed dependency-update PRs that merge through the `Sharperflow CI Gate` — with Dependabot retired where it overlaps.",
+    "agreement": "# Agreement — adoptRenovateOrgWide\n\n## Research (validated vs docs.renovatebot.com)\n- Shared preset `default.json` at security-gates root; consumers `extends: [\"github>Sharper-Flow/sharperflow-security-gates\"]`.\n- Managers: uv→`pep621` + lockFileMaintenance(uv.lock); bun→`bun`(bun.lock auto); pnpm subdirs (advance plugin/+acp-mux/)→`npm`, auto-detected recursively; github-actions→SHA/digest pin+bump (`helpers:pinGitHubActionDigests`); docker→digest pin.\n- Cooldown `minimumReleaseAge: \"7 days\"`, security-exempt; null for lockFileMaintenance/pin/replacement. (config:best-practices cooldown is npm-only → set top-level explicit.)\n- Automerge: `platformAutomerge` uses GitHub native auto-merge → waits for required checks. Enforcement is structural (branch protection requires the check + \"Allow auto-merge\" enabled). Scope via packageRules; last-match-wins.\n- Dependabot: Renovate ignores its PRs; delete after onboarding.\n- Open: Mend hosted-app pricing for private repos (confirm at install). advance has no CI gate yet (conformAdvanceCi pending) → automerge deferral.\n\n## Acceptance Criteria\n- **AC1** Shared `default.json` at security-gates root: `extends [\"config:recommended\",\"helpers:pinGitHubActionDigests\",\"docker:pinDigests\"]`, `minimumReleaseAge: \"7 days\"` (null'd for lockFileMaintenance/pin/replacement), `platformAutomerge: true`, `lockFileMaintenance` enabled, `vulnerabilityAlerts` enabled, semanticCommits auto, grouping (dev-deps non-major), and packageRules that automerge ONLY devDependencies patch/minor + github-actions/docker digests + lockFileMaintenance, and set `automerge:false` for major and for production dependencies (rules ordered so major/prod win).\n- **AC2** Per-repo `renovate.json` extending the shared preset in all 4 repos (security-gates, pokeedge, pokeedge-web, advance). advance subdirs (plugin/, acp-mux/) auto-detected; optional grouping only.\n- **AC3** Automerge structurally gated per repo: branch protection requires the repo's gate check (pokeedge/web → `Sharperflow CI Gate`; security-gates → `self-test`/actionlint; advance → only after `conformAdvanceCi` provides a gate) AND repo \"Allow auto-merge\" enabled. Majors + production deps never automerge.\n- **AC4** Renovate GitHub App installed on the org/repos (org-admin handoff if no scope) + each repo's onboarding PR merged.\n- **AC5** pokeedge `.github/dependabot.yml` removed AFTER Renovate onboarding merges (no gap; Renovate ignores Dependabot meanwhile).\n- **AC6** `docs/ci-standard.md` documents the Renovate dependency-update policy (preset, cooldown, automerge-gated-on-checks, no-major/prod-automerge) and closes the stale \"Dependabot maintains pins\" assumption.\n\n## Constraints\n- No hosted-dashboard REQUIREMENT (Renovate dependencyDashboard = in-repo GitHub issue, acceptable).\n- One updater per repo (retire Dependabot where it overlaps).\n- Per-ecosystem correctness (pep621/bun/npm/github-actions/docker).\n- Cooldown lives in Renovate only (not duplicated in enforceLifecycleScriptBlocking).\n\n## Avoidances\n- Do not run two updaters on one repo (dual PRs / lockfile conflicts).\n- Do not automerge major or production dependencies unreviewed.\n- Do not bypass the repo's required gate check for automerge.\n- Do not break the tag-only release flow.\n\n## Verify in design\n- Mend hosted Renovate pricing for private repos (pokeedge, pokeedge-web) — confirm at install; if not free, decide self-host vs accept.\n- Cooldown 3 vs 7 days (default 7; security-exempt).\n- advance automerge stays off/conservative until conformAdvanceCi gives it a `Sharperflow CI Gate`.\n- Exact gate-check context name per repo for the automerge requirement.",
+    "design": "# Design — adoptRenovateOrgWide\n\nValidated vs docs.renovatebot.com (adv-researcher, build 43.214.2). No separate validator spawn needed.\n\n## 1. Shared preset (AC1) — `default.json` at security-gates repo root (native)\n```json\n{\n  \"$schema\": \"https://docs.renovatebot.com/renovate-schema.json\",\n  \"extends\": [\"config:recommended\", \"helpers:pinGitHubActionDigests\", \"docker:pinDigests\"],\n  \"dependencyDashboard\": true,\n  \"semanticCommits\": \"auto\",\n  \"schedule\": [\"before 6am on monday\"],\n  \"minimumReleaseAge\": \"7 days\",\n  \"internalChecksFilter\": \"strict\",\n  \"platformAutomerge\": true,\n  \"labels\": [\"dependencies\"],\n  \"lockFileMaintenance\": { \"enabled\": true, \"schedule\": [\"before 6am on monday\"] },\n  \"vulnerabilityAlerts\": { \"enabled\": true, \"labels\": [\"security\"] },\n  \"packageRules\": [\n    { \"description\": \"Cooldown not validatable for PM-driven update types\", \"matchUpdateTypes\": [\"lockFileMaintenance\", \"pin\", \"replacement\"], \"minimumReleaseAge\": null },\n    { \"description\": \"Group non-major dev deps\", \"matchDepTypes\": [\"devDependencies\"], \"matchUpdateTypes\": [\"minor\", \"patch\"], \"groupName\": \"dev dependencies (non-major)\" },\n    { \"description\": \"Automerge dev deps patch/minor\", \"matchDepTypes\": [\"devDependencies\"], \"matchUpdateTypes\": [\"minor\", \"patch\"], \"automerge\": true },\n    { \"description\": \"Automerge actions + docker digests\", \"matchManagers\": [\"github-actions\", \"dockerfile\", \"docker-compose\"], \"matchUpdateTypes\": [\"minor\", \"patch\", \"digest\", \"pin\"], \"automerge\": true },\n    { \"description\": \"Automerge lockfile maintenance\", \"matchUpdateTypes\": [\"lockFileMaintenance\"], \"automerge\": true },\n    { \"description\": \"NEVER automerge major\", \"matchUpdateTypes\": [\"major\"], \"automerge\": false },\n    { \"description\": \"NEVER automerge production deps\", \"matchDepTypes\": [\"dependencies\", \"project.dependencies\"], \"automerge\": false }\n  ]\n}\n```\nOrder = last-match-wins: the major/prod `automerge:false` rules are LAST so they override.\n\n## 2. Per-repo `renovate.json` (AC2)\n- **security-gates** (native): `{ \"extends\": [\"github>Sharper-Flow/sharperflow-security-gates\"], \"packageRules\": [{ \"matchManagers\": [\"github-actions\"], \"groupName\": \"github actions\" }] }` — bumps its own SHA pins.\n- **pokeedge** (PR): `{ \"extends\": [\"github>Sharper-Flow/sharperflow-security-gates\"] }` (pep621 + lockFileMaintenance handles uv.lock).\n- **pokeedge-web** (PR): `{ \"extends\": [\"github>Sharper-Flow/sharperflow-security-gates\"] }` (bun auto).\n- **advance** (PR): `{ \"extends\": [\"github>Sharper-Flow/sharperflow-security-gates\"] }` + optional pnpm-subpackage grouping; subdirs auto-detected.\n\n## 3. Branch-protection automerge gating (AC3)\n- Renovate `platformAutomerge` enqueues GitHub native auto-merge → waits for required checks. So enforcement = each repo must (a) **require its gate check** and (b) enable **\"Allow auto-merge\"**.\n  - pokeedge/web: org ruleset already requires `Sharperflow CI Gate`; ensure repo \"Allow auto-merge\" on (web set in #94 era; verify pokeedge). `gh api -X PATCH repos/... -F allow_auto_merge=true`.\n  - security-gates: required check = `self-test` (actionlint) — confirm it's required on main; enable allow_auto_merge.\n  - advance: **defer automerge** until `conformAdvanceCi` provides `Sharperflow CI Gate`. Until then advance Renovate opens PRs but automerge has no gate → set advance `renovate.json` to NOT automerge yet (or rely on no allow_auto_merge). Document.\n- Majors/prod never automerge (preset).\n\n## 4. Renovate App install (AC4) — privileged runbook (handoff)\n- Org owner installs the Mend Renovate GitHub App (https://github.com/apps/renovate) on Sharper-Flow → All or the 4 repos. Org-admin scope; not doable from this session token. Confirm private-repo pricing at install (UNCLEAR from docs).\n- Each repo gets a \"Configure Renovate\" onboarding PR (no changes until merged) — merge them.\n\n## 5. Dependabot removal (AC5)\n- After Renovate onboarding merges on pokeedge, remove `.github/dependabot.yml` (PR). Renovate ignores Dependabot meanwhile → no gap.\n\n## 6. Docs (AC6)\n- `docs/ci-standard.md`: add a \"Dependency updates (Renovate)\" section — shared preset, 7-day cooldown (security-exempt), automerge policy (dev/patch-minor + digests + lockfile-maint auto after the gate; majors/prod → human PR), one-updater rule. Remove/replace the stale \"Dependabot maintains the pins\" line.\n\n## Execution routing\n- Native (security-gates, full checkpoint): `default.json` preset, security-gates `renovate.json`, `ci-standard.md`.\n- Cross-project PRs: pokeedge/web/advance `renovate.json`; pokeedge dependabot removal.\n- Privileged/handoff: App install (org-admin); `allow_auto_merge` repo settings (gh api where scoped, else handoff).\n\n## Verification strategy\n- JSON validates against the Renovate schema (`npx`... no — use a node/ajv check or `renovate-config-validator` via bunx/pnpm dlx, NOT npm).\n- Confirm each repo's `renovate.json` parses + extends resolve.\n- Post-install: onboarding PRs appear; a test Renovate PR respects cooldown + automerge rules; security-gates SHA pins get a bump PR.\n\n## Risks\n- Mend private pricing — if not free, fallback self-host (heavier) — decide at install.\n- advance automerge gap until conformAdvanceCi — handled by deferral.\n- Renovate config validation tooling: use `bunx renovate-config-validator` or `pnpm dlx`, never npm/npx (per eliminateNpmUsage).",
+    "executiveSummary": "# Executive Summary — adoptRenovateOrgWide\n\nRenovate is now the single, org-wide dependency updater across all 4 Sharper Flow repos (security-gates, pokeedge, pokeedge-web, advance), replacing the lone pokeedge Dependabot setup. One shared preset governs every repo; updates auto-merge only after the repo's real CI gate passes.\n\n## What was built\n- **Shared preset** `default.json` (security-gates root) — `config:recommended` + GitHub-Action/Docker digest pinning, **7-day supply-chain cooldown** (`minimumReleaseAge`), security fixes cooldown-exempt, `lockFileMaintenance`, `vulnerabilityAlerts`, dev-dep grouping.\n- **Per-repo `renovate.json` ×4** extending the preset (advance adds pnpm-subpackage grouping).\n- **`docs/ci-standard.md` + `README.md`** — documented policy; retired the stale \"Dependabot maintains pins\" guidance.\n\n## Automerge policy (amended mid-flight by user decision)\nOriginal conservative policy (automerge dev/patch-minor only; majors + production deps → human PR) was **superseded**: the preset now sets top-level `automerge: true` so **all update types — including majors and production deps — auto-merge once the repo's required check is green**.\n\nRationale: pokeedge and web require `Sharperflow CI Gate`, a **real functional suite** (unit + integration on pgvector Postgres + Playwright e2e + contract). Renovate merges **only green**, so a breaking update fails the suite, the PR stays open red, and never merges. The test suite is the review — a human gate nobody would actually use was adding no safety. The 7-day cooldown means every auto-merged release already survived a week in the wild.\n\n**advance is the deliberate exception** — it has no `Sharperflow CI Gate` yet (deferred until `conformAdvanceCi`), so it is double-guarded: `automerge: false` in its config **and** repo \"Allow auto-merge\" off.\n\n## Verified\n- `renovate-config-validator`: preset + security-gates config validate clean.\n- All 4 default branches carry the extending `renovate.json`; advance override present.\n- Org ruleset `Sharperflow App Protection` requires `Sharperflow CI Gate`; `allow_auto_merge` armed on pokeedge/web/security-gates, off on advance.\n- Renovate App installed (pokeedge dependency dashboard live); pokeedge Dependabot absent (one updater).\n\n## Follow-ups (separate changes)\n- **Agent dependency-PR reviewer** — optional extra signal (changelog/deprecation reading) on top of the test gate. Deferred as its own proposal; not a safety dependency.\n- **advance automerge** — enable once `conformAdvanceCi` provides a functional `Sharperflow CI Gate`.",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-06T23:42:38.199Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1** Shared `default.json` at security-gates root: `extends [\"config:recommended\",\"helpers:pinGitHubActionDigests\",\"docker:pinDigests\"]`, `minimumReleaseAge: \"7 days\"` (null'd for lockFileMaintenance/pin/replacement), `platformAutomerge: true`, `lockFileMaintenance` enabled, `vulnerabilityAlerts` enabled, semanticCommits auto, grouping (dev-deps non-major), and packageRules that automerge ONLY devDependencies patch/minor + github-actions/docker digests + lockFileMaintenance, and set `automerge:false` for major and for production dependencies (rules ordered so major/prod win). | pass | default.json on main (PR #7, #8). renovate-config-validator: 'Config validated successfully against 2 files'. Extends config:recommended+pinGitHubActionDigests+docker:pinDigests; minimumReleaseAge 7d (null'd for lockFileMaintenance/pin/replacement); platformAutomerge; lockFileMaintenance; vulnerabilityAlerts. |\n| AC2 | acceptance_criterion | **AC2** Per-repo `renovate.json` extending the shared preset in all 4 repos (security-gates, pokeedge, pokeedge-web, advance). advance subdirs (plugin/, acp-mux/) auto-detected; optional grouping only. | pass | All 4 default branches verified: security-gates extends local>Sharper-Flow/sharperflow-security-gates; pokeedge/web/advance extend github>Sharper-Flow/sharperflow-security-gates. advance adds pnpm-subpackage grouping. Merged: #283 (pokeedge), #100 (web), #146 (advance). |\n| AC3 | acceptance_criterion | **AC3** Automerge structurally gated per repo: branch protection requires the repo's gate check (pokeedge/web → `Sharperflow CI Gate`; security-gates → `self-test`/actionlint; advance → only after `conformAdvanceCi` provides a gate) AND repo \"Allow auto-merge\" enabled. Majors + production deps never automerge. | pass | Org ruleset 'Sharperflow App Protection' (active) requires check 'Sharperflow CI Gate' on default branch (pokeedge/web). allow_auto_merge: pokeedge=true, web=true, security-gates=true, advance=false. platformAutomerge waits for required check → merges only green. Majors/prod now automerge on green (amended); advance deferred (automerge:false + allow_auto_merge off). |\n| AC4 | acceptance_criterion | **AC4** Renovate GitHub App installed on the org/repos (org-admin handoff if no scope) + each repo's onboarding PR merged. | pass | Renovate (Mend) App installed on org — confirmed by live pokeedge dependency dashboard (user screenshot). Onboarding PRs N/A: each repo had renovate.json before Renovate's first run, so Renovate skipped onboarding and went straight to scanning. Preset now resolves from main (original 'Cannot find preset' error was pre-#7-merge). |\n| AC5 | acceptance_criterion | **AC5** pokeedge `.github/dependabot.yml` removed AFTER Renovate onboarding merges (no gap; Renovate ignores Dependabot meanwhile). | pass | pokeedge .github/dependabot.yml absent: gh api contents 404, .github/ listing has no dependabot.yml, code search empty. Renovate is sole updater. |\n| AC6 | acceptance_criterion | **AC6** `docs/ci-standard.md` documents the Renovate dependency-update policy (preset, cooldown, automerge-gated-on-checks, no-major/prod-automerge) and closes the stale \"Dependabot maintains pins\" assumption. | pass | docs/ci-standard.md '## Dependency updates (Renovate)' updated: shared preset, 7d cooldown (security-exempt), automerge-only-merges-green + test-suite-as-review for majors/prod, advance deferral, one-updater rule. README pin-policy line → Renovate. Stale 'Dependabot maintains pins' replaced. |\n| C1 | constraint | No hosted-dashboard REQUIREMENT (Renovate dependencyDashboard = in-repo GitHub issue, acceptable). | respected | dependencyDashboard:true = in-repo GitHub issue. Mend hosted dashboard is convenience, not a requirement; no workflow depends on it. |\n| C2 | constraint | One updater per repo (retire Dependabot where it overlaps). | respected | pokeedge Dependabot absent; Renovate sole updater across all 4 repos. |\n| C3 | constraint | Per-ecosystem correctness (pep621/bun/npm/github-actions/docker). | respected | config:recommended auto-detects pep621(uv)/bun/npm(pnpm)/github-actions/docker. advance pnpm-subpackage grouping added; subdirs auto-detected. |\n| C4 | constraint | Cooldown lives in Renovate only (not duplicated in enforceLifecycleScriptBlocking). | respected | minimumReleaseAge lives only in the Renovate preset; not duplicated in enforceLifecycleScriptBlocking. |\n| DONT1 | avoidance | Do not run two updaters on one repo (dual PRs / lockfile conflicts). | respected | No repo runs two updaters: pokeedge dependabot.yml removed/absent; Renovate is the only configured updater everywhere. |\n| DONT2 | avoidance | Do not automerge major or production dependencies unreviewed. | respected | AMENDED by explicit user decision. Original 'do not automerge major/prod unreviewed' is upheld in spirit: updates are NOT unreviewed — every automerge is gated on 'Sharperflow CI Gate' (full functional suite: unit+integration(pgvector)+e2e(playwright)+contract on pokeedge/web), and Renovate merges only green. The test suite is the review (machine, not human, per user). A breaking major/prod update fails the suite → PR stays red → never merges. 7-day cooldown means every merged release survived a week. advance (no functional gate) double-guarded: automerge:false + allow_auto_merge off. |\n| DONT3 | avoidance | Do not bypass the repo's required gate check for automerge. | respected | platformAutomerge uses GitHub native auto-merge which cannot bypass the required 'Sharperflow CI Gate' check. No --admin bypass wired into automerge path. |\n| DONT4 | avoidance | Do not break the tag-only release flow. | respected | Only renovate.json/default.json + docs touched. No release.yml or tag-trigger workflow modified across any repo. Tag-only release flow intact. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/proposal.md",
+      "updatedAt": "2026-06-06T22:17:38.297Z",
+      "contentHash": "ec5ea1d0640432e33d4f9b3f1e34326abc0a5ceb13add90011f1ed18a1bd7f26"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-06T22:17:38.297Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/agreement.md",
+      "updatedAt": "2026-06-06T22:23:58.722Z",
+      "contentHash": "bd42c989906de83e513cfae239c95ddcfd9769029448653c9e02acf6d1c0c297"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/design.md",
+      "updatedAt": "2026-06-06T22:24:48.321Z",
+      "contentHash": "e368fd1e3cf26e23b19443c6a9ee62615ec36d0827a57d574bac014109474864"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/adoptRenovateOrgWide/executive-summary.md",
+      "updatedAt": "2026-06-06T23:42:55.582Z",
+      "contentHash": "5ea0222d16337a26bccaaaeebedd580416e2776fd6806228ab8ebbbe466ed7d9"
+    }
+  },
+  "lastSignalAt": "2026-06-06T23:43:01.242Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_ASSUMPTION_HEAVY",
+      "severity": "warning",
+      "message": "Proposal references authentication/authorization without specifying the model. What auth mechanism will be used?",
+      "recorded_at": "2026-06-06T22:19:02.423Z"
+    }
+  ],
+  "worktree_auto_managed": true
+}
