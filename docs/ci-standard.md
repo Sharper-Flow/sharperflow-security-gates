@@ -224,10 +224,10 @@ Policy:
 
 - **Required status checks**: `Sharperflow CI Gate` only, `strict` (branch must be
   up to date before merging).
-- **Enforced for admins**: `enforcement: active` and `bypass_actors` empty of
-  humans — no person bypasses, including org owners and repo admins. The **only**
-  permitted bypass is the release automation identity (see
-  [Release automation & ruleset bypass](#release-automation--ruleset-bypass)).
+- **Enforced for admins**: `enforcement: active` and `bypass_actors: []` — no one
+  bypasses, including org owners and repo admins. Releases adhere to the ruleset
+  via [tag-only release](#release-automation) (the default); a bypass actor is an
+  escape hatch only for repos that must push release commits to `main`.
 - **No required human review**: `required_approving_review_count: 0`. Automated
   gates are the merge authority; this keeps Dependabot auto-merge clean. PRs are
   still required (no direct pushes to the default branch).
@@ -254,58 +254,68 @@ App with `Administration: write`** at org scope. `GITHUB_TOKEN` does NOT suffice
 Applying the ruleset is an explicit privileged operation (a runbook step), not an
 automated CI mutation.
 
-### Release automation & ruleset bypass
+### Release automation
 
-semantic-release (`@semantic-release/git`, `python-semantic-release`) pushes a
-`chore(release): <version> [skip ci]` commit **directly to the default branch**
-plus a tag. The ruleset's require-PR and required-`Sharperflow CI Gate` rules
-would reject that push (the `[skip ci]` commit never runs CI, so the required
-check is absent). **The release identity MUST therefore be a ruleset bypass
-actor**, or releases break the moment the ruleset is applied.
+semantic-release bumps the version on a merge to the default branch. But the
+default branch is protected by the ruleset (require-PR + required
+`Sharperflow CI Gate`, `bypass_actors: []`), so a release **must not** push a
+version-bump commit to it. The Sharperflow default **adheres to the ruleset
+rather than weakening it**:
 
-A bypass actor with `bypass_mode: always` skips the **entire** ruleset for that
-identity (both require-PR and required-status-check), so the release push lands;
-everyone else stays fully gated.
+#### Default (required): tag-only release
 
-**Recommended — dedicated GitHub App:**
+semantic-release creates and pushes the **version tag** — tags are NOT governed
+by the branch ruleset — but pushes **no commit** to the default branch:
+
+- **JS/TS:** omit `@semantic-release/git` from `.releaserc`. The core still tags;
+  `package.json`/`CHANGELOG` are simply not committed to `main` (this is the
+  semantic-release maintainers' recommended setup for protected branches).
+- **Python:** run `python-semantic-release` in tag-only mode (no version commit /
+  no `--vcs-release`).
+- The version bump is carried into the `staging` branch by the promote step
+  (stamp `package.json` / `pyproject.toml` from the latest tag), so deploy
+  pipelines read the correct version.
+
+The ruleset stays strict (`bypass_actors: []`) and the org never grants a
+release-bot push exception. Apply protection with:
+
+```bash
+scripts/apply-ruleset.sh --no-release-bypass
+```
+
+`--no-release-bypass` is the **normal** path for a tag-only repo — it is not a
+weakening override.
+
+#### Escape hatch (only if a release MUST push commits to main)
+
+If a repo genuinely cannot go tag-only and must push release assets to the
+default branch, grant **one** release identity a ruleset bypass — prefer a
+dedicated GitHub App, never a human or org-admin:
 
 ```yaml
-# release.yml (consumer repo)
+# release.yml — mint a short-lived App token
 - uses: actions/create-github-app-token@<sha>  # vN
   id: app-token
   with:
     app-id: ${{ secrets.RELEASE_APP_ID }}
     private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
-# ... run semantic-release with GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+# run semantic-release with GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 ```
-
-Bypass entry (composed at apply time, not committed):
-
-```json
-{ "actor_id": <App ID>, "actor_type": "Integration", "bypass_mode": "always" }
-```
-
-Apply with:
 
 ```bash
-scripts/apply-ruleset.sh --bypass-app-id <App ID>
+scripts/apply-ruleset.sh --bypass-app-id <App ID>   # escape hatch — prefer tag-only
 ```
 
-Notes:
+Bypass entry (composed at apply time, not committed —
+`{ "actor_id": <App ID>, "actor_type": "Integration", "bypass_mode": "always" }`).
+Use the **App ID** (`gh api /app`), not the installation/client id; the App needs
+`contents: write`. `Team`/`User` actors (`--bypass-team-id` / `--bypass-user-id`)
+are a cloud-only, non-portable fallback. A bypass actor skips the **entire**
+ruleset for that identity — which is exactly why tag-only is preferred.
 
-- Use the **App ID** (`gh api /app` with the App JWT) — **not** the installation
-  id or client id. A wrong id silently fails to match.
-- The App needs **`contents: write`** on the target repos.
-- App-installation-token pushes **are** attributed to the App (Integration) and
-  **do** trigger downstream workflows — keep `[skip ci]` to avoid a re-run loop.
-- **Tags are unaffected**: this ruleset targets `branch`, not `tag`.
-- **Cloud fallback** (less clean, non-portable): a `Team` or `User` actor via
-  `--bypass-team-id` / `--bypass-user-id`. Rulesets cannot bypass a bare user on
-  GHES; prefer the App.
-
-The committed `rulesets/sharperflow-app-protection.json` keeps `bypass_actors: []`;
-`apply-ruleset.sh` injects the release bypass at apply time and **refuses to apply
-without one** unless `--no-release-bypass` is passed.
+The committed `rulesets/sharperflow-app-protection.json` always keeps
+`bypass_actors: []`; any bypass is injected only at apply time via the escape-hatch
+flags above.
 
 ---
 
@@ -346,8 +356,8 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 - [ ] Setup via the shared `setup-python-uv` / `setup-bun-node` composite.
 - [ ] All org `uses:` SHA-pinned + version comment; Dependabot `github-actions`
       enabled.
-- [ ] Org ruleset applied **with the release bypass actor set**
-      (`apply-ruleset.sh --bypass-app-id <App ID>`); classic required-check
-      contexts removed.
-- [ ] Release automation (semantic-release) can still push to the default branch
-      — verify a release after applying the ruleset.
+- [ ] Org ruleset applied (`apply-ruleset.sh --no-release-bypass` for the default
+      tag-only release; `--bypass-app-id <App ID>` only if the repo must push
+      release commits to `main`); classic required-check contexts removed.
+- [ ] Release is tag-only (semantic-release tags but pushes no commit to `main`)
+      — verify a release lands the tag and the staging promote stamps the version.
