@@ -224,8 +224,10 @@ Policy:
 
 - **Required status checks**: `Sharperflow CI Gate` only, `strict` (branch must be
   up to date before merging).
-- **Enforced for admins**: `enforcement: active` with empty `bypass_actors` — no
-  one bypasses, including org owners and repo admins.
+- **Enforced for admins**: `enforcement: active` and `bypass_actors` empty of
+  humans — no person bypasses, including org owners and repo admins. The **only**
+  permitted bypass is the release automation identity (see
+  [Release automation & ruleset bypass](#release-automation--ruleset-bypass)).
 - **No required human review**: `required_approving_review_count: 0`. Automated
   gates are the merge authority; this keeps Dependabot auto-merge clean. PRs are
   still required (no direct pushes to the default branch).
@@ -251,6 +253,59 @@ Org-ruleset writes require **`admin:org`** (org-admin classic PAT) or a **GitHub
 App with `Administration: write`** at org scope. `GITHUB_TOKEN` does NOT suffice.
 Applying the ruleset is an explicit privileged operation (a runbook step), not an
 automated CI mutation.
+
+### Release automation & ruleset bypass
+
+semantic-release (`@semantic-release/git`, `python-semantic-release`) pushes a
+`chore(release): <version> [skip ci]` commit **directly to the default branch**
+plus a tag. The ruleset's require-PR and required-`Sharperflow CI Gate` rules
+would reject that push (the `[skip ci]` commit never runs CI, so the required
+check is absent). **The release identity MUST therefore be a ruleset bypass
+actor**, or releases break the moment the ruleset is applied.
+
+A bypass actor with `bypass_mode: always` skips the **entire** ruleset for that
+identity (both require-PR and required-status-check), so the release push lands;
+everyone else stays fully gated.
+
+**Recommended — dedicated GitHub App:**
+
+```yaml
+# release.yml (consumer repo)
+- uses: actions/create-github-app-token@<sha>  # vN
+  id: app-token
+  with:
+    app-id: ${{ secrets.RELEASE_APP_ID }}
+    private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+# ... run semantic-release with GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+```
+
+Bypass entry (composed at apply time, not committed):
+
+```json
+{ "actor_id": <App ID>, "actor_type": "Integration", "bypass_mode": "always" }
+```
+
+Apply with:
+
+```bash
+scripts/apply-ruleset.sh --bypass-app-id <App ID>
+```
+
+Notes:
+
+- Use the **App ID** (`gh api /app` with the App JWT) — **not** the installation
+  id or client id. A wrong id silently fails to match.
+- The App needs **`contents: write`** on the target repos.
+- App-installation-token pushes **are** attributed to the App (Integration) and
+  **do** trigger downstream workflows — keep `[skip ci]` to avoid a re-run loop.
+- **Tags are unaffected**: this ruleset targets `branch`, not `tag`.
+- **Cloud fallback** (less clean, non-portable): a `Team` or `User` actor via
+  `--bypass-team-id` / `--bypass-user-id`. Rulesets cannot bypass a bare user on
+  GHES; prefer the App.
+
+The committed `rulesets/sharperflow-app-protection.json` keeps `bypass_actors: []`;
+`apply-ruleset.sh` injects the release bypass at apply time and **refuses to apply
+without one** unless `--no-release-bypass` is passed.
 
 ---
 
@@ -291,4 +346,8 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 - [ ] Setup via the shared `setup-python-uv` / `setup-bun-node` composite.
 - [ ] All org `uses:` SHA-pinned + version comment; Dependabot `github-actions`
       enabled.
-- [ ] Org ruleset applied; classic required-check contexts removed.
+- [ ] Org ruleset applied **with the release bypass actor set**
+      (`apply-ruleset.sh --bypass-app-id <App ID>`); classic required-check
+      contexts removed.
+- [ ] Release automation (semantic-release) can still push to the default branch
+      — verify a release after applying the ruleset.
