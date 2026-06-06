@@ -93,11 +93,12 @@ Protection is applied once as an org-level Ruleset, not per-repo by hand:
 check = `Sharperflow CI Gate` only; strict; enforced for admins; no required human
 review. See the [standard](docs/ci-standard.md#6-branch-protection-org-rulesets).
 
-> **Release automation:** semantic-release pushes release commits directly to the
-> default branch, so the release identity must be a ruleset bypass actor. Apply
-> with `scripts/apply-ruleset.sh --bypass-app-id <App ID>` — the script refuses to
-> apply without a release bypass. See
-> [Release automation & ruleset bypass](docs/ci-standard.md#release-automation--ruleset-bypass).
+> **Release automation:** the default is **tag-only** — semantic-release pushes a
+> tag, not a commit to the default branch, so the ruleset stays strict (no bypass).
+> Apply with `scripts/apply-ruleset.sh --no-release-bypass`. A ruleset bypass
+> (`--bypass-app-id <App ID>`) is an **escape hatch** only for repos that must push
+> release commits to `main`. See
+> [Release automation](docs/ci-standard.md#release-automation).
 
 ## Design posture
 

@@ -5,12 +5,11 @@
 # Idempotent: looks up an existing org ruleset by name and updates it (PUT),
 # otherwise creates it (POST). Use --dry-run to preview without mutating.
 #
-# Release bypass: semantic-release pushes a `chore(release)` commit directly to
-# the default branch, which the ruleset's require-PR + required-status-check
-# rules would otherwise reject. You MUST supply the release identity as a bypass
-# actor (recommended: a dedicated GitHub App via --bypass-app-id) or pass
-# --no-release-bypass to acknowledge applying a ruleset that will block releases.
-# See docs/ci-standard.md "Release automation & ruleset bypass".
+# Release bypass: the Sharperflow default is TAG-ONLY releases — semantic-release
+# pushes only a tag (not a commit to the default branch), so NO bypass is needed
+# and --no-release-bypass is the normal path. The --bypass-* flags are an escape
+# hatch ONLY for repos whose release must push commits to the default branch.
+# See docs/ci-standard.md "Release automation".
 #
 # Auth: requires a token with `admin:org` (org-admin classic PAT) or a GitHub
 # App with org `Administration: write`. The Actions GITHUB_TOKEN is NOT
@@ -38,19 +37,18 @@ Usage: scripts/apply-ruleset.sh [options]
 Options:
   --org <name>           GitHub org (default: Sharper-Flow)
   --file <path>          Ruleset JSON (default: rulesets/sharperflow-app-protection.json)
-  --bypass-app-id <id>   Release GitHub App ID -> Integration bypass (recommended).
+  --bypass-app-id <id>   Release GitHub App ID -> Integration bypass (ESCAPE HATCH).
                          Use the App ID (gh api /app), NOT the installation or client id.
                          Also settable via env RELEASE_BYPASS_APP_ID.
-  --bypass-team-id <id>  Release Team ID -> Team bypass (cloud fallback).
-  --bypass-user-id <id>  Release User ID -> User bypass (cloud-only; non-portable).
-  --no-release-bypass    Apply with NO release bypass (will block semantic-release).
+  --bypass-team-id <id>  Release Team ID -> Team bypass (escape hatch; cloud-only).
+  --bypass-user-id <id>  Release User ID -> User bypass (escape hatch; cloud-only).
+  --no-release-bypass    Apply with no bypass (NORMAL path for tag-only releases).
   --dry-run              Show the create/update + composed payload; mutate nothing.
   -h, --help             Show this help
 
-Release bypass: semantic-release pushes release commits straight to the default
-branch. Without a bypass actor the ruleset's require-PR + required-check rules
-reject that push and releases fail. Supply --bypass-app-id (preferred) or
-acknowledge with --no-release-bypass.
+Release bypass: tag-only releases (the Sharperflow default) need NO bypass — use
+--no-release-bypass. Only repos whose release pushes commits to the default branch
+need a bypass actor; for those, prefer --bypass-app-id (a dedicated GitHub App).
 
 Auth: token with `admin:org` (org-admin PAT) or a GitHub App with org
 `Administration: write`. GITHUB_TOKEN from Actions is NOT sufficient.
@@ -108,13 +106,16 @@ if [ ! -f "$RULESET_FILE" ]; then
 	exit 2
 fi
 
-# Release-bypass guard: refuse to apply a release-breaking ruleset unless a
-# bypass actor is supplied or the caller explicitly opts out.
+# Release guard: require an explicit release-mode choice so the operator is aware
+# of how releases interact with the ruleset. Tag-only (the default) needs no
+# bypass — pass --no-release-bypass. A bypass actor is only for repos that push
+# release commits to the default branch.
 if [ -z "${BYPASS_APP_ID}${BYPASS_TEAM_ID}${BYPASS_USER_ID}" ] && [ "$NO_RELEASE_BYPASS" != true ]; then
-	echo "error: no release bypass actor set." >&2
-	echo "  semantic-release pushes release commits directly to the default branch;" >&2
-	echo "  applying this ruleset without a bypass actor will block releases." >&2
-	echo "  Pass --bypass-app-id <App ID> (recommended) or --no-release-bypass to override." >&2
+	echo "error: release mode not specified." >&2
+	echo "  Tag-only releases (the Sharperflow default) need no bypass:" >&2
+	echo "    pass --no-release-bypass (normal path)." >&2
+	echo "  Only if this repo's release pushes commits to the default branch:" >&2
+	echo "    pass --bypass-app-id <App ID> (escape hatch)." >&2
 	exit 2
 fi
 
