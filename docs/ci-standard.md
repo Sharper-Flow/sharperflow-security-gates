@@ -230,12 +230,20 @@ a built-in supply-chain cooldown.
 - **Cooldown (supply-chain).** `minimumReleaseAge: "7 days"` — newly-published
   versions wait 7 days before Renovate installs them (most malicious releases are
   pulled within an hour). **Security fixes are exempt** (they skip the line).
-- **Automerge is gated on the required check.** Renovate uses GitHub native
-  auto-merge (`platformAutomerge`), so a PR merges only after the repo's required
-  check passes (`Sharperflow CI Gate` for apps; `self-test` here). Automerge is
-  scoped to **dev-dependency patch/minor + github-actions/docker digests +
-  lockfile maintenance**. **Major updates and production dependencies never
-  automerge** — they require a human PR.
+- **Automerge is gated on the required check, and only merges green.** Renovate
+  uses GitHub native auto-merge (`platformAutomerge` + top-level `automerge: true`),
+  so a PR merges **only after** the repo's required check passes — never on red.
+  Where the required check is a real functional test suite (`Sharperflow CI Gate`
+  on pokeedge/web rolls up unit + integration + e2e + contract; `self-test`
+  actionlint here), **all update types automerge on green — including majors and
+  production dependencies**. The test suite *is* the review: a breaking update
+  fails the suite, the PR stays open red, and Renovate never merges it. Combined
+  with the 7-day cooldown, every auto-merged release already survived a week in
+  the wild.
+- **Repos without a functional gate do not automerge.** advance has no
+  `Sharperflow CI Gate` yet (deferred until `conformAdvanceCi` lands one), so its
+  `renovate.json` sets `automerge: false` — Renovate opens PRs but never merges
+  them unreviewed.
 - **One updater per repo.** Do not run Dependabot alongside Renovate (duplicate
   PRs + lockfile conflicts). Renovate ignores Dependabot PRs; remove
   `.github/dependabot.yml` after Renovate onboarding.
