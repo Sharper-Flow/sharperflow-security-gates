@@ -1,0 +1,64 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Sharperflow org-wide Renovate preset. Repos extend via: { \"extends\": [\"github>Sharper-Flow/sharperflow-security-gates\"] }",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests"
+  ],
+  "dependencyDashboard": true,
+  "semanticCommits": "auto",
+  "schedule": ["before 6am on monday"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "platformAutomerge": true,
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  },
+  "packageRules": [
+    {
+      "description": "Cooldown cannot be validated for PM-driven update types",
+      "matchUpdateTypes": ["lockFileMaintenance", "pin", "replacement"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Group non-major dev dependencies",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dev dependencies (non-major)"
+    },
+    {
+      "description": "Automerge dev dependencies (patch/minor) — gated on the repo's required checks",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "description": "Automerge github-actions + docker digest/pin updates",
+      "matchManagers": ["github-actions", "dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin"],
+      "automerge": true
+    },
+    {
+      "description": "Automerge lockfile maintenance",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "automerge": true
+    },
+    {
+      "description": "NEVER automerge major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "description": "NEVER automerge production dependencies",
+      "matchDepTypes": ["dependencies", "project.dependencies"],
+      "automerge": false
+    }
+  ]
+}

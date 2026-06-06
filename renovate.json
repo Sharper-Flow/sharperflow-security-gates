@@ -1,0 +1,11 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["local>Sharper-Flow/sharperflow-security-gates"],
+  "packageRules": [
+    {
+      "description": "Group all github-actions bumps (this repo's SHA-pinned reusables/actions)",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ]
+}
