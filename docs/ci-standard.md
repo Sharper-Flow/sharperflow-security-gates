@@ -329,6 +329,28 @@ These are recommended but MUST NOT require per-app secrets to pass CI:
 
 ---
 
+## Code quality beyond the security gate
+
+**SonarCloud is retired.** Sharper Flow no longer uses SonarCloud (no hosted
+dashboard, no `sonar-project.properties`, no `SONAR_TOKEN`). The required path is
+the OSS gates (Semgrep, Bandit, OSV, Gitleaks, Trivy) plus app-owned coverage and
+complexity gates under `Sharperflow CI Gate`.
+
+Retiring Sonar leaves four capabilities it used to provide. Each is tracked as a
+deliberate research→decision followup rather than silently dropped:
+
+| Capability | Followup change | Likely direction |
+|---|---|---|
+| Duplication detection | `addDuplicationDetection` | jscpd/CPD advisory, or accept-drop |
+| Maintainability/reliability ratings + tech-debt | `addMaintainabilityMetrics` | bounded complexity gate, or rely on review |
+| Coverage-on-new-code | `addDiffCoverageGate` | `diff-cover` on existing coverage artifacts |
+| Deep dataflow/taint SAST | `deepenSastDataflow` | Semgrep taint-mode / Opengrep, or accept CE ceiling |
+
+Coverage **trends**, the **dashboard**, and **PR decoration** are intentionally
+out of scope (no-hosted-dashboard posture).
+
+---
+
 ## App-owned gates
 
 The standard does **not** standardize, and apps keep ownership of:

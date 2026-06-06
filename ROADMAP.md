@@ -5,8 +5,11 @@ across Sharper Flow repos.
 
 > **Status update:** the pilot phase is complete. The reusable security gate is
 > now **permanent and required** under the **[Sharperflow CI Standard](docs/ci-standard.md)**.
-> App repos conform to that standard (single `Sharperflow CI Gate` summary check,
-> shared setup composites, org ruleset). Remaining items below are
+> Both flagship apps conform: pokeedge backend (`hardenCiGateContract`, archived)
+> and pokeedge-web (#92). Releases are **tag-only** (adhere to the org ruleset, no
+> bypass). A **test-tier restructure** (PR-fast vs nightly) is in flight in both
+> apps. **SonarCloud is being retired** — see
+> [SonarCloud retirement](#sonarcloud-retirement) below. Remaining items are
 > follow-ups, not blockers.
 
 Source of truth: workflow YAML and CI override this roadmap if they conflict.
@@ -66,8 +69,8 @@ Update this file when executable behavior changes.
 - [x] Keep example wiring in `examples/pokeedge-python/`.
 - [x] Run the Python gate as CI in PokeEdge backend (pilot).
 - [x] Promote the gate to **permanent + required** via the CI standard.
-- [ ] Conform PokeEdge backend CI to the standard (single `Sharperflow CI Gate`
-  summary, fold security into CI, shared composite, org ruleset) — Change B.
+- [x] Conform PokeEdge backend CI to the standard (`hardenCiGateContract`, archived) —
+  single `Sharperflow CI Gate` summary, folded security, shared composite, org ruleset.
 - [ ] Triage false positives and review suppressions as they surface.
 
 ### Container deploy gate
@@ -92,12 +95,34 @@ These are roadmap items, not behavior changes in this docs-only update.
 ### PokeEdge Web conformance — Change C
 
 - [x] JS/TS reusable gate exists and runs in PokeEdge Web (pilot).
-- [ ] Conform PokeEdge Web CI to the standard (single `Sharperflow CI Gate`
-  summary, fold security into CI, `setup-bun-node` composite, org ruleset,
-  require the real fast-checks/test/build jobs) — Change C.
+- [x] Conform PokeEdge Web CI to the standard (#92) — single `Sharperflow CI Gate`
+  summary, folded security, `setup-bun-node` composite, org ruleset, real
+  fast-checks/test/build required. Releases converted to tag-only (#93).
 - [ ] Decide whether frontend deploy scan targets an image or static artifact.
 - [ ] Preserve existing web lint/type/test commands; do not invent new
   verification flow.
+
+### Test-tier restructure (in flight)
+
+- [ ] pokeedge `restructureCiTestTiers`: PR-required fast lane + promoted
+  integration/e2e/acceptance; `@slow`/perf/fuzz/Bicep → nightly (no merge queue —
+  unavailable on Team/private).
+- [ ] pokeedge-web `parallelizeWebUnitTests`: drop `--maxWorkers=1` + optional
+  shard; state-based waits in the mocked suite.
+- [ ] pokeedge-web `hardenIntegrationE2eSuite` (peer): fix + promote the
+  real-backend integration-e2e job.
+
+### SonarCloud retirement
+
+- [ ] `retireSonarcloud`: disconnect the `sonarqubecloud` App + disable Automatic
+  Analysis, remove `sonar-project.properties` + `SONAR_TOKEN` from both apps,
+  reconcile docs to "no Sonar". (Removing the properties file alone does NOT stop
+  analysis — Sonar ignores it under Automatic Analysis.)
+- Capability-gap followups (research → decide → implement):
+  - [ ] `addDuplicationDetection` — jscpd/CPD or accept-drop.
+  - [ ] `addMaintainabilityMetrics` — bounded complexity/maintainability or rely on review.
+  - [ ] `addDiffCoverageGate` — `diff-cover` on existing coverage artifacts (no dashboard).
+  - [ ] `deepenSastDataflow` — Semgrep taint-mode / Opengrep, or accept Semgrep-CE ceiling.
 
 ## Verification for this repo
 
