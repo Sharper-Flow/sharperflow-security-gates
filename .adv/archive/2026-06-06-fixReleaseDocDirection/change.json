@@ -1,0 +1,394 @@
+{
+  "id": "fixReleaseDocDirection",
+  "title": "Fix release doc direction",
+  "status": "archived",
+  "created_at": "2026-06-06T19:56:59.820Z",
+  "tasks": [
+    {
+      "id": "tk-94df2d3e0a15",
+      "title": "Rewrite docs/ci-standard.md release section to tag-only default",
+      "type": "code",
+      "section": "Docs",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-06T19:59:25.467Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1"
+        ],
+        "respects": [
+          "C1",
+          "DONT1"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T19:59:55.406Z",
+      "verification": "Rewrote ci-standard.md '### Release automation & ruleset bypass' → '### Release automation': tag-only is the default/required (semantic-release tags, no commit to main, ruleset strict bypass_actors[], --no-release-bypass = normal path); App bypass demoted to clearly-labeled escape hatch ('only if a release MUST push commits to main; prefer tag-only'). Updated the enforced-for-admins bullet (no 'only permitted bypass is release identity') and the 2 conformance-checklist items (tag-only default; verify tag+staging-stamp).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "3a85ee309d0c92a0767a3766d030bbe6c6b4be6d",
+      "completedAt": "2026-06-06T20:00:55.363Z",
+      "completed_at": "2026-06-06T20:00:55.363Z"
+    },
+    {
+      "id": "tk-5749a69c3901",
+      "title": "Reframe apply-ruleset.sh wording + README pointer (no logic change)",
+      "type": "code",
+      "section": "Messaging",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-06T19:59:28.831Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2",
+          "AC3"
+        ],
+        "respects": [
+          "C1",
+          "DONT2"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T20:01:17.256Z",
+      "verification": "apply-ruleset.sh reworded (no logic change): header + usage describe --no-release-bypass as the NORMAL tag-only path and --bypass-* as escape hatch; guard message reframed to 'release mode not specified' (tag-only=--no-release-bypass normal; bypass only if pushing commits to main). All flags + guard logic retained. README release-automation blockquote: tag-only default, bypass escape hatch, points to #release-automation.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "README.md",
+        "scripts/apply-ruleset.sh"
+      ],
+      "touched_files": [
+        "README.md",
+        "scripts/apply-ruleset.sh"
+      ],
+      "checkpointSha": "f7928353ad364af2f170f3ea1aad4d4099296c04",
+      "completedAt": "2026-06-06T20:02:11.173Z",
+      "completed_at": "2026-06-06T20:02:11.173Z"
+    },
+    {
+      "id": "tk-8d909dd6fa2c",
+      "title": "Verify release-doc direction fix",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-06T19:59:40.256Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-94df2d3e0a15"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-5749a69c3901"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-06T20:02:11.398Z",
+      "verification": "Verification-only task, no file changes. Evidence: shellcheck PASS; actionlint PASS; guard exit 2 (capability retained); all bypass flags + injection logic intact; tag-only default in ci-standard.md + README; heading renamed; no preferred-bypass framing.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "f7928353ad364af2f170f3ea1aad4d4099296c04",
+      "completedAt": "2026-06-06T20:03:13.623Z",
+      "completed_at": "2026-06-06T20:03:13.623Z"
+    }
+  ],
+  "subagent_reports": [],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-06T19:58:51.157Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved (fast-tracked small native doc fix). Tag-only=default, App-bypass=escape hatch; reframe apply-ruleset.sh guard/help; align README+checklist. Docs/messaging only, no behavior change.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/proposal.md",
+        "content_hash": "c44e6e7225657310694df2453b822a786fb5fa3216583a29c9cbe8e2cc03ebf1",
+        "non_whitespace_chars": 1888,
+        "checked_at": "2026-06-06T19:56:59.968Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-06T19:59:24.952Z",
+      "completed_by": "user",
+      "approval_evidence": "Fast-tracked. Agreement approved with proposal; contract minted (8 items, minimal rigor). Tag-only mechanics already validated in fixRulesetReleaseBypass discovery.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/agreement.md",
+        "content_hash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "non_whitespace_chars": 1044,
+        "checked_at": "2026-06-06T19:56:59.969Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-06T19:59:38.823Z",
+      "completed_by": "agent",
+      "approval_evidence": "Trivial doc/messaging change; no new external surfaces (tag-only validated previously); no validator re-run. ci-standard.md release section → tag-only default + App-bypass escape hatch; apply-ruleset.sh wording reframe (no logic change); README + checklist align.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/design.md",
+        "content_hash": "7b2dedc3ee06b1f06014784a53c76511cb50e3a7e381a699c312c286551338ca",
+        "non_whitespace_chars": 1946,
+        "checked_at": "2026-06-06T19:56:59.970Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-06T19:59:47.166Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved the fast-tracked plan (proposal+plan in one approval). 3 tasks: T1 ci-standard.md rewrite, T2 apply-ruleset.sh wording + README, T3 verify. AC1-4 mapped."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-06T20:03:51.980Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 3 tasks done + checkpointed (T1 ci-standard.md, T2 apply-ruleset.sh+README, T3 verify). Verified: shellcheck PASS, actionlint PASS, guard exit 2 (capability retained), no preferred-bypass framing, tag-only default."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-06T20:04:39.235Z",
+      "completed_by": "user",
+      "approval_evidence": "User accepted with 'approve'. Contract 8/8; docs/messaging-only fix verified (shellcheck/actionlint/guard exit 2/capability retained). Exec summary persisted.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/executive-summary.md",
+        "content_hash": "201645a85a399c6b652ca5170b023cefc55706840e7e8ed91f77deca419adc89",
+        "non_whitespace_chars": 1250,
+        "checked_at": "2026-06-06T19:56:59.971Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "audit: ci-standard.md recommends App bypass, but org chose tag-only (adhere, don't weaken)"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "minimal",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+      "approvedAt": "2026-06-06T19:59:08.079Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** `docs/ci-standard.md` presents tag-only as the Sharperflow default (semantic-release tags but pushes no commit to main; ruleset stays strict, `bypass_actors: []`), with the GitHub App bypass demoted to a clearly-labeled escape hatch (\"only if your release must push commits to main\"). No language recommending bypass as the preferred approach.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** `scripts/apply-ruleset.sh` help + guard messaging reframed so applying with no bypass (`--no-release-bypass`) reads as the normal tag-only path; bypass flags documented as opt-in escape hatch. Script flags/logic unchanged; shellcheck clean.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** `README.md` release-automation pointer + the ci-standard conformance-checklist item aligned with tag-only default.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** self-test + actionlint + shellcheck green; grep confirms no \"preferred\"/recommended-bypass framing remains.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "Documentation + messaging only — do NOT change apply-ruleset.sh flags/logic or the ruleset JSON.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Do not alter security-gate workflows or composites.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not remove the bypass capability (stays as escape hatch).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not change ruleset enforcement or no-op the guard.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-06T20:03:51.847Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "ci-standard.md '### Release automation' (renamed from '...& ruleset bypass'): tag-only is the default/required (semantic-release tags, no commit to main, ruleset strict bypass_actors[]); App bypass demoted to labeled escape hatch. grep: no preferred/recommended-bypass framing remains. heading present at line 257."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "apply-ruleset.sh header+usage describe --no-release-bypass as NORMAL tag-only path, --bypass-* as escape hatch; guard message reframed to 'release mode not specified'. shellcheck PASS; guard still exit 2; all flags + bypass-injection logic retained (capability unchanged)."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "README release-automation blockquote: tag-only default + --no-release-bypass, bypass escape hatch, points to #release-automation. ci-standard conformance-checklist items updated to tag-only default + verify-tag/staging-stamp; admin-enforcement bullet updated (no 'only permitted bypass is release identity')."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "shellcheck PASS, actionlint PASS, self-test presence parity ok; grep confirms no preferred/recommended bypass framing (only unrelated optional-conventions line) and tag-only present in both docs."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Docs/messaging only: apply-ruleset.sh flags (--bypass-app-id/team/user, --no-release-bypass) + guard logic + python bypass-injection unchanged; ruleset JSON untouched."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No security-gate workflows or composites modified; only docs/ci-standard.md, scripts/apply-ruleset.sh wording, README.md."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Bypass capability retained as documented escape hatch (flags + injection logic present); not removed."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Guard not no-opped — still requires an explicit release-mode choice and exits 2 when neither --no-release-bypass nor a --bypass-* flag is given; ruleset enforcement unchanged."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** `docs/ci-standard.md` presents tag-only as the Sharperflow default (semantic-release tags but pushes no commit to main; ruleset stays strict, `bypass_actors: []`), with the GitHub App bypass demoted to a clearly-labeled escape hatch (\"only if your release must push commits to main\"). No language recommending bypass as the preferred approach.",
+    "**AC2** `scripts/apply-ruleset.sh` help + guard messaging reframed so applying with no bypass (`--no-release-bypass`) reads as the normal tag-only path; bypass flags documented as opt-in escape hatch. Script flags/logic unchanged; shellcheck clean.",
+    "**AC3** `README.md` release-automation pointer + the ci-standard conformance-checklist item aligned with tag-only default.",
+    "**AC4** self-test + actionlint + shellcheck green; grep confirms no \"preferred\"/recommended-bypass framing remains."
+  ],
+  "documents": {
+    "proposal": "## Why\n`docs/ci-standard.md` recommends a GitHub App **bypass** as the preferred release-on-protected-main approach, contradicting the org's chosen **tag-only / adhere-don't-weaken** direction (pokeedge #273, web #93). The `apply-ruleset.sh` guard also frames no-bypass as a scary override when tag-only repos legitimately need no bypass.\n\n## What Changes\n1. Rewrite `docs/ci-standard.md` \"Release automation & ruleset bypass\" → **\"Release automation\"**: tag-only is the default (semantic-release tags but commits nothing to `main`; `bypass_actors: []`; ruleset stays strict). Demote the GitHub App bypass to an explicit **escape hatch** (\"only if your release must push commits to main\").\n2. Reframe `scripts/apply-ruleset.sh`: applying with **no bypass is the normal tag-only path**; `--no-release-bypass` messaging/help reworded as expected (not an override); the bypass flags documented as the escape-hatch path. Keep the guard but flip its tone (default-safe).\n3. Align the `README.md` release-automation pointer + the conformance-checklist item.\n\n## Success Criteria\n- `ci-standard.md` presents tag-only as the Sharperflow default with App-bypass as a labeled escape hatch; no language recommending bypass as preferred.\n- `apply-ruleset.sh` help/guard text treats no-bypass (tag-only) as the normal path; bypass as opt-in escape hatch; shellcheck clean.\n- README pointer + checklist consistent.\n- self-test + actionlint + shellcheck green.\n\n## Affected Code\n`docs/ci-standard.md`, `scripts/apply-ruleset.sh`, `README.md`.\n\n## Constraints\n- Do NOT change `apply-ruleset.sh`'s actual behavior/flags or the ruleset JSON — this is documentation + messaging direction only (the `--bypass-*` / `--no-release-bypass` flags stay functional).\n- Do not alter the security gates or composites.\n\n## Scope\n### In Scope\n`docs/ci-standard.md` release section, `scripts/apply-ruleset.sh` help/guard wording, `README.md` pointer + checklist.\n### Out of Scope\nRuleset JSON; the apply-script's flags/logic; any app repo; the security-gate workflows/composites.\n### Must Not\nRemove the bypass capability (it stays as an escape hatch); change ruleset enforcement; weaken any guard into a no-op.",
+    "problemStatement": "The shipped Sharperflow CI Standard contradicts the org's chosen release approach.\n\n`docs/ci-standard.md` (from change `fixRulesetReleaseBypass`) recommends a **GitHub App bypass as the preferred** way to let semantic-release push to a ruleset-protected `main`. But the org explicitly decided the opposite — *\"adhere to the ruleset, don't weaken it\"* — and adopted **tag-only releases** (semantic-release creates the tag but pushes no commit to `main`; the version bump is carried into staging). pokeedge already shipped tag-only (#273) and pokeedge-web is following (#93).\n\nConsequently:\n1. The canonical standard points the wrong way — it recommends weakening the ruleset (bypass) when the org standard is to keep it strict (tag-only, `bypass_actors: []`).\n2. `scripts/apply-ruleset.sh`'s refuse-without-bypass guard reinforces the wrong default: it treats applying with no bypass as a scary override (`--no-release-bypass`), when for a tag-only repo that is the **correct, expected** choice and releases work fine.\n\nDesired outcome: `docs/ci-standard.md` makes **tag-only the Sharperflow default** (no bypass, ruleset stays strict), with the App-bypass demoted to a clearly-labeled escape hatch for repos that must push release commits to `main`; and `apply-ruleset.sh` guidance/messaging reframed so `--no-release-bypass` reads as the normal tag-only path, not a dangerous override.",
+    "agreement": "# Agreement — fixReleaseDocDirection\n\n## Acceptance Criteria\n- **AC1** `docs/ci-standard.md` presents tag-only as the Sharperflow default (semantic-release tags but pushes no commit to main; ruleset stays strict, `bypass_actors: []`), with the GitHub App bypass demoted to a clearly-labeled escape hatch (\"only if your release must push commits to main\"). No language recommending bypass as the preferred approach.\n- **AC2** `scripts/apply-ruleset.sh` help + guard messaging reframed so applying with no bypass (`--no-release-bypass`) reads as the normal tag-only path; bypass flags documented as opt-in escape hatch. Script flags/logic unchanged; shellcheck clean.\n- **AC3** `README.md` release-automation pointer + the ci-standard conformance-checklist item aligned with tag-only default.\n- **AC4** self-test + actionlint + shellcheck green; grep confirms no \"preferred\"/recommended-bypass framing remains.\n\n## Constraints\n- Documentation + messaging only — do NOT change apply-ruleset.sh flags/logic or the ruleset JSON.\n- Do not alter security-gate workflows or composites.\n\n## Avoidances\n- Do not remove the bypass capability (stays as escape hatch).\n- Do not change ruleset enforcement or no-op the guard.",
+    "design": "# Design — fixReleaseDocDirection\n\nTrivial doc/messaging change; no external surfaces beyond what's already validated (tag-only mechanics confirmed in `fixRulesetReleaseBypass` discovery). No validator re-run needed.\n\n## 1. docs/ci-standard.md (AC1)\nRename \"### Release automation & ruleset bypass\" → \"### Release automation\". Restructure:\n- **Default (Sharperflow): tag-only.** semantic-release creates+pushes the version tag (tags are not governed by the branch ruleset); it pushes NO commit to `main`. The ruleset stays strict (`bypass_actors: []`). For JS `@semantic-release/git` is omitted; for python-semantic-release the workflow tags without committing. Version bump is carried into the staging branch by the promote step. → \"adhere to the ruleset, don't weaken it.\"\n- **Escape hatch (only if a release MUST push commits to main): GitHub App bypass.** Move the create-github-app-token + Integration `bypass_mode:always` content here, clearly labeled \"escape hatch — prefer tag-only.\" Keep App-ID-not-install-id + contents:write notes.\n- Keep the apply command examples but lead with `apply-ruleset.sh --no-release-bypass` (tag-only) as the normal path; `--bypass-app-id` shown as the escape hatch.\n\n## 2. scripts/apply-ruleset.sh (AC2)\nReword only (no logic change):\n- Header comment + `usage()`: describe `--no-release-bypass` as the normal tag-only path; bypass flags as opt-in escape hatch for repos pushing release commits to main.\n- The refuse-without-bypass guard message: reframe from \"applying without a bypass will break releases\" to \"this repo has no release bypass set — correct for tag-only releases (default). If your release pushes commits to main, pass --bypass-app-id; otherwise pass --no-release-bypass to proceed.\" (Guard still requires an explicit choice, but tone is default-safe.)\n\n## 3. README.md (AC3)\nUpdate the release-automation blockquote: lead with tag-only as default; bypass as escape hatch. Align the ci-standard conformance-checklist item (\"release works tag-only, or bypass set if pushing to main\").\n\n## Verification (AC4)\n- shellcheck scripts/apply-ruleset.sh; actionlint; self-test docs/presence; grep for \"preferred\"/\"recommended\" near bypass → none; grep confirms `--no-release-bypass` framed as normal.",
+    "executiveSummary": "Corrected the shipped Sharperflow CI Standard so its release guidance matches the org's chosen direction. The prior `fixRulesetReleaseBypass` change had documented the GitHub App bypass as the *preferred* way to release onto a ruleset-protected `main`; the org instead decided to *adhere to the ruleset, not weaken it* and adopted tag-only releases (pokeedge #273, web #93). This change rewrites `docs/ci-standard.md`'s release section (renamed '### Release automation') to make **tag-only the default/required** approach — semantic-release pushes only a tag (not governed by the branch ruleset), the ruleset stays strict (`bypass_actors: []`), and the version bump is carried to staging — with the GitHub App bypass demoted to a clearly-labeled escape hatch for repos that must push release commits to `main`. `scripts/apply-ruleset.sh` help text and the refuse-without-bypass guard were reframed so `--no-release-bypass` reads as the normal tag-only path rather than a dangerous override (flags and logic unchanged — the bypass capability and the explicit-choice guard are retained). The README pointer, conformance-checklist items, and the admin-enforcement bullet were aligned. Docs/messaging only — no behavior, flag, or ruleset-JSON changes. Verified: shellcheck + actionlint pass, the guard still exits 2 without an explicit choice, all bypass flags + injection logic intact, and no 'preferred/recommended bypass' language remains. Contract 8/8.",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-06T20:03:51.847Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1** `docs/ci-standard.md` presents tag-only as the Sharperflow default (semantic-release tags but pushes no commit to main; ruleset stays strict, `bypass_actors: []`), with the GitHub App bypass demoted to a clearly-labeled escape hatch (\"only if your release must push commits to main\"). No language recommending bypass as the preferred approach. | pass | ci-standard.md '### Release automation' (renamed from '...& ruleset bypass'): tag-only is the default/required (semantic-release tags, no commit to main, ruleset strict bypass_actors[]); App bypass demoted to labeled escape hatch. grep: no preferred/recommended-bypass framing remains. heading present at line 257. |\n| AC2 | acceptance_criterion | **AC2** `scripts/apply-ruleset.sh` help + guard messaging reframed so applying with no bypass (`--no-release-bypass`) reads as the normal tag-only path; bypass flags documented as opt-in escape hatch. Script flags/logic unchanged; shellcheck clean. | pass | apply-ruleset.sh header+usage describe --no-release-bypass as NORMAL tag-only path, --bypass-* as escape hatch; guard message reframed to 'release mode not specified'. shellcheck PASS; guard still exit 2; all flags + bypass-injection logic retained (capability unchanged). |\n| AC3 | acceptance_criterion | **AC3** `README.md` release-automation pointer + the ci-standard conformance-checklist item aligned with tag-only default. | pass | README release-automation blockquote: tag-only default + --no-release-bypass, bypass escape hatch, points to #release-automation. ci-standard conformance-checklist items updated to tag-only default + verify-tag/staging-stamp; admin-enforcement bullet updated (no 'only permitted bypass is release identity'). |\n| AC4 | acceptance_criterion | **AC4** self-test + actionlint + shellcheck green; grep confirms no \"preferred\"/recommended-bypass framing remains. | pass | shellcheck PASS, actionlint PASS, self-test presence parity ok; grep confirms no preferred/recommended bypass framing (only unrelated optional-conventions line) and tag-only present in both docs. |\n| C1 | constraint | Documentation + messaging only — do NOT change apply-ruleset.sh flags/logic or the ruleset JSON. | respected | Docs/messaging only: apply-ruleset.sh flags (--bypass-app-id/team/user, --no-release-bypass) + guard logic + python bypass-injection unchanged; ruleset JSON untouched. |\n| C2 | constraint | Do not alter security-gate workflows or composites. | respected | No security-gate workflows or composites modified; only docs/ci-standard.md, scripts/apply-ruleset.sh wording, README.md. |\n| DONT1 | avoidance | Do not remove the bypass capability (stays as escape hatch). | respected | Bypass capability retained as documented escape hatch (flags + injection logic present); not removed. |\n| DONT2 | avoidance | Do not change ruleset enforcement or no-op the guard. | respected | Guard not no-opped — still requires an explicit release-mode choice and exits 2 when neither --no-release-bypass nor a --bypass-* flag is given; ruleset enforcement unchanged. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/proposal.md",
+      "updatedAt": "2026-06-06T19:56:59.994Z",
+      "contentHash": "c44e6e7225657310694df2453b822a786fb5fa3216583a29c9cbe8e2cc03ebf1"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-06T19:56:59.994Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/agreement.md",
+      "updatedAt": "2026-06-06T19:58:55.259Z",
+      "contentHash": "72f234b45b869151ea220ee0b0497f4ba3af2f31d337ffca61b6bc8ccea42c71"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/design.md",
+      "updatedAt": "2026-06-06T19:59:11.813Z",
+      "contentHash": "7b2dedc3ee06b1f06014784a53c76511cb50e3a7e381a699c312c286551338ca"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixReleaseDocDirection/executive-summary.md",
+      "updatedAt": "2026-06-06T20:03:56.846Z",
+      "contentHash": "201645a85a399c6b652ca5170b023cefc55706840e7e8ed91f77deca419adc89"
+    }
+  },
+  "lastSignalAt": "2026-06-06T20:04:39.235Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "worktree_auto_managed": true
+}
