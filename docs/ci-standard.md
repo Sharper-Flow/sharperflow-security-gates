@@ -237,9 +237,15 @@ a built-in supply-chain cooldown.
   on pokeedge/web rolls up unit + integration + e2e + contract; `self-test`
   actionlint here), **all update types automerge on green — including majors and
   production dependencies**. The test suite *is* the review: a breaking update
-  fails the suite, the PR stays open red, and Renovate never merges it. Combined
-  with the 7-day cooldown, every auto-merged release already survived a week in
-  the wild.
+   fails the suite, the PR stays open red, and Renovate never merges it. Combined
+   with the 7-day cooldown, every auto-merged release already survived a week in
+   the wild.
+- **Major updates require Dependency Dashboard approval.** Breaking majors (e.g.
+   `python 3.x`, framework majors) never go green on their own and would otherwise
+   re-run the full CI suite on every rebase forever. The preset gates `major`
+   updates behind an explicit human opt-in in the dashboard (`dependencyDashboardApproval`),
+   so they create **no PR/CI churn** until someone commits to the migration.
+   Minor/patch/digest updates still flow hands-off.
 - **Repos without a functional gate do not automerge.** advance has no
   `Sharperflow CI Gate` yet (deferred until `conformAdvanceCi` lands one), so its
   `renovate.json` sets `automerge: false` — Renovate opens PRs but never merges

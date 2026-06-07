@@ -34,6 +34,11 @@
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "dev dependencies (non-major)"
+    },
+    {
+      "description": "Major updates require Dependency Dashboard approval. Breaking majors (e.g. python 3.x, framework majors) never auto-merge and would otherwise re-run the full CI suite on every rebase forever. Gate them behind an explicit human opt-in in the dashboard so they create no PR/CI churn until someone commits to the migration. Minor/patch/digest updates still flow hands-off.",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
     }
   ]
 }
