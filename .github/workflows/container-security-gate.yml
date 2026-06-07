@@ -46,10 +46,10 @@ jobs:
     steps:
       - name: Checkout caller repository
         if: inputs.trivy-ignorefile != ''
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Run Trivy image scanner
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ${{ inputs.image-ref }}
           scanners: vuln,secret
@@ -61,7 +61,7 @@ jobs:
 
       - name: Generate SBOM
         if: inputs.sbom-format != ''
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ${{ inputs.image-ref }}
           format: ${{ inputs.sbom-format }}
@@ -70,7 +70,7 @@ jobs:
 
       - name: Upload SBOM artifact
         if: inputs.sbom-format != ''
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: sbom-${{ inputs.sbom-format }}
           path: sbom-${{ inputs.sbom-format }}.json
