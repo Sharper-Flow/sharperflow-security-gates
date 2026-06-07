@@ -85,10 +85,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout caller repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: ${{ inputs.python-version }}
 
@@ -136,7 +136,7 @@ jobs:
     timeout-minutes: 8
     steps:
       - name: Checkout caller repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Check lockfile exists
         id: lockfile
@@ -152,7 +152,7 @@ jobs:
 
       - name: OSV Scanner
         if: steps.lockfile.outputs.exists == 'true'
-        uses: google/osv-scanner-action/osv-scanner-action@v2.3.8
+        uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2 # v2.3.8
         with:
           scan-args: |
             --lockfile=${{ inputs.lockfile-path }}
@@ -164,7 +164,7 @@ jobs:
     timeout-minutes: 8
     steps:
       - name: Checkout caller repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           fetch-depth: 0
 
@@ -199,10 +199,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout caller repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Run Trivy filesystem scanner
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -215,7 +215,7 @@ jobs:
 
       - name: Generate SBOM
         if: inputs.sbom-format != ''
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -225,7 +225,7 @@ jobs:
 
       - name: Upload SBOM artifact
         if: inputs.sbom-format != ''
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: sbom-${{ inputs.sbom-format }}
           path: sbom-${{ inputs.sbom-format }}.json
