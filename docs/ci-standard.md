@@ -616,6 +616,28 @@ normalize for oasdiff 3.1 parser compatibility → `oasdiff breaking`) invoked f
 the `contract-gate` job in `pr-gate.yml`, required via `Sharperflow CI Gate`. New
 producer/consumer pairs should follow that pattern rather than re-deriving it.
 
+**Two complementary halves of the contract:**
+
+| Side | Repo | Check | Enforces |
+|---|---|---|---|
+| Producer (breaking-change) | backend (PokeEdge) | `oasdiff breaking` consumer-spec vs backend spec | backend change does not break the consumer the frontend was built against |
+| Consumer (spec-sync) | frontend (PokeEdge-Web) | `Backend Contract Sync Check`: canonicalized equality of committed `docs/openapi.json` vs backend `main` | the consumer's committed baseline is not stale vs the producer |
+
+Both are required (each under its repo's `Sharperflow CI Gate`); neither replaces
+the other. The producer side proves *no breaking change*; the consumer side proves
+*the baseline is current*.
+
+> **Gotcha — specs over 1 MB.** GitHub's Contents API returns **empty content for
+> files larger than 1 MB**. PokeEdge's `openapi.json` crossed that threshold on
+> 2026-05-23. To fetch a large spec cross-repo, resolve its blob SHA then use the
+> **Git Blobs API** (handles up to 100 MB):
+> ```bash
+> BLOB_SHA=$(gh api 'repos/<org>/<producer>/contents/openapi.json?ref=main' --jq .sha)
+> gh api "repos/<org>/<producer>/git/blobs/${BLOB_SHA}" --jq .content | base64 -d > spec.json
+> ```
+> The simple `gh api .../contents/...` form in the canonical job shape above is fine
+> only while the spec stays under 1 MB.
+
 **Complements (not replacements):** [Spectral](https://github.com/stoplightio/spectral)
 for API *design* linting; [Schemathesis](https://github.com/schemathesis/schemathesis)
 for *runtime* contract/property testing. oasdiff is the static breaking-change
