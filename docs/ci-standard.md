@@ -268,14 +268,25 @@ and is applied via [`scripts/apply-ruleset.sh`](../scripts/apply-ruleset.sh).
 
 Policy:
 
-- **Required status checks**: `Sharperflow CI Gate` only, `strict` (branch must be
-  up to date before merging).
+- **Required status checks**: `Sharperflow CI Gate` only, **non-strict**
+  (`strict_required_status_checks_policy: false`). The branch does **not** have to
+  be up to date before merging — see [Merge serialization](#merge-serialization-strict-off--squash-only--auto-merge) for why.
+- **Squash-only merges**: the `pull_request` rule sets
+  `allowed_merge_methods: ["squash"]`. This is the **sole** squash-only enforcer:
+  it excludes merge-commit **and** rebase, giving a linear squash history. (The
+  `non_fast_forward` rule only blocks force-pushes — it does **not** forbid merge
+  commits; that would be `required_linear_history`, which this ruleset does not
+  use.)
+- **Force-push guard**: `non_fast_forward` prevents force-pushing the default
+  branch.
 - **Enforced for admins**: `enforcement: active` and `bypass_actors: []` — no one
   bypasses, including org owners and repo admins. Releases adhere to the ruleset
   via [tag-only release](#release-automation) (the default); a bypass actor is an
-  escape hatch only for repos that must push release commits to `main`.
+  escape hatch only for repos that must push release commits to `main`. **No tool
+  (merge bot, queue, etc.) is ever added as a bypass actor** — protection-as-code
+  on a security-gates org must not be weakened to accommodate tooling.
 - **No required human review**: `required_approving_review_count: 0`. Automated
-  gates are the merge authority; this keeps Renovate auto-merge clean. PRs are
+  gates are the merge authority; this keeps bot auto-merge clean. PRs are
   still required (no direct pushes to the default branch).
 - **Targeting**: by `repository_name.include` with `protected: true` (resists
   rename-evasion). Switch to a `repository_property` custom property as the app set
@@ -283,6 +294,69 @@ Policy:
 - **Optional hardening**: add `integration_id` to the required status check to bind
   it to the GitHub Actions app and prevent a write-capable actor from spoofing the
   context.
+
+### Merge serialization (strict-off + squash-only + auto-merge)
+
+The protection model is tuned for **many concurrent PRs from AI agents and bots**
+(single machine today, multiple machines and Renovate/Dependabot in future) on a
+small-seat org. GitHub's native merge queue is **not available** here (it requires
+GitHub Enterprise Cloud for private repos; this org is on the Team plan), so the
+serialization strategy is built from GitHub primitives that work on any plan and
+are server-side (machine-count-independent):
+
+- **`strict` is OFF.** Strict ("require branches to be up to date before merging")
+  is what caused the collision loop: PR A merges → PR B is suddenly "not up to
+  date" → B rebases + reruns CI → meanwhile C merges → B is stale again. Disabling
+  strict removes that churn. PRs merge serially as their required check goes green,
+  ordered by GitHub server-side.
+- **Native auto-merge does the serialization.** Use
+  `gh pr merge --squash --auto`. GitHub merges each PR only after
+  `Sharperflow CI Gate` passes — never on red — and arbitrates ordering itself. No
+  manual "update branch", no local compute, identical behavior across machines.
+- **Squash-only** keeps `main` linear and each PR a single commit.
+- **Residual risk (accepted):** loose checks are **not** re-evaluated against the
+  new base after another PR merges, so a green-but-logically-incompatible pair can
+  land and break `main`. This is caught by **the next PR's CI** (and, for the
+  backend↔frontend API surface specifically, by the
+  [cross-repo contract gate](#cross-repo-api-contract-gate-openapi-breaking-changes)).
+  At small-team PR volume this is an acceptable trade vs the constant rebase churn
+  of strict mode. If main-breaking pairs become frequent, escalate
+  ([If collisions persist](#if-collisions-persist-after-strict-off)).
+- **Hard precondition before applying squash-only:** every targeted repo MUST have
+  **`allow_squash_merge: true`**. A squash-only ruleset against a repo whose squash
+  button is disabled produces an *empty* allowed-method intersection and **blocks
+  all merges**. The apply runbook verifies this first (see
+  [`apply-ruleset.sh`](#release-automation) and the conformance checklist).
+  Normalizing `allow_merge_commit`/`allow_rebase_merge` to `false` is recommended
+  hygiene (removes dead buttons) but is not load-bearing; `allow_squash_merge:
+  true` is.
+
+### If collisions persist after strict-off
+
+Strict-off + auto-merge + squash dissolves the rebase-churn loop without serialized
+pre-merge re-testing. If, after this is in place, you still observe
+**green-but-incompatible PR pairs breaking `main` often enough to hurt**, escalate
+to a real serializing merge queue. Native GitHub merge queue stays unavailable on
+the Team plan for private repos, so the candidates are:
+
+- **Mergify** (free tier ≤5 active users on private repos) — speculative/batched
+  queue; reads and respects existing rulesets/required checks.
+- **Another AI-enabled PR-merge bot** — survey current options at adoption time
+  (Trunk, Aviator, etc.).
+
+Before adopting any of them, **verified caveats** (do not skip):
+
+- **Confirm bot-author billing.** Free tiers count "active users"; many bot/agent
+  PR authors can silently consume the free seat limit. Verify before relying.
+- **Bot-PR queueing needs explicit config** (e.g. a `bot_account`) and has a
+  documented regression history — test a Renovate/Dependabot PR end-to-end first.
+- **Keep the tool WITHIN the ruleset — never as a bypass actor.** A security-gates
+  org must not hand merge authority that skips its own gates.
+
+This is a documented escalation path only; **no third-party queue is adopted by
+this standard.** Agent-side merge serialization (e.g. a Temporal mutex) is
+explicitly **not** used: it taxes local hardware and cannot govern bot PRs that
+never pass through the orchestrator.
 
 ### Ruleset ↔ classic protection coexistence
 
@@ -422,10 +496,18 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
       SHA-pinned with version comment; no standalone pilot, no inline duplicate
       scanners.
 - [ ] Setup via the shared `setup-python-uv` / `setup-bun-node` composite.
-- [ ] All org `uses:` SHA-pinned + version comment; Renovate enabled
-      (`renovate.json` extends the org preset).
+- [ ] All org `uses:` SHA-pinned + version comment; one dependency updater
+      enabled (`renovate.json` extends the org preset, **or** Dependabot —
+      one updater per ecosystem per repo; see [Dependency updates](#dependency-updates-renovate--or-dependabot)).
+- [ ] Repo merge buttons normalized: **`allow_squash_merge: true`** (load-bearing
+      precondition for the squash-only ruleset — without it all merges block),
+      `allow_merge_commit: false`, `allow_rebase_merge: false`, `allow_auto_merge:
+      true`.
 - [ ] Org ruleset applied (`apply-ruleset.sh --no-release-bypass` for the default
       tag-only release; `--bypass-app-id <App ID>` only if the repo must push
       release commits to `main`); classic required-check contexts removed.
+      Ruleset is non-strict + squash-only (see [Merge serialization](#merge-serialization-strict-off--squash-only--auto-merge)).
+- [ ] Auto-merge standardized: PRs merged via `gh pr merge --squash --auto`; bot
+      PRs (Renovate/Dependabot) auto-merge on green `Sharperflow CI Gate`.
 - [ ] Release is tag-only (semantic-release tags but pushes no commit to `main`)
       — verify a release lands the tag and the staging promote stamps the version.
