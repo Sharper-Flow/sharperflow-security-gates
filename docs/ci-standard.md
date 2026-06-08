@@ -206,56 +206,135 @@ uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-
 - The **`# vX.Y.Z` comment** keeps the human-readable version local and visible
   (Locality of Behavior): the reader sees exactly which release is running without
   resolving the SHA.
-- **Renovate maintains both** — `helpers:pinGitHubActionDigests` bumps the SHA and
-  keeps the trailing version comment current (see
-  [Dependency updates](#dependency-updates-renovate)).
+- **The dependency updater maintains both** — Renovate
+  (`helpers:pinGitHubActionDigests`) or Dependabot (`github-actions` ecosystem)
+  bumps the SHA and keeps the trailing version comment current (see
+  [Dependency updates](#dependency-updates-renovate--or-dependabot)).
 - **No floating tags or branches** (`@v0`, `@main`) in app workflows or in this
   repo's examples.
 
 ---
 
-## Dependency updates (Renovate)
+## Dependency updates (Renovate — or Dependabot)
 
-Sharper Flow uses **Renovate** (one updater, org-wide) — **not Dependabot** — for
-automated dependency updates across all ecosystems (uv via `pep621`, bun, pnpm,
-`github-actions`, docker). One tool covers them all, with the best bun support and
-a built-in supply-chain cooldown.
+Sharper Flow uses **one automated dependency updater per ecosystem per repo**. Both
+**Renovate** and **GitHub Dependabot** are supported, equal paths. A repo MAY use
+either; the per-repo choice is made on its own merits (see
+[Choosing the updater](#choosing-the-updater)).
 
-- **Shared preset.** All repos extend one org preset:
+> **Supersession (2026-06-08).** This replaces the earlier `adoptRenovateOrgWide`
+> rule of "**Renovate only, not Dependabot**". That rule was reversed by explicit
+> decision: Dependabot is now a first-class equal path, and a future per-repo
+> re-assessment will pick the updater for each repo once the merge pathway is
+> settled. The original concerns (below) still inform that choice — they are
+> design inputs, not a ban.
+
+### The one hard rule: one updater per ecosystem per repo
+
+Do **not** run Renovate and Dependabot on the **same ecosystem** in the **same
+repo**. Both write the same manifests/lockfiles → duplicate PRs + competing
+lockfile rewrites. Coexistence is only safe when strictly partitioned (different
+repos, or non-overlapping ecosystems in one repo). When migrating between updaters,
+remove the old one's config for that ecosystem first.
+
+### Merge behavior (both updaters)
+
+Both gate auto-merge on the required check and **only merge green** — the
+`Sharperflow CI Gate` functional suite *is* the review. A breaking update fails the
+suite, the PR stays open red, and never merges. With strict-off + squash-only (see
+[Merge serialization](#merge-serialization-strict-off--squash-only--auto-merge)),
+bot PRs use **`gh pr merge --squash --auto`** and merge serially on green, no
+rebase churn.
+
+- Repos with **no functional gate** do not auto-merge (e.g. advance has no
+  `Sharperflow CI Gate` yet → `automerge: false` + repo "Allow auto-merge" off,
+  double-guarded).
+- Enable **"Allow auto-merge"** in repo settings for either updater's auto-merge to
+  take effect.
+
+### Renovate path
+
+- **Shared preset.** All Renovate repos extend one org preset:
   ```json
   { "extends": ["github>Sharper-Flow/sharperflow-security-gates"] }
   ```
   The preset lives at `default.json` in this repo. Repo-specific tweaks go in each
   repo's `renovate.json`.
 - **Cooldown (supply-chain).** `minimumReleaseAge: "7 days"` — newly-published
-  versions wait 7 days before Renovate installs them (most malicious releases are
-  pulled within an hour). **Security fixes are exempt** (they skip the line).
-- **Automerge is gated on the required check, and only merges green.** Renovate
-  uses GitHub native auto-merge (`platformAutomerge` + top-level `automerge: true`),
-  so a PR merges **only after** the repo's required check passes — never on red.
-  Where the required check is a real functional test suite (`Sharperflow CI Gate`
-  on pokeedge/web rolls up unit + integration + e2e + contract; `self-test`
-  actionlint here), **all update types automerge on green — including majors and
-  production dependencies**. The test suite *is* the review: a breaking update
-   fails the suite, the PR stays open red, and Renovate never merges it. Combined
-   with the 7-day cooldown, every auto-merged release already survived a week in
-   the wild.
-- **Major updates require Dependency Dashboard approval.** Breaking majors (e.g.
-   `python 3.x`, framework majors) never go green on their own and would otherwise
-   re-run the full CI suite on every rebase forever. The preset gates `major`
-   updates behind an explicit human opt-in in the dashboard (`dependencyDashboardApproval`),
-   so they create **no PR/CI churn** until someone commits to the migration.
-   Minor/patch/digest updates still flow hands-off.
-- **Repos without a functional gate do not automerge.** advance has no
-  `Sharperflow CI Gate` yet (deferred until `conformAdvanceCi` lands one), so its
-  `renovate.json` sets `automerge: false` — Renovate opens PRs but never merges
-  them unreviewed.
-- **One updater per repo.** Do not run Dependabot alongside Renovate (duplicate
-  PRs + lockfile conflicts). Renovate ignores Dependabot PRs; remove
-  `.github/dependabot.yml` after Renovate onboarding.
-- **Install.** Renovate is the Mend GitHub App (org-admin install); each repo gets
-  a one-time onboarding PR. Enable "Allow auto-merge" in repo settings for the
-  automerge policy to take effect.
+  versions wait 7 days before install (most malicious releases are pulled within an
+  hour). **Security fixes are exempt.**
+- **Automerge.** `platformAutomerge` + top-level `automerge: true` → native
+  auto-merge on green required check, all update types (majors gated behind
+  Dependency Dashboard approval to avoid endless rebase/CI churn).
+- **Install.** Renovate is the Mend GitHub App (org-admin install); one onboarding
+  PR per repo.
+
+### Dependabot path
+
+- **Config.** `.github/dependabot.yml` with one `package-ecosystem` entry per
+  ecosystem the repo uses (`uv`, `bun`, `npm` for pnpm, `github-actions`,
+  `docker`).
+- **Cooldown (supply-chain).** Dependabot's GA `cooldown` is the analogue of
+  Renovate's `minimumReleaseAge`, with finer semver granularity:
+  ```yaml
+  # .github/dependabot.yml (per ecosystem)
+  updates:
+    - package-ecosystem: "uv"
+      directory: "/"
+      schedule: { interval: "daily" }
+      cooldown:
+        default-days: 7        # ≈ Renovate minimumReleaseAge 7d
+        semver-major-days: 30
+        semver-minor-days: 7
+        semver-patch-days: 3
+  ```
+  **Cooldown applies to version updates only — NOT security updates** (security
+  fixes are never delayed; same as Renovate). Note: cooldown semver tiers work for
+  `uv`/`bun`/`npm` but **`docker` and `github-actions` get `default-days` only**.
+- **Auto-merge** is a GitHub Actions workflow (Dependabot itself cannot enable
+  auto-merge):
+  ```yaml
+  # .github/workflows/dependabot-auto-merge.yml
+  name: Dependabot auto-merge
+  on: pull_request
+  permissions:
+    contents: write
+    pull-requests: write
+  jobs:
+    auto-merge:
+      runs-on: ubuntu-latest
+      if: github.event.pull_request.user.login == 'dependabot[bot]'
+      steps:
+        - id: meta
+          uses: dependabot/fetch-metadata@<sha>  # pin + Renovate/Dependabot-bump
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+        # widen/narrow which update tiers auto-merge via the if: below
+        - if: ${{ steps.meta.outputs.update-type != 'version-update:semver-major' }}
+          run: gh pr merge --auto --squash "$PR_URL"
+          env:
+            PR_URL: ${{ github.event.pull_request.html_url }}
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ```
+  Use `--squash` (matches the squash-only ruleset). Secrets Dependabot needs are
+  **Dependabot secrets**, not Actions secrets. Keep `Sharperflow CI Gate` required
+  — it is the only-merge-green guard.
+
+### Choosing the updater
+
+The per-repo choice is deferred to a future re-assessment. Inputs that decide it:
+
+| Input | Renovate | Dependabot |
+|---|---|---|
+| Bun support maturity | strong | supported, min Bun version-gated (verify live) |
+| `github-actions` SHA-pin + version-comment | `helpers:pinGitHubActionDigests`, battle-tested | pins SHA + updates comment, but has stale-comment edge cases on release-branch actions |
+| Cooldown | uniform `minimumReleaseAge` | GA `cooldown` with semver tiers; **no cooldown for docker** |
+| pnpm security updates | full | limited (npm v7/v8) |
+| Grouping / config ergonomics | rich (shared preset, grouping rules) | `groups` + `dependabot.yml` |
+| Multi-machine future | server-side (neutral) | server-side (neutral) |
+
+Both are fully compatible with the strict-off + squash + auto-merge merge strategy;
+neither has a single-machine dependency.
 
 ---
 
