@@ -209,7 +209,7 @@ uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-
 - **The dependency updater maintains both** — Renovate
   (`helpers:pinGitHubActionDigests`) or Dependabot (`github-actions` ecosystem)
   bumps the SHA and keeps the trailing version comment current (see
-  [Dependency updates](#dependency-updates-renovate--or-dependabot)).
+  [Dependency updates](#dependency-updates-renovate-or-dependabot)).
 - **No floating tags or branches** (`@v0`, `@main`) in app workflows or in this
   repo's examples.
 
@@ -242,7 +242,7 @@ remove the old one's config for that ecosystem first.
 Both gate auto-merge on the required check and **only merge green** — the
 `Sharperflow CI Gate` functional suite *is* the review. A breaking update fails the
 suite, the PR stays open red, and never merges. With strict-off + squash-only (see
-[Merge serialization](#merge-serialization-strict-off--squash-only--auto-merge)),
+[Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge)),
 bot PRs use **`gh pr merge --squash --auto`** and merge serially on green, no
 rebase churn.
 
@@ -349,7 +349,7 @@ Policy:
 
 - **Required status checks**: `Sharperflow CI Gate` only, **non-strict**
   (`strict_required_status_checks_policy: false`). The branch does **not** have to
-  be up to date before merging — see [Merge serialization](#merge-serialization-strict-off--squash-only--auto-merge) for why.
+  be up to date before merging — see [Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge) for why.
 - **Squash-only merges**: the `pull_request` rule sets
   `allowed_merge_methods: ["squash"]`. This is the **sole** squash-only enforcer:
   it excludes merge-commit **and** rebase, giving a linear squash history. (The
@@ -675,7 +675,7 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 - [ ] Setup via the shared `setup-python-uv` / `setup-bun-node` composite.
 - [ ] All org `uses:` SHA-pinned + version comment; one dependency updater
       enabled (`renovate.json` extends the org preset, **or** Dependabot —
-      one updater per ecosystem per repo; see [Dependency updates](#dependency-updates-renovate--or-dependabot)).
+      one updater per ecosystem per repo; see [Dependency updates](#dependency-updates-renovate-or-dependabot)).
 - [ ] Repo merge buttons normalized: **`allow_squash_merge: true`** (load-bearing
       precondition for the squash-only ruleset — without it all merges block),
       `allow_merge_commit: false`, `allow_rebase_merge: false`, `allow_auto_merge:
@@ -683,7 +683,7 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 - [ ] Org ruleset applied (`apply-ruleset.sh --no-release-bypass` for the default
       tag-only release; `--bypass-app-id <App ID>` only if the repo must push
       release commits to `main`); classic required-check contexts removed.
-      Ruleset is non-strict + squash-only (see [Merge serialization](#merge-serialization-strict-off--squash-only--auto-merge)).
+      Ruleset is non-strict + squash-only (see [Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge)).
 - [ ] Auto-merge standardized: PRs merged via `gh pr merge --squash --auto`; bot
       PRs (Renovate/Dependabot) auto-merge on green `Sharperflow CI Gate`.
 - [ ] Release is tag-only (semantic-release tags but pushes no commit to `main`)

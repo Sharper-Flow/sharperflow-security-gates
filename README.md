@@ -30,9 +30,9 @@ Apps invoke it as a job inside their CI workflow and require only the single
 ## Reusable workflows
 
 Pin with a full commit SHA plus a `# vX.Y.Z` version comment (see
-[Pin policy](docs/ci-standard.md#5-pin-policy-lbp--supply-chain)). The dependency
+[Pin policy](docs/ci-standard.md#5-pin-policy-lbp-supply-chain)). The dependency
 updater — Renovate or Dependabot, one per ecosystem per repo (see
-[Dependency updates](docs/ci-standard.md#dependency-updates-renovate--or-dependabot))
+[Dependency updates](docs/ci-standard.md#dependency-updates-renovate-or-dependabot))
 — maintains both.
 
 ```yaml
@@ -94,7 +94,7 @@ Protection is applied once as an org-level Ruleset, not per-repo by hand:
 `rulesets/sharperflow-app-protection.json` + `scripts/apply-ruleset.sh`. Required
 check = `Sharperflow CI Gate` only; **non-strict + squash-only** (PRs merge serially
 via native auto-merge; no branch-up-to-date churn — see
-[Merge serialization](docs/ci-standard.md#merge-serialization-strict-off--squash-only--auto-merge));
+[Merge serialization](docs/ci-standard.md#merge-serialization-strict-off-squash-only-auto-merge));
 enforced for admins; no required human review. **Precondition:** every targeted repo
 must have `allow_squash_merge: true` before applying, or all merges block. See the
 [standard](docs/ci-standard.md#6-branch-protection-org-rulesets).
