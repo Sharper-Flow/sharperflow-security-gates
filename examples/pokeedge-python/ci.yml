@@ -63,10 +63,59 @@ jobs:
       lockfile-path: "uv.lock"
       bandit-config: "configs/security/bandit.yaml"
 
+  # Producer-side cross-repo API contract gate (see docs/ci-standard.md
+  # "Cross-repo API contract gate"). Path-filtered to openapi.json: non-spec PRs
+  # skip (→ success), so the summary still reports without blocking.
+  changes:
+    name: Detect spec changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      openapi: ${{ steps.filter.outputs.openapi }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d  # v4
+        id: filter
+        with:
+          filters: |
+            openapi:
+              - 'openapi.json'
+
+  contract-gate:
+    name: Contract Gate (spec compat)
+    needs: changes
+    if: ${{ needs.changes.outputs.openapi == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - name: Install oasdiff (pinned release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Pin a specific oasdiff release tag; the dependency updater bumps it.
+          # Use the CLI (or oasdiff/oasdiff-action) — NEVER the deprecated
+          # Tufin/oasdiff-action.
+          OASDIFF_VERSION="v1.18.5"
+          URL="https://github.com/oasdiff/oasdiff/releases/download/${OASDIFF_VERSION}/oasdiff_${OASDIFF_VERSION#v}_linux_amd64.tar.gz"
+          curl -sSfL "$URL" | tar xz -C /usr/local/bin oasdiff
+          oasdiff --version
+      - name: Fetch consumer's committed spec (baseline)
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+        run: |
+          gh api repos/Sharper-Flow/PokeEdge-Web/contents/docs/openapi.json \
+            --jq '.content' | base64 -d > /tmp/base-openapi.json
+      - name: Compare for breaking changes (fail on ERR)
+        run: oasdiff breaking /tmp/base-openapi.json openapi.json --fail-on ERR
+
   ci-gate:
     name: Sharperflow CI Gate
     if: ${{ !cancelled() }}
-    needs: [fast-checks, test, build, security]
+    needs: [fast-checks, test, build, security, contract-gate]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}

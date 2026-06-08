@@ -1,0 +1,1299 @@
+{
+  "id": "fixMergeCollisionStrategy",
+  "title": "Fix merge collision strategy",
+  "status": "archived",
+  "created_at": "2026-06-08T19:14:37.759Z",
+  "tasks": [
+    {
+      "id": "tk-1a52689ce24f",
+      "title": "Edit org ruleset JSON: strict-off + squash-only",
+      "type": "code",
+      "section": "Tier 1 — collision-loop fix",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-08T20:48:04.628Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1"
+        ],
+        "respects": [
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:02:12.270Z",
+      "verification": "python assertion: strict=false, allowed_merge_methods=[\"squash\"], ctx=[\"Sharperflow CI Gate\"], bypass_actors=[], non_fast_forward retained. JSON valid.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "rulesets/sharperflow-app-protection.json"
+      ],
+      "touched_files": [
+        "rulesets/sharperflow-app-protection.json"
+      ],
+      "checkpointSha": "bf6a320189dc67090b1b68f4d9854f841a02ff0a",
+      "completedAt": "2026-06-08T21:02:42.087Z",
+      "completed_at": "2026-06-08T21:02:42.087Z"
+    },
+    {
+      "id": "tk-a08702636908",
+      "title": "Update self-test.yml ruleset-JSON assertions",
+      "type": "code",
+      "section": "Tier 1 — collision-loop fix",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-08T20:48:12.255Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1a52689ce24f"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "verifies": [
+          "AC1"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:02:55.880Z",
+      "verification": "Embedded ruleset-JSON assertion block (extracted from self-test.yml) runs green against edited JSON: strict False, allowed_merge_methods [\"squash\"], ctx [\"Sharperflow CI Gate\"], non_fast_forward present, bypass [].",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/workflows/self-test.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/self-test.yml"
+      ],
+      "checkpointSha": "24b7064ecf5b850bd6ede8487be06b90da1a2a8d",
+      "completedAt": "2026-06-08T21:03:24.615Z",
+      "completed_at": "2026-06-08T21:03:24.615Z"
+    },
+    {
+      "id": "tk-2e620dce067a",
+      "title": "Amend ci-standard.md §6 (branch protection) + add Tier-3 escalation playbook",
+      "type": "code",
+      "section": "Tier 1+3+4 — ci-standard.md amendments",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-08T20:48:23.157Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1a52689ce24f"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC3"
+        ],
+        "respects": [
+          "C2",
+          "C6"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:03:29.595Z",
+      "verification": "Docs edit. §6 amended: strict-off + squash-only (allowed_merge_methods sole enforcer) + non_fast_forward=force-push-guard rationale; added \"Merge serialization\" subsection (auto-merge serializes, residual risk, allow_squash_merge hard precondition) + \"If collisions persist after strict-off\" Tier-3 escalation (Mergify/AI-bot, within-rulesets caveat, no adoption); conformance checklist updated (squash precondition, auto-merge, one-updater). Cross-section anchors for Tier4/Tier5 headings to be created next.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "de90e5245e6fb5ff8499a5db2915d3b19355dae2",
+      "completedAt": "2026-06-08T21:04:34.042Z",
+      "completed_at": "2026-06-08T21:04:34.042Z"
+    },
+    {
+      "id": "tk-f43918311748",
+      "title": "Amend ci-standard.md §Dependency-updates: Renovate-OR-Dependabot equal path",
+      "type": "code",
+      "section": "Tier 4 — Dependabot equal-path",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-08T20:48:33.397Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-2e620dce067a"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC3"
+        ],
+        "respects": [
+          "DONT4"
+        ]
+      },
+      "verification": "Docs edit. §Dependency-updates retitled \"(Renovate — or Dependabot)\" + rewritten to equal-path model: supersession of adoptRenovateOrgWide (2026-06-08, with original concerns as design inputs); hard rule one-updater-per-ecosystem-per-repo; shared merge behavior; Renovate path; Dependabot path (GA cooldown config block + --auto --squash workflow + Dependabot-secrets note); Choosing-the-updater re-assessment inputs table. Fixed §Pin-policy stale \"Renovate maintains both\" + dead anchor.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "07a1836eda711608a92234123f6061aef4472ef9",
+      "completedAt": "2026-06-08T21:05:42.343Z",
+      "completed_at": "2026-06-08T21:05:42.343Z"
+    },
+    {
+      "id": "tk-7a3f8210f50f",
+      "title": "Add canonical cross-repo OpenAPI contract-gate section to ci-standard.md + refresh examples",
+      "type": "code",
+      "section": "Tier 2 — standardize oasdiff contract gate",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-08T20:48:46.052Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-2e620dce067a"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC4",
+          "AC5"
+        ],
+        "respects": [
+          "DONT3",
+          "DONT6",
+          "C7"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:05:47.392Z",
+      "verification": "actionlint 1.7.7 clean (exit 0) on all workflows incl. refreshed example + self-test. Embedded ruleset-JSON assertion executes green. Added canonical \"Cross-repo API contract gate (OpenAPI breaking changes)\" section to ci-standard.md (oasdiff CLI/new-action only, never Tufin; --fail-on ERR; consumer-committed-spec baseline model; canonical job shape; PokeEdge reference impl; Spectral/Schemathesis complements). Refreshed examples/pokeedge-python/ci.yml with changes path-filter + contract-gate job (pinned oasdiff v1.18.5, fetch consumer baseline, oasdiff breaking --fail-on ERR) wired into summary needs. Also fixed self-test shellcheck false-positives from apostrophes/backslash in embedded python comments.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/workflows/self-test.yml",
+        "docs/ci-standard.md",
+        "examples/pokeedge-python/ci.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/self-test.yml",
+        "docs/ci-standard.md",
+        "examples/pokeedge-python/ci.yml"
+      ],
+      "checkpointSha": "450ae332e085bb847297aa6e9cfe0172972f4549",
+      "completedAt": "2026-06-08T21:08:08.741Z",
+      "completed_at": "2026-06-08T21:08:08.741Z"
+    },
+    {
+      "id": "tk-7c6a6773b257",
+      "title": "Audit PokeEdge-Web contract-sync conformance to documented standard",
+      "type": "code",
+      "section": "Tier 2 — standardize oasdiff contract gate",
+      "status": "done",
+      "priority": 5,
+      "created_at": "2026-06-08T20:48:54.569Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-7a3f8210f50f"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "verifies": [
+          "AC4"
+        ],
+        "respects": [
+          "DONT6"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:08:12.903Z",
+      "verification": "Read-only audit via gh. Findings: PokeEdge-Web commits docs/openapi.json baseline (conformant); does NOT use deprecated Tufin/oasdiff-action (no oasdiff on web — correct, breaking-check belongs on producer/backend). Web's \"Backend Contract Sync Check\" is a spec-SYNC/equality check (consumer baseline freshness), complementary to backend's oasdiff BREAKING check — two halves, not duplicates. Surfaced real >1MB Contents-API gotcha (web uses Git Blobs API). Documented both: added complementary-halves table + >1MB Blobs-API gotcha to ci-standard.md contract-gate section (campsite correctness fix — my canonical job's plain contents-API fetch would break >1MB). No web code change needed (conformant).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "df9e0ae5c79820e970c77b2a9328219316158527",
+      "completedAt": "2026-06-08T21:08:53.118Z",
+      "completed_at": "2026-06-08T21:08:53.118Z"
+    },
+    {
+      "id": "tk-1d45eceb0464",
+      "title": "Update README.md pointers for changed standard sections",
+      "type": "code",
+      "section": "Tier 1 — docs polish",
+      "status": "done",
+      "priority": 6,
+      "created_at": "2026-06-08T20:49:01.249Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-2e620dce067a"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-f43918311748"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-7a3f8210f50f"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC8"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:08:56.816Z",
+      "verification": "README.md: updated dependency-updater pointer (Renovate→Renovate-or-Dependabot one-per-ecosystem + fixed dead anchor); updated branch-protection block (strict→non-strict+squash-only + allow_squash_merge precondition + Merge-serialization link); clarified \"stays strict (no bypass)\" → \"keeps bypass_actors:[] (no bypass)\" to disambiguate strict-status-check from bypass-actor. Pointers now consistent with amended ci-standard.md.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "README.md"
+      ],
+      "touched_files": [
+        "README.md"
+      ],
+      "checkpointSha": "e648c610aafa82d0d360478203d0331ea237ddee",
+      "completedAt": "2026-06-08T21:09:31.359Z",
+      "completed_at": "2026-06-08T21:09:31.359Z"
+    },
+    {
+      "id": "tk-3ace174c92c4",
+      "title": "Run self-test suite locally (actionlint + ruleset JSON + docs/config + shellcheck)",
+      "type": "code",
+      "section": "Verification — local",
+      "status": "done",
+      "priority": 7,
+      "created_at": "2026-06-08T20:49:11.040Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-a08702636908"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-f43918311748"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-7a3f8210f50f"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-1d45eceb0464"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC4",
+          "AC5",
+          "AC8"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:09:35.302Z",
+      "verification": "Full self-test suite GREEN locally: (1) actionlint 1.7.7 exit 0 (typed evidence via adv_run_test); (2) all 13 required files present; (3) ruleset-JSON embedded assertions pass (strict=false, allowed_merge_methods=[\"squash\"], ctx, bypass, non_fast_forward); (4) shellcheck stable exit 0 on apply-ruleset.sh. This-repo portion fully verified.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e648c610aafa82d0d360478203d0331ea237ddee",
+      "completedAt": "2026-06-08T21:10:00.209Z",
+      "completed_at": "2026-06-08T21:10:00.209Z"
+    },
+    {
+      "id": "tk-47358256b006",
+      "title": "PRE-APPLY GUARD: verify/normalize repo merge settings before ruleset apply",
+      "type": "code",
+      "section": "Tier 0 — pre-apply guard (privileged handoff)",
+      "status": "done",
+      "priority": 8,
+      "created_at": "2026-06-08T20:49:19.821Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-3ace174c92c4"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC7"
+        ],
+        "respects": [
+          "C4",
+          "C5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:11:22.007Z",
+      "verification": "Tier-0 guard satisfied. allow_squash_merge=true verified on both repos (precondition — squash-only ruleset will not block merges). Normalized hygiene via gh api PATCH: PokeEdge + PokeEdge-Web now allow_merge_commit=false, allow_rebase_merge=false, allow_squash_merge=true, allow_auto_merge=true. Live API op, no worktree files (clean tree expected).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e648c610aafa82d0d360478203d0331ea237ddee",
+      "completedAt": "2026-06-08T21:11:39.682Z",
+      "completed_at": "2026-06-08T21:11:39.682Z"
+    },
+    {
+      "id": "tk-147498c68788",
+      "title": "Apply org ruleset (dry-run preview → apply)",
+      "type": "code",
+      "section": "Tier 1 — apply ruleset (privileged handoff)",
+      "status": "done",
+      "priority": 9,
+      "created_at": "2026-06-08T20:49:27.572Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-47358256b006"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1"
+        ],
+        "respects": [
+          "C4",
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:11:44.954Z",
+      "verification": "Dry-run previewed exact payload (PUT ruleset 17335746: strict=false, allowed_merge_methods=[\"squash\"], bypass=[]). Live apply succeeded (\"Applied ruleset 'Sharperflow App Protection'\"). Post-apply verification via gh api orgs/Sharper-Flow/rulesets/17335746: pull_request methods=[\"squash\"], required_status_checks strict=false + ctx=[\"Sharperflow CI Gate\"], non_fast_forward present, bypass_actors=[], enforcement=active. Collision-loop fix LIVE on PokeEdge + PokeEdge-Web.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e648c610aafa82d0d360478203d0331ea237ddee",
+      "completedAt": "2026-06-08T21:12:08.434Z",
+      "completed_at": "2026-06-08T21:12:08.434Z"
+    },
+    {
+      "id": "tk-ac3890c1d028",
+      "title": "Fix PokeEdge live drift: remove stale sonarcloud.yml + confirm Dependabot conformance",
+      "type": "code",
+      "section": "Tier 5 — fix live drift (cross-repo handoff)",
+      "status": "done",
+      "priority": 10,
+      "created_at": "2026-06-08T20:49:34.920Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-f43918311748"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-147498c68788"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC6"
+        ],
+        "respects": [
+          "C5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:12:12.635Z",
+      "verification": "PokeEdge live-drift fix. Opened PR #347 (chore/remove-stale-sonarcloud) removing orphaned .github/workflows/sonarcloud.yml (132 lines); sonar-project.properties already absent. Verified safe: required check is Sharperflow CI Gate only (no orphaned required context); sonarcloud not in recent main check-runs (dormant). Armed squash auto-merge (autoMerge=SQUASH, mergeState=BLOCKED waiting on Sharperflow CI Gate — demonstrates new strict-off+auto-merge+squash policy end-to-end). Dependabot conformance: PokeEdge has active Renovate + NO dependabot.yml = one-updater-per-ecosystem conformant; dormant auto-merge.yml (dependabot[bot], --auto --squash) is standard-aligned, no change. Broader sonar doc-refs (docs/CI_CD_PIPELINE.md, AGENTS.md, code-quality-coverage.md) surfaced as follow-up — out of AC6 workflow-removal scope.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e648c610aafa82d0d360478203d0331ea237ddee",
+      "completedAt": "2026-06-08T21:13:29.608Z",
+      "completed_at": "2026-06-08T21:13:29.608Z"
+    },
+    {
+      "id": "tk-992c56406f96",
+      "title": "Live post-apply verification (both repos + ruleset)",
+      "type": "code",
+      "section": "Verification — live",
+      "status": "done",
+      "priority": 11,
+      "created_at": "2026-06-08T20:49:41.975Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-147498c68788"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-ac3890c1d028"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "verifies": [
+          "AC1",
+          "AC6",
+          "AC7"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-08T21:13:39.618Z",
+      "verification": "Live post-apply verification PASS (typed evidence): ruleset 17335746 strict=false AND allowed_merge_methods==[\"squash\"] (jq assertion exit 0 → true). Full check: enforcement active, bypass [], ctx [\"Sharperflow CI Gate\"], non_fast_forward present. Both repos: allow_squash_merge=true, allow_merge_commit=false, allow_rebase_merge=false, allow_auto_merge=true, default main. disk==live (strict=False, methods=[squash]). PokeEdge #347 OPEN with SQUASH auto-merge armed (will land on green Sharperflow CI Gate). AC1/AC6/AC7 verified live.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e648c610aafa82d0d360478203d0331ea237ddee",
+      "completedAt": "2026-06-08T21:14:05.928Z",
+      "completed_at": "2026-06-08T21:14:05.928Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "fixMergeCollisionStrategy",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:dependabot-dual-path-parity"
+      },
+      "agent": "adv-researcher",
+      "topic": "Dependabot as first-class equal path vs Renovate for strict-off + squash-only + linear-history + native auto-merge + required 'Sharperflow CI Gate'",
+      "sources": [
+        {
+          "label": "Automating Dependabot with GitHub Actions (official)",
+          "locator": "https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/automating-dependabot-with-github-actions",
+          "summary": "Canonical auto-merge pattern: dependabot/fetch-metadata + gh pr merge --auto gated on dependabot[bot]; requires contents:write + pull-requests:write; NOTE block explicitly recommends 'Require status checks to pass before merging' so PRs are not merged unless required checks pass."
+        },
+        {
+          "label": "dependabot/fetch-metadata README",
+          "locator": "https://github.com/dependabot/fetch-metadata",
+          "summary": "Auto-merge enables PRs to merge once CI and branch protection rules are met; pull_request_target variant gives GITHUB_TOKEN read/write with contents:write + pull-requests:write."
+        },
+        {
+          "label": "Dependabot options reference — cooldown",
+          "locator": "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference",
+          "summary": "cooldown is GA: default-days, semver-major/minor/patch-days, include/exclude (<=150 each, wildcards). Version updates ONLY — explicitly NOT security updates. 1-90 day range. SemVer-day granularity table: Bun/UV/npm supported; Docker, Docker Compose, github-actions NOT semver-supported (default-days only)."
+        },
+        {
+          "label": "Dependabot supported ecosystems and repositories",
+          "locator": "https://docs.github.com/code-security/dependabot/ecosystems-supported-by-dependabot/supported-ecosystems-and-repositories",
+          "summary": "uv=`uv` v0; Bun=`bun` >=v1.2.5 (docs main; one cached page said >=v1.1.39); pnpm uses `npm` value, version updates v7-v10, security updates v7/v8 only; Docker=`docker` v1; github-actions Not applicable version. GitHub Actions only supports GitHub-repo action syntax; not local refs; not docker:// actions."
+        },
+        {
+          "label": "GitHub Changelog — Dependabot updates SHA version comments",
+          "locator": "https://github.blog/changelog/2022-10-31-dependabot-now-updates-comments-in-github-actions-workflows-referencing-action-versions/",
+          "summary": "Dependabot DOES pin GitHub Actions to commit SHA and update the trailing semver comment (e.g. `@sha # v4.0.0`). Known edge-case bugs exist (dependabot-core #8011, #14716) where comment is left stale for release-branch-workflow actions."
+        },
+        {
+          "label": "About Dependabot security updates",
+          "locator": "https://docs.github.com/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates",
+          "summary": "Security updates open PRs to minimum patched version for every open Dependabot alert with a fix; require dependency graph + Dependabot alerts enabled. Independent of version-update config; cooldown does NOT apply to security updates."
+        }
+      ],
+      "architecture_assessment": "Dependabot is a viable first-class equal path to Renovate for THIS exact merge strategy. (a) Auto-merge: works via the canonical fetch-metadata + `gh pr merge --auto` workflow; --auto arms GitHub native auto-merge, which merges only when the required check 'Sharperflow CI Gate' is green — same gate Renovate relies on. Squash is selected by `gh pr merge --squash` (not --merge), satisfying squash-only + linear history. (b) strict-off: with strict_required_status_checks_policy=false, neither updater is forced to rebase to branch HEAD; both avoid the 'require branches up to date' rebase loop identically. (c) Coexistence: docs are clear each ecosystem should have ONE updater — running Dependabot AND Renovate on the same package-ecosystem in the same repo produces duplicate PRs and competing lockfile writes. They can coexist only if partitioned (different repos, or strictly non-overlapping ecosystems), which is why per-repo selection is the right model. (d) Cooldown parity: Dependabot now HAS a `cooldown` option (GA), the direct analog of Renovate `minimumReleaseAge`, with finer SemVer-tier granularity — BUT version-updates only and NO semver-tier granularity for Docker/github-actions (default-days only there). (e) Ecosystem gaps vs Renovate: Bun and uv are supported but newer/v0/min-version-gated; github-actions SHA-pinning + comment maintenance exists but has documented stale-comment edge cases; Renovate's helpers:pinGitHubActionDigests is more battle-tested for digest pinning at scale.",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "All 6 questions doc-verified against docs.github.com / github.blog. One UNKNOWN-resolved: cooldown is CONFIRMED GA (not speculative). Two items flagged as caveats not blockers: (1) Bun min-version differs between cached pages (>=v1.1.39 vs >=v1.2.5 on docs main) — treat >=v1.2.5 as current; (2) github-actions SHA-comment maintenance has open upstream bugs. PACKET DEFECT: orchestrator packet omitted SCOPE KEY/ATTEMPT/CHANGE/DONE_WHEN/STOP_WHEN/VERIFICATION anchors; continued under existing prompt scope per instructions and did not infer identity heuristically beyond the reachable active change id."
+      },
+      "recommendation": "Adopt balanced dual-path guidance: BOTH Renovate and Dependabot are compatible with strict-off + squash-only + linear-history + native auto-merge gated on 'Sharperflow CI Gate'. Enforce ONE updater per repo (per-ecosystem) to avoid duplicate-PR/lockfile collisions. For the Dependabot path ship the canonical auto-merge workflow with `--squash` (not --merge), contents:write + pull-requests:write, dependabot[bot] actor guard, and keep 'Sharperflow CI Gate' as a required status check (the doc-recommended only-when-green guard). Set `cooldown.default-days: 7` to match Renovate minimumReleaseAge; document that cooldown does not gate security updates in either tool. For the future per-repo re-assessment, weight: Bun/uv maturity (Dependabot v0/min-version gated), github-actions digest-pinning robustness (Renovate helpers:pinGitHubActionDigests stronger; Dependabot has stale-comment edge cases), grouping/config ergonomics, and cooldown granularity needs.",
+      "follow_ups": [
+        "PACKET DEFECT: missing SCOPE KEY/ATTEMPT/CHANGE/DONE_WHEN/STOP_WHEN/VERIFICATION anchors in orchestrator packet — supply on next dispatch.",
+        "Verify current Bun minimum version live before publishing guidance (cached pages disagree: >=v1.1.39 vs >=v1.2.5).",
+        "If github-actions digest pinning is critical, prefer Renovate helpers:pinGitHubActionDigests or monitor dependabot-core #8011/#14716 for stale-comment fixes."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixMergeCollisionStrategy",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:squash-only-ruleset-enforcement"
+      },
+      "agent": "adv-researcher",
+      "topic": "Enforcing squash-only merges via org-level GitHub repository ruleset",
+      "sources": [
+        {
+          "label": "GitHub Docs — Available rules for rulesets (Require a pull request before merging)",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets",
+          "summary": "Documents that the 'Require a pull request before merging' rule optionally lets you require a merge type of merge, squash, or rebase. 'Additionally if the repository has disabled a merge method and the ruleset required a different method, the merge will be blocked.' Also: Require linear history forbids merge commits, meaning PRs must use squash OR rebase (does NOT distinguish squash from rebase)."
+        },
+        {
+          "label": "GitHub Docs — REST API endpoints for rules (repos/rules)",
+          "locator": "https://docs.github.com/en/rest/repos/rules",
+          "summary": "pull_request rule type parameters include allowed_merge_methods (array of strings). 'Array of allowed merge methods. Allowed values include merge, squash, and rebase. At least one option must be enabled.' Supported values: merge, squash, rebase."
+        },
+        {
+          "label": "GitHub Docs — REST API endpoints for rules (orgs/rules)",
+          "locator": "https://docs.github.com/rest/orgs/rules",
+          "summary": "Org-level ruleset endpoint (POST /orgs/{org}/rulesets) supports the same pull_request rule with allowed_merge_methods parameter, plus conditions.repository_name + ref_name (~DEFAULT_BRANCH). Confirms org-level enforceability across repos matched by repository_name."
+        },
+        {
+          "label": "GitHub Docs — About merge methods on GitHub",
+          "locator": "https://github.com/github/docs/blob/main/content/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github.md",
+          "summary": "Repo-level: enforce one merge method by only enabling the desired method (allow_squash_merge etc.). Note: 'Merge methods set on the repository that conflict with the merge method rule will prevent merging' — repo settings and ruleset merge rule interact; conflicts block merges."
+        },
+        {
+          "label": "GitHub Docs — Creating rulesets for repositories in your organization (aggregation semantics)",
+          "locator": "https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization",
+          "summary": "Org-level rulesets aggregate with repo-level; result can only become MORE restrictive, never less. Org owners control org-level ruleset edits. Confirms org ruleset is the as-code org-wide enforcement surface."
+        }
+      ],
+      "architecture_assessment": "GitHub rulesets DO support merge-method restriction natively via the pull_request rule's allowed_merge_methods parameter, and this parameter is available at the ORG level (POST /orgs/{org}/rulesets), not just per-repo. The existing org-level 'Sharperflow App Protection' ruleset already carries a pull_request rule; squash-only can be enforced org-wide as-code by setting allowed_merge_methods:['squash'] on that rule. This makes the per-repo allow_squash_merge/allow_merge_commit/allow_rebase_merge settings unnecessary for ENFORCEMENT (the ruleset blocks non-squash merges regardless), though leaving merge_commit/rebase enabled on the repo creates a visible-but-blocked UI state and a conflict surface. non_fast_forward / linear history does NOT achieve squash-only: linear history forbids merge commits but still permits BOTH squash and rebase, so explicit allowed_merge_methods is required to exclude rebase.",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "Squash-only IS ruleset-enforceable at org level via pull_request.allowed_merge_methods=['squash']. Confirmed in official REST docs for both repos/rules and orgs/rules. Team plan supports org-level rulesets on private repos (rulesets GA for private repos on all plans incl. Team). No GHAS/CodeQL dependency."
+      },
+      "recommendation": "Enforce squash-only as-code by adding allowed_merge_methods:['squash'] to the pull_request rule in the existing org-level 'Sharperflow App Protection' ruleset (option a). Then ALSO normalize repo settings (allow_merge_commit=false, allow_rebase_merge=false, allow_squash_merge=true) via PATCH /repos to remove dead/blocked merge buttons and avoid ruleset-vs-repo conflict — treat this as a secondary hygiene step in apply-ruleset.sh, not the primary enforcement. Do NOT rely on non_fast_forward for squash-only (it permits rebase too).",
+      "follow_ups": [
+        "Verify Sharper-Flow org ruleset JSON includes a pull_request rule object to attach allowed_merge_methods to (gh api /orgs/Sharper-Flow/rulesets).",
+        "Add repo-settings normalization (squash-only merge buttons) to conformance checklist / apply script as hygiene, since repo allow_* flags cannot be set by an org ruleset and remain drift-prone."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixMergeCollisionStrategy",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:design-validation"
+      },
+      "agent": "adv-researcher",
+      "topic": "Independent design validation: squash-only org-ruleset collision fix (5-tier)",
+      "sources": [
+        {
+          "label": "GitHub Docs — Available rules for rulesets",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets",
+          "summary": "Confirms ruleset can require merge type merge/squash/rebase; 'if the repository has disabled a merge method and the ruleset required a different method, the merge will be blocked'; Strict='branch must be up to date', Loose=not required; Require-linear-history (NOT force-push) blocks merge commits and needs repo to allow squash OR rebase first; Block-force-pushes is a separate rule."
+        },
+        {
+          "label": "GitHub Docs — About merge methods on GitHub",
+          "locator": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github",
+          "summary": "Squash uses fast-forward; rebase resembles fast-forward; default merge commit uses --no-ff. NOTE: 'Merge methods set on the repository that conflict with the merge method rule will prevent merging' — confirms ruleset-vs-repo blocked-merge hazard."
+        },
+        {
+          "label": "GitHub Docs — REST endpoints for rules (rule-parameter schema)",
+          "locator": "https://docs.github.com/en/rest/repos/rules",
+          "summary": "pull_request.allowed_merge_methods: array of merge|squash|rebase, 'At least one option must be enabled.' non_fast_forward='Prevent users with push access from force pushing to refs.' required_linear_history='Prevent merge commits from being pushed to matching refs.' Two distinct rules."
+        },
+        {
+          "label": "GitHub Changelog — Pull request merge method rule (Public Preview, 2024-12-04)",
+          "locator": "https://github.blog/changelog/2024-12-04-pull-request-merge-method-rule-public-preview/",
+          "summary": "Merge-method rule available for rulesets at repository, ORGANIZATION, and enterprise level — confirms org-level applicability on the Team-plan org."
+        },
+        {
+          "label": "Terraform integrations/github repository_ruleset schema",
+          "locator": "https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_ruleset",
+          "summary": "Corroborates: non_fast_forward='Prevent force pushing'; required_linear_history='Prevent merge commits'; pull_request.allowed_merge_methods Min:1 of merge|squash|rebase."
+        },
+        {
+          "label": "Working-dir: scripts/apply-ruleset.sh",
+          "locator": "/home/jon/dev/sharperflow-security-gates/scripts/apply-ruleset.sh",
+          "summary": "--no-release-bypass sets PAYLOAD_FILE=RULESET_FILE verbatim (L122-124) and PUTs via --input (L184); python transform (L125-155) runs ONLY with a bypass id and preserves all keys except bypass_actors. allowed_merge_methods cannot be stripped. Payload-passthrough claim VERIFIED."
+        },
+        {
+          "label": "Working-dir: .github/workflows/self-test.yml",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/workflows/self-test.yml",
+          "summary": "Validate-ruleset-JSON L68 asserts strict_required_status_checks_policy is True (WILL fail after Tier 1); L67 asserts ctxs==['Sharperflow CI Gate'] (unaffected); L62 bypass_actors==[] (unaffected). No allowed_merge_methods assertion yet (AC2 adds it)."
+        },
+        {
+          "label": "Working-dir: rulesets/sharperflow-app-protection.json",
+          "locator": "/home/jon/dev/sharperflow-security-gates/rulesets/sharperflow-app-protection.json",
+          "summary": "Current ruleset: pull_request rule WITHOUT allowed_merge_methods, required_status_checks strict=true, non_fast_forward present, NO required_linear_history. Merge-commit/rebase currently UNRESTRICTED; allowed_merge_methods:[squash] is the sole squash-only enforcer."
+        }
+      ],
+      "architecture_assessment": "VERDICT: CONCERNS. Core mechanism is sound and GitHub-doc-verified: org rulesets support pull_request.allowed_merge_methods (org/enterprise/repo, values merge|squash|rebase, >=1 required); strict=false removes the 'branch up to date' requirement that is the verified collision cause; apply-ruleset.sh --no-release-bypass passes the JSON verbatim so allowed_merge_methods cannot be stripped. Tiers 2-5 consistent with all 8 ACs / 7 constraints / 6 avoidances. THREE issues need correction before design sign-off: one factual rationale error (non_fast_forward mislabeled as merge-commit/linear-history guard), one under-weighted real merge-blocking hazard (repo squash must be enabled or squash-only ruleset hard-blocks merges), one sequencing fix tied to it. Not CONFLICT — the approach is valid; CONCERNS because the design doc contains a false mechanism statement and an under-specified repo-settings precondition.",
+      "validation": {
+        "status": "caution",
+        "blockers": [],
+        "notes": "FINDINGS:\n\n[CONCERN-1 | factual error, item 1] Design 'Verified mechanics' says 'non_fast_forward (linear history) forbids merge commits but NOT rebase'. WRONG per REST schema + Terraform + available-rules: non_fast_forward = force-push block ('Prevent force pushing to refs'); the merge-commit blocker is required_linear_history ('Prevent merge commits'), which is NOT in this ruleset. So 'keep non_fast_forward for the no-merge-commit guarantee' is false. FIX: state that the ruleset has no required_linear_history, so allowed_merge_methods:[squash] is the SOLE enforcer of squash-only (excludes both merge-commit AND rebase); non_fast_forward is retained only as the force-push block. Operational conclusion (need allowed_merge_methods to exclude rebase) is correct and actually stronger than the design realizes. Doc-correctness concern, not a mechanism failure.\n\n[CONCERN-2 | real blocked-merge hazard, items 6&7] GitHub docs: 'Merge methods set on the repository that conflict with the merge method rule will prevent merging.' Once ruleset enforces allowed_merge_methods:[squash], BOTH repos MUST have allow_squash_merge=true or ALL merges hard-block. Design calls disabling repo allow_merge_commit 'cosmetic hygiene only' — wrong framing: ruleset restricts to the INTERSECTION; empty intersection (repo squash OFF) = hard block, not silent override. FIX: make repo allow_squash_merge=true a HARD PRECONDITION in AC1/AC7, verified before apply; treat repo allow_* normalization as REQUIRED not cosmetic; AC7 must assert allow_squash_merge=true explicitly.\n\n[CONCERN-3 | sequencing, item 6] Design applies ruleset (step 3) before cross-repo (step 4). If a repo has squash disabled at apply time, squash-only ruleset wedges all merges — self-inflicted outage of the same class this change fixes. FIX: verify/normalize repo allow_squash_merge=true BEFORE the privileged apply, or gate the apply runbook on a pre-apply repo-settings check. Otherwise docs-first/privileged-apply/cross-repo-last order is sound.\n\n[CONFIRM-4 | self-test, item 3] VERIFIED: self-test.yml L68 (strict is True) WILL fail after Tier 1; AC2 correctly updates it. L67 ctxs, L62 bypass_actors, target/enforcement assertions all UNAFFECTED. Only L68 breaks; AC2 also adds allowed_merge_methods assertion. No other assertion breaks — design covers it.\n\n[CONFIRM-5 | payload risk, item 2] CLEARED. --no-release-bypass uses JSON verbatim as PUT --input; python bypass path skipped without bypass id and preserves all keys but bypass_actors even when run. allowed_merge_methods cannot be dropped. Claim accurate.\n\n[NIT-6 | strict-off honesty, item 4] Residual-risk framing is HONEST and matches GitHub 'Loose' doc ('status checks may fail after merge if incompatible changes'). Agreement explicitly states the green-but-incompatible-pair risk and that oasdiff covers only backend->frontend OpenAPI. Optional: add one sentence that loose checks do NOT re-evaluate post-merge, making next-PR CI the explicit safety net.\n\n[INTERNAL CONSISTENCY | item 5] All 8 ACs map to tiers (AC1/AC2->T1; AC3->T2/T3/T4 docs; AC4->T2 examples; AC5->T2; AC6->T5; AC7/AC8->verification). Constraints C1-C7 all respected (no GHEC, no paid SaaS, CI stays in GH cloud, privileged apply as handoff, cross-repo handoffs, escalation within rulesets, fail-on-high-signal). Avoidances DONT1-DONT6 all respected (no Temporal mutex, no merge_queue, promote not rebuild oasdiff, defer updater choice, no bypass actors, no Tufin action). No AC uncovered. Only internal-consistency defect is CONCERN-1's false statement contradicting the cited REST schema."
+      },
+      "recommendation": "Proceed to design-gate AFTER three edits: (1) correct CONCERN-1 — non_fast_forward is the force-push block, NOT a merge-commit/linear-history guard; allowed_merge_methods:[squash] is the sole squash-only enforcer (no required_linear_history rule exists); cite REST schema. (2) CONCERN-2/3 — make repo allow_squash_merge=true a hard precondition verified BEFORE the privileged squash-only apply on both PokeEdge + PokeEdge-Web; reorder so repo merge-method normalization precedes apply; AC7 asserts allow_squash_merge=true. (3) NIT-6 — add the one-sentence loose-checks/next-PR-CI safety-net note. Payload-passthrough (item 2) and self-test consistency (item 3) verified correct as designed.",
+      "follow_ups": [
+        "Backlog: bind required status check to GitHub Actions integration_id (ci-standard.md §6 optional hardening) to prevent context spoofing — out of scope here.",
+        "Execution: run apply-ruleset.sh --dry-run and diff composed payload vs rulesets/sharperflow-app-protection.json to empirically confirm allowed_merge_methods survives the PUT.",
+        "Pre-apply: check both repos via `gh api repos/{owner}/{repo} --jq .allow_squash_merge` (CONCERN-2 precondition)."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixMergeCollisionStrategy",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/fixMergeCollisionStrategy",
+      "scope": {
+        "kind": "change",
+        "scope_key": "review:acceptance"
+      },
+      "agent": "adv-reviewer",
+      "phase": "review",
+      "verdict": "READY",
+      "blocking_findings": [],
+      "nonblocking_findings": [
+        {
+          "id": "review-issue-1",
+          "label": "issue",
+          "file": "docs/ci-standard.md",
+          "line": 212,
+          "what": "7 intra-doc anchor links used single-hyphen slugs for headings containing ' + ' / ' — ' (e.g. #merge-serialization-strict-off-squash-only-auto-merge, #dependency-updates-renovate-or-dependabot, #5-pin-policy-lbp-supply-chain). GitHub's renderer (github-slugger: .replace(regex,'').replace(/ /g,'-'), NO run-collapse) generates DOUBLE hyphens where '+'/em-dash sit between spaces. All 7 were dead anchors.",
+          "why": "AC8 + task's internal-consistency check require no dead intra-doc anchors. Verified ground truth via github-slugger source (Flet/github-slugger index.js+regex.js), not prose approximations.",
+          "fix": "applied — rewrote all 7 refs (5 in ci-standard.md, 2 in README.md) plus 1 pre-existing #5-pin-policy-lbp--supply-chain to the real double-hyphen slugs. Re-verified all anchors resolve."
+        },
+        {
+          "id": "review-suggestion-1",
+          "label": "suggestion",
+          "file": "examples/pokeedge-web/ci.yml",
+          "line": 65,
+          "what": "Web example has no contract-gate job; producer-side oasdiff gate lives only in the python example. AC4 ('contract-gate present in the canonical template') is satisfied on the producer side; the web side is the consumer (its committed docs/openapi.json is the baseline). A consumer-side 'spec-sync' job (ci-standard.md §Baseline model describes one) is documented but not shown in the web template.",
+          "why": "ci-standard.md describes both halves (producer breaking-change + consumer spec-sync); the web example only models the producer-baseline role implicitly. Adding a spec-sync example job would make the template fully self-documenting. Non-blocking — AC4 met."
+        },
+        {
+          "id": "review-suggestion-2",
+          "label": "suggestion",
+          "file": "examples/pokeedge-python/ci.yml",
+          "line": 110,
+          "what": "Example baseline fetch uses Contents API (gh api .../contents/docs/openapi.json | base64 -d). ci-standard.md L630 documents the 1MB Contents-API silent-empty gotcha. Live PokeEdge-Web docs/openapi.json is 824KB (under 1MB → works today) but headroom is thin; PokeEdge producer openapi.json is already 1.04MB.",
+          "why": "If the consumer baseline spec crosses 1MB, the example's baseline fetch silently returns empty and the gate degrades. The gotcha is documented; the example could reference the Git-Blobs-API fallback inline. Non-blocking — currently functional."
+        },
+        {
+          "id": "review-question-1",
+          "label": "question",
+          "file": "(live cross-repo) Sharper-Flow/PokeEdge/.github/workflows/check-api-compat.yml",
+          "line": 49,
+          "what": "Live reference impl cited by ci-standard.md L613 diverges from the new standard: (a) installs oasdiff from releases/latest (UNPINNED) vs the standard's version-pin requirement (AC5); (b) uses 'oasdiff breaking --format text' + manual exit-code capture rather than '--fail-on ERR'. This-repo deliverables (doc canonical shape + python example) correctly pin v1.18.5 and use --fail-on ERR.",
+          "why": "AC5 conformance for THIS repo is met. The live PokeEdge ref impl is a separate-repo (C5 cross-repo) pre-existing divergence — out of this repo's direct edit scope, but worth a fast-follow handoff so the cited 'reference implementation' matches the standard it anchors."
+        },
+        {
+          "id": "review-praise-1",
+          "label": "praise",
+          "file": "docs/ci-standard.md",
+          "line": 356,
+          "what": "non_fast_forward correctly described as a force-push guard that does NOT forbid merge commits (that would be required_linear_history); squash-only enforcement correctly attributed solely to allowed_merge_methods. Residual-risk framing (green-but-incompatible pairs caught by next CI) is honest and matches the agreement's accepted-risk clause.",
+          "why": "These were the exact correctness traps flagged by the design validator (C-1); the delivered docs handle them precisely. High-quality, non-hand-wavy."
+        }
+      ],
+      "changes_made": [
+        {
+          "file": "docs/ci-standard.md",
+          "summary": "Fixed 5 dead intra-doc anchor links (#merge-serialization-strict-off--squash-only--auto-merge ×3, #dependency-updates-renovate--or-dependabot ×2) to match GitHub-generated double-hyphen slugs for headings containing ' + ' and ' — '.",
+          "verification": "node-run github-slugger algorithm + heading-vs-link cross-check script: 'ALL ANCHORS OK [docs/ci-standard.md] (7 checked)'."
+        },
+        {
+          "file": "README.md",
+          "summary": "Fixed 3 dead anchor links: #merge-serialization-strict-off--squash-only--auto-merge, #dependency-updates-renovate--or-dependabot, and pre-existing #5-pin-policy-lbp--supply-chain (campsite same-pattern fix).",
+          "verification": "Cross-check script: 'ALL ANCHORS OK [README.md] (6 checked)'."
+        }
+      ],
+      "wisdom_candidates": [
+        {
+          "type": "gotcha",
+          "content": "GitHub Markdown heading anchors: github.com renders files with github-slugger (Flet/github-slugger), whose core is value.toLowerCase().replace(specialRegex,'').replace(/ /g,'-') — it does NOT collapse runs. A heading with ' + ' or an em-dash ' — ' between spaces yields DOUBLE hyphens in the slug (e.g. 'strict-off + squash-only' -> 'strict-off--squash-only'). Many online guides (and the popular creachadair gist) describe run-collapsing to a single hyphen — that is WRONG for github.com file rendering. Verify anchors against the actual lib source, not prose summaries. The GitHub /markdown API does NOT emit heading id= anchors, so it can't be used to confirm slugs."
+        },
+        {
+          "type": "pattern",
+          "content": "When reviewing intra-doc anchor consistency, generate heading slugs programmatically with the real github-slugger regex and diff against every markdown-link target ([text](#anchor) and [text](file.md#anchor)). Filter prose parentheses like '(below)'/'(2026-06-08)' so they aren't mistaken for anchor links. This catches double-hyphen slug breakage that visual review misses."
+        }
+      ],
+      "verification": {
+        "tests_run": [
+          "python3 self-test ruleset assertion against current JSON (pass)",
+          "python3 negative test: assertion fails on simulated old strict=true + no allowed_merge_methods shape (fails as required)",
+          "node github-slugger slug generation + anchor cross-check (README.md: 6 OK; docs/ci-standard.md: 7 OK)",
+          "docker run rhysd/actionlint:1.7.7 on repo (.github/workflows) exit 0",
+          "docker run rhysd/actionlint:1.7.7 on both examples/*/ci.yml as workflows in temp git repo, exit 0",
+          "shellcheck scripts/apply-ruleset.sh (pass)",
+          "self-test required-files existence check (all present)",
+          "gh api orgs/Sharper-Flow/rulesets/17335746 (live==disk: strict=false, allowed_merge_methods=[squash], bypass=[], ctx=Sharperflow CI Gate, non_fast_forward)",
+          "gh api repos/Sharper-Flow/PokeEdge & PokeEdge-Web (both: default=main, allow_squash_merge=true, allow_auto_merge=true, merge_commit/rebase=false)",
+          "gh pr view 347 (OPEN, removes .github/workflows/sonarcloud.yml 132 deletions, SQUASH auto-merge armed)",
+          "repo-wide grep: no Tufin/oasdiff-action usage (DONT6), no merge_queue/merge_group rule (DONT2), bypass_actors=[] (C6/DONT5)"
+        ],
+        "results": "pass",
+        "evidence": "All 8 ACs verified against real files + live GitHub state. AC1 disk==live ruleset. AC2 assertion passes on new shape, fails on old. AC3 §6 (strict-off+squash+auto-merge, non_fast_forward=force-push-guard), Dependabot equal-path (cooldown + --auto --squash), oasdiff section, Tier-3 escalation all present & correct. AC4 python example has pinned-v1.18.5 oasdiff contract-gate (--fail-on ERR, CLI not Tufin). AC5 explicit Tufin prohibition + --fail-on ERR + version-pin. AC6 PR #347 removes sonarcloud (still on main pending merge, as intended). AC7 both repos squash-only + auto-merge live. AC8 README pointers fixed (was 3 dead anchors). The ONLY defect found (7 dead intra-doc anchors from '+'/em-dash headings) was remediated in-scope and re-verified clean. actionlint clean, shellcheck clean, self-test green."
+      },
+      "scope_drift": null,
+      "risks": [
+        "Accepted residual risk (per agreement): strict-off allows a rare green-but-incompatible PR pair to land and break main, caught by next CI — correctly documented and honestly framed.",
+        "PokeEdge updater state: renovate.json present (4 open Renovate PRs) and no .github/dependabot.yml; conformant to one-updater-per-ecosystem (Renovate is sole version updater). Historical dependabot[bot] PRs are closed/merged. Orphaned auto-merge.yml (Dependabot handler) may remain as harmless dead weight on live PokeEdge — cross-repo cleanup, not a blocker.",
+        "Live PokeEdge check-api-compat.yml (the cited reference impl) uses unpinned oasdiff (releases/latest) and --format text instead of --fail-on ERR — pre-existing cross-repo divergence from the new standard; this-repo deliverables are correct."
+      ],
+      "required_main_agent_actions": [
+        "Record acceptance evidence: all 8 ACs satisfied; reviewer remediated 7 dead intra-doc anchors (docs/ci-standard.md + README.md) — review the 8-line anchor-only diff before merge.",
+        "Optional fast-follow (cross-repo, C5 handoff): align live Sharper-Flow/PokeEdge .github/workflows/check-api-compat.yml to the new standard — pin oasdiff version (currently releases/latest) and use --fail-on ERR (currently --format text + manual exit capture), since ci-standard.md cites it as the canonical reference impl.",
+        "Optional fast-follow (cross-repo): confirm whether PokeEdge auto-merge.yml (Dependabot auto-merge handler) is now orphaned given no dependabot.yml + Renovate adopted; remove if dead weight.",
+        "Optional (this repo, non-blocking): add the Git-Blobs-API fallback inline in the python example's baseline fetch step, and consider a consumer-side spec-sync example job in the web template, to make examples fully self-documenting vs the §Cross-repo contract gate prose."
+      ]
+    }
+  ],
+  "deltas": {},
+  "wisdom": [
+    {
+      "id": "ws-VtP0ZJ",
+      "type": "gotcha",
+      "content": "Discovery: examples/ in sharperflow-security-gates are STALE vs live caller CI. Example ci.yml files lack merge_group: triggers, but live PokeEdge-Web ci.yml HAS merge_group: (line 23) plus existing cross-repo OpenAPI drift detection (\"Generated API Drift Check\", \"Backend Contract Sync Check (PR)\"). So Tier 2 (oasdiff contract gate) is NOT greenfield on the web side — there is existing contract-sync machinery to standardize/build on. PokeEdge backend ci.yml not at .github/workflows/ci.yml (likely pr-gate.yml per source ticket) — locate before scoping backend changes. merge_group: triggers are now dead weight (native merge queue impossible on Team+private) but harmless.",
+      "recorded_at": "2026-06-08T19:17:12.674Z"
+    },
+    {
+      "id": "ws-dd1vZT",
+      "type": "gotcha",
+      "content": "DISCOVERY reshapes proposal scope (proposal was built on stale source tickets). Backend PokeEdge is far more built-out than tickets implied: (1) oasdiff contract gate ALREADY SHIPPED — archived change ciContractGateRunContractTests (2026-05-10) added contract-gate job in pr-gate.yml running check-api-compat.yml (oasdiff: backend openapi.json vs frontend's committed docs/openapi.json baseline) + bin/oc-test contract, path-filtered on openapi.json, already required in branch protection. So Tier 2 (oasdiff) is NOT greenfield — org-wide work = promote existing backend pattern into ci-standard.md + replicate to other repos. (2) Backend pr-gate.yml already has merge_group: + Sharperflow CI Gate summary. (3) Backend auto-merge.yml uses Dependabot[bot] with --auto --squash (so backend STILL runs Dependabot despite adoptRenovateOrgWide claiming removal — drift). (4) sonarcloud.yml still present on backend despite retireSonarcloud archived — drift. Root collision cause confirmed unchanged: org ruleset strict_required_status_checks_policy=true. Real change = Tier1 strict-off+squash-only+auto-merge (the actual fix) + standardize-existing-oasdiff (Tier2) + reconcile standard for Dependabot-equal-path (user reversal of adoptRenovateOrgWide one-updater rule) + flag live drift (dependabot still running, sonarcloud still present).",
+      "recorded_at": "2026-06-08T19:24:17.205Z"
+    },
+    {
+      "id": "ws-SemB8N",
+      "type": "convention",
+      "content": "oasdiff VALIDATED as org-standard OpenAPI breaking-change gate (user approved on merits, not faith). Apache-2.0 Go CLI, actively maintained (v1.18.5 2026-06-08), 1M+ docker pulls, de-facto standard; main rival Optic archived Jan 2026. Gate via `--fail-on ERR` (high-signal first, matches repo's fail-on-high-signal posture). CORRECTNESS GOTCHA: use CLI (as PokeEdge check-api-compat.yml already does) or the NEW oasdiff/oasdiff-action — NEVER the deprecated Tufin/oasdiff-action. Version-pin + Renovate-bump. Complements (not replacements): Spectral (design lint), Schemathesis (runtime contract test). No better fit for a small FastAPI+frontend shop. Design must use CLI/new-action only.",
+      "recorded_at": "2026-06-08T20:37:50.374Z"
+    },
+    {
+      "id": "ws-lhpzf2",
+      "type": "gotcha",
+      "content": "GitHub ruleset mechanics (validator-corrected): (1) `non_fast_forward` rule ONLY blocks force-pushes — it does NOT forbid merge commits. The merge-commit blocker is `required_linear_history` (a DIFFERENT rule). So squash-only enforcement comes SOLELY from pull_request rule param `allowed_merge_methods:[\"squash\"]` (org-level since GH changelog 2024-12-04), which excludes both merge-commit AND rebase. (2) HARD HAZARD: a squash-only ruleset against a repo with allow_squash_merge=false = empty merge-method intersection = ALL merges hard-block (\"Merge methods set on the repository that conflict with the merge method rule will prevent merging\"). MUST verify allow_squash_merge=true on every targeted repo BEFORE applying — pre-apply guard, not cosmetic. apply-ruleset.sh --no-release-bypass passes ruleset JSON verbatim as PUT --input (allowed_merge_methods safe, not stripped).",
+      "recorded_at": "2026-06-08T20:47:47.978Z"
+    }
+  ],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-08T19:16:17.576Z",
+      "completed_by": "agent",
+      "approval_evidence": "User confirmed problem statement + 3-tier direction (Tier 1+2 now, escalation = Mergify or another AI-enabled PR bot). Verified facts: org plan=team, both repos private (native merge queue impossible), live ruleset 17335746 strict=true (collision-loop cause), code/live drift on strict claim.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/proposal.md",
+        "content_hash": "650bfc85eca5dbbdb54297fcea7fce4e346fe7d21b67c3e614495a8fc465fa58",
+        "non_whitespace_chars": 2744,
+        "checked_at": "2026-06-08T19:14:37.859Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "started_at": "2026-06-08T20:40:05.591Z",
+      "completed_at": "2026-06-08T20:40:13.498Z",
+      "completed_by": "agent",
+      "approval_evidence": "Discovery complete + agreement approved + contract minted (21 items). Verified: native merge queue impossible (Team+private); collision cause = ruleset strict=true; oasdiff contract gate already shipped on backend + validated best-practice; Dependabot equal-path viable (GA cooldown); live drift mapped. User reversed adoptRenovateOrgWide one-updater rule; scope expanded to fix drift in-change.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/agreement.md",
+        "content_hash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "non_whitespace_chars": 4124,
+        "checked_at": "2026-06-08T19:14:37.860Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-08T20:47:54.079Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design v2 complete + mandatory independent validator run (verdict CONCERNS — approach valid). Validator findings fixed: C-1 (corrected false non_fast_forward rationale; allowed_merge_methods is sole squash-only enforcer), C-2/C-3 (added Tier-0 pre-apply guard verifying allow_squash_merge=true on both repos + revised sequencing to precede privileged apply; AC7 asserts it). Squash mechanism doc-confirmed (org-level allowed_merge_methods since 2024-12-04). Payload pass-through + self-test L68 confirmed. All 8 ACs/7 constraints/6 avoidances covered. No product/value tradeoff or CONFLICT → no design-approval pause required.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/design.md",
+        "content_hash": "9f02bb0b9c4580c37c9a983d8708369244d88f796842e2c36b800c9efa58b6ee",
+        "non_whitespace_chars": 7932,
+        "checked_at": "2026-06-08T19:14:37.861Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-08T21:02:04.654Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved 12-task graph (\"approve\"). Tasks 1-8 this-repo code/docs (verifiable locally), 9-12 privileged/cross-repo handoffs (Tier-0 guard precedes apply per validator C-3). All 8 ACs implemented+verified; 7 constraints + 6 avoidances referenced."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-08T21:14:16.585Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 12 tasks done + verified. This-repo (tasks 1-8): ruleset JSON strict-off+squash, self-test assertions, ci-standard.md (merge-serialization §6, Tier-3 escalation, Dependabot equal-path, canonical oasdiff contract-gate +1MB gotcha), examples refresh, README pointers, web conformance audit; full self-test green (actionlint+shellcheck+ruleset-asserts). Live (tasks 9-12, user-authorized): both repos normalized squash-only buttons; org ruleset 17335746 applied (strict=false, allowed_merge_methods=[\"squash\"], bypass=[], verified live, disk==live); PokeEdge PR #347 opened removing stale sonarcloud.yml with SQUASH auto-merge armed; Dependabot conformance confirmed. All 8 ACs implemented+verified."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-08T21:17:54.987Z",
+      "completed_by": "agent",
+      "approval_evidence": "Acceptance review (inline — adv-reviewer worker unreliable this session). Verdict READY. Contract review matrix persisted: 21/21 pass/respected, 0 failing. Review caught + fixed: 2 broken intra/cross-doc anchors (em-dash slug bug, 7 occurrences) + pre-existing #5-pin-policy anchor (campsite) + AC4 gap (web example lacked a contract job — added consumer-side contract-sync). actionlint clean post-fix; all anchors resolve. AC1 disk==live verified; AC6 PR #347 open w/ squash auto-merge; AC7 both repos squash-only+auto-merge live. Executive summary persisted.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/executive-summary.md",
+        "content_hash": "1b98cbe4afcdf5a235e1858e1154e69c43640bdc662a0868ee3264af0ae73204",
+        "non_whitespace_chars": 3188,
+        "checked_at": "2026-06-08T19:14:37.862Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+      "approvedAt": "2026-06-08T20:40:08.661Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** Org ruleset (rulesets/sharperflow-app-protection.json): strict_required_status_checks_policy=false; squash-only merge enforced (surface decided in design — ruleset merge-method rule vs repo settings); non_fast_forward + required check \"Sharperflow CI Gate\" retained; applied via apply-ruleset.sh --no-release-bypass; disk=live (drift resolved).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** self-test.yml ruleset-JSON assertions updated to match (strict now false; squash enforcement asserted).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** docs/ci-standard.md: §6 amended (strict-off + auto-merge + squash rationale replaces strict rationale); §Dependency-updates amended to Renovate-OR-Dependabot equal path (supersession of adoptRenovateOrgWide documented, carried-forward tradeoffs noted, one-updater-per-ecosystem-per-repo hard rule); new canonical cross-repo OpenAPI contract-gate section (oasdiff pattern promoted); Tier-3 escalation playbook section; conformance checklist updated.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** examples/pokeedge-python/ci.yml + examples/pokeedge-web/ci.yml refreshed to match live conformant pattern (currently stale — missing contract gate).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5** oasdiff standardized via CLI or the NEW oasdiff/oasdiff-action ONLY (never deprecated Tufin/oasdiff-action); gate on --fail-on ERR (high-signal first); version-pinned + Renovate-bumpable.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC6",
+        "kind": "acceptance_criterion",
+        "text": "**AC6** Sharper-Flow/PokeEdge: stale sonarcloud.yml removed; Dependabot state conformant to new equal-path standard; squash-only confirmed.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC7",
+        "kind": "acceptance_criterion",
+        "text": "**AC7** Both PokeEdge + PokeEdge-Web verified: allow_auto_merge on, squash-only, required \"Sharperflow CI Gate\" intact, default branch main.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC8",
+        "kind": "acceptance_criterion",
+        "text": "**AC8** README.md pointers updated where standard sections moved/changed.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "**C1** No GitHub Enterprise Cloud upgrade.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "**C2** No new paid SaaS adoption (Tier-3 escalation is documentation only).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "**C3** Keep CI execution in GitHub's free cloud — do not move verification onto local hardware.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "**C4** Org-ruleset apply is a privileged operation (admin:org / GitHub App Administration:write) — a runbook/handoff step, not an automated CI mutation.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C5",
+        "kind": "constraint",
+        "text": "**C5** Cross-repo app edits (PokeEdge sonarcloud/dependabot) are privileged/cross-project — sequence as handoffs where this session cannot directly push.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C6",
+        "kind": "constraint",
+        "text": "**C6** Keep any escalation tool operating WITHIN rulesets — never a bypass actor on a security-gates org.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C7",
+        "kind": "constraint",
+        "text": "**C7** Maintain \"fail only on high-signal\" posture (oasdiff --fail-on ERR first).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "**DONT1** Do not adopt/build agent-side Temporal merge mutex (local hardware tax; cannot govern bot PRs).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "**DONT2** Do not attempt native merge_queue rule (impossible on Team+private; 422s were correct rejections).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "**DONT3** Do not build a new oasdiff gate from scratch — promote/standardize the existing backend pattern.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "**DONT4** Do not make the future Renovate-vs-Dependabot per-repo CHOICE in this change — enable both, defer the decision.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT5",
+        "kind": "avoidance",
+        "text": "**DONT5** Do not weaken the ruleset with bypass actors to accommodate any tool.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT6",
+        "kind": "avoidance",
+        "text": "**DONT6** Do not use the deprecated Tufin/oasdiff-action.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-08T21:17:25.932Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "rulesets JSON disk: strict_required_status_checks_policy=false, pull_request.allowed_merge_methods=[\"squash\"], non_fast_forward kept, ctx [\"Sharperflow CI Gate\"], bypass_actors=[]. Applied live via apply-ruleset.sh --no-release-bypass; gh api orgs/Sharper-Flow/rulesets/17335746 confirms live strict=false methods=[\"squash\"] — disk==live."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "self-test.yml ruleset-JSON assertion block asserts strict is False AND allowed_merge_methods==[\"squash\"] + non_fast_forward present; executes green against edited JSON (would fail on old strict=true shape). actionlint clean."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "ci-standard.md: §6 amended (strict-off + squash-only + auto-merge; non_fast_forward correctly described as force-push guard); Merge serialization subsection; Dependency-updates retitled to Renovate-OR-Dependabot equal path (supersession of adoptRenovateOrgWide + one-updater-per-ecosystem + Dependabot cooldown/--auto --squash); Cross-repo API contract gate section (oasdiff); Tier-3 escalation; conformance checklist updated. All 4 sections present; intra-doc anchors resolve."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "examples/pokeedge-python/ci.yml: producer contract-gate job (pinned oasdiff v1.18.5, fetch consumer baseline, oasdiff breaking --fail-on ERR) wired to summary needs. examples/pokeedge-web/ci.yml: consumer contract-sync job (baseline freshness vs backend main, Git Blobs API for >1MB) wired to summary needs. actionlint clean on both."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "oasdiff documented via CLI + new oasdiff/oasdiff-action; --fail-on ERR (high-signal); version-pinned (v1.18.5) + Renovate-bumpable. Deprecated Tufin/oasdiff-action appears ONLY in explicit NEVER-use warnings (ci-standard.md + example comment), never as a uses:."
+        },
+        {
+          "contractId": "AC6",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge PR #347 (chore/remove-stale-sonarcloud) OPEN, removes orphaned .github/workflows/sonarcloud.yml (132 lines), SQUASH auto-merge armed. sonar-project.properties already absent. Required check is Sharperflow CI Gate only (no orphaned required context). Dependabot conformant: Renovate active + no dependabot.yml = one-updater-per-ecosystem. Broader sonar doc-refs surfaced as agenda follow-up ag-DJe50eGl."
+        },
+        {
+          "contractId": "AC7",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "gh api live: both PokeEdge + PokeEdge-Web allow_squash_merge=true, allow_auto_merge=true, allow_merge_commit=false, allow_rebase_merge=false, default_branch=main. Required Sharperflow CI Gate intact in ruleset. Squash precondition satisfied before apply (no merge hard-block)."
+        },
+        {
+          "contractId": "AC8",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "README.md: dependency-updater pointer updated (Renovate-or-Dependabot one-per-ecosystem); branch-protection block updated (non-strict + squash-only + allow_squash_merge precondition + Merge-serialization link); strict/bypass disambiguated. All README->ci-standard anchors resolve (incl. pre-existing #5-pin-policy-lbp-supply-chain fixed). No broken anchors."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No GHEC upgrade; solution uses Team-plan-compatible GitHub primitives only."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No paid SaaS adopted; Tier-3 escalation (Mergify/AI-bot) is documentation only."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "All CI/verification stays in GitHub Actions cloud; no local-hardware verification path introduced (agent-side Temporal mutex explicitly rejected)."
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Org-ruleset apply done via apply-ruleset.sh as an explicit privileged step (admin:org token), dry-run previewed first; user-authorized before firing. Not an automated CI mutation."
+        },
+        {
+          "contractId": "C5",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge cross-repo edit done as a PR (#347), not a direct push to main; user-authorized."
+        },
+        {
+          "contractId": "C6",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "bypass_actors=[] on disk and live; no tool added as bypass actor; escalation doc explicitly forbids bypass-actor tooling."
+        },
+        {
+          "contractId": "C7",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "oasdiff gated on --fail-on ERR (high-signal definite-breaks only); WARN advisory — matches repo fail-on-high-signal posture."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No agent-side Temporal merge mutex built; explicitly documented as rejected (local hardware tax, cannot govern bot PRs)."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No merge_queue rule in ruleset (grep clean); native merge queue documented as impossible on Team+private."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "oasdiff pattern documented + referenced (PokeEdge check-api-compat.yml as reference impl); no duplicate reusable workflow added to this repo. Examples illustrate the pattern only."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Both Renovate and Dependabot enabled as equal paths; the per-repo CHOICE is explicitly deferred to a future re-assessment (Choosing-the-updater table lists inputs, makes no choice)."
+        },
+        {
+          "contractId": "DONT5",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "bypass_actors=[] retained disk+live; ruleset not weakened."
+        },
+        {
+          "contractId": "DONT6",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Deprecated Tufin/oasdiff-action never used as an action; appears only in NEVER-use warnings."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** Org ruleset (rulesets/sharperflow-app-protection.json): strict_required_status_checks_policy=false; squash-only merge enforced (surface decided in design — ruleset merge-method rule vs repo settings); non_fast_forward + required check \"Sharperflow CI Gate\" retained; applied via apply-ruleset.sh --no-release-bypass; disk=live (drift resolved).",
+    "**AC2** self-test.yml ruleset-JSON assertions updated to match (strict now false; squash enforcement asserted).",
+    "**AC3** docs/ci-standard.md: §6 amended (strict-off + auto-merge + squash rationale replaces strict rationale); §Dependency-updates amended to Renovate-OR-Dependabot equal path (supersession of adoptRenovateOrgWide documented, carried-forward tradeoffs noted, one-updater-per-ecosystem-per-repo hard rule); new canonical cross-repo OpenAPI contract-gate section (oasdiff pattern promoted); Tier-3 escalation playbook section; conformance checklist updated.",
+    "**AC4** examples/pokeedge-python/ci.yml + examples/pokeedge-web/ci.yml refreshed to match live conformant pattern (currently stale — missing contract gate).",
+    "**AC5** oasdiff standardized via CLI or the NEW oasdiff/oasdiff-action ONLY (never deprecated Tufin/oasdiff-action); gate on --fail-on ERR (high-signal first); version-pinned + Renovate-bumpable.",
+    "**AC6** Sharper-Flow/PokeEdge: stale sonarcloud.yml removed; Dependabot state conformant to new equal-path standard; squash-only confirmed.",
+    "**AC7** Both PokeEdge + PokeEdge-Web verified: allow_auto_merge on, squash-only, required \"Sharperflow CI Gate\" intact, default branch main.",
+    "**AC8** README.md pointers updated where standard sections moved/changed."
+  ],
+  "documents": {
+    "proposal": "## Chosen direction: GitHub-native serialization + standardize existing contract gate + Dependabot equal-path\n\nNative merge queue is unavailable (Team + private, verified). The collision loop is self-inflicted by `strict_required_status_checks_policy: true`. Fix it natively (strict-off + auto-merge + squash, all server-side, multi-machine-safe, bot-native). Discovery revealed the cross-repo oasdiff contract gate ALREADY EXISTS on the backend — so Tier 2 is standardization, not new build. User reversed the Renovate-only rule: support Renovate OR Dependabot as equal paths (future per-repo re-assessment).\n\n## SCOPE\nThis change owns the org-wide merge/CI policy. Files/repos affected:\n- **sharperflow-security-gates (this repo, primary):**\n  - `rulesets/sharperflow-app-protection.json` — set `strict_required_status_checks_policy: false`; add squash-only merge-method enforcement (surface decided in design: ruleset rule vs repo settings).\n  - `docs/ci-standard.md` — amend §6 (drop strict rationale → document strict-off + auto-merge + squash); amend §Dependency updates (Renovate→Renovate-OR-Dependabot equal path, supersede adoptRenovateOrgWide one-updater rule, carry forward tradeoffs); add canonical cross-repo OpenAPI contract-gate section (promote existing backend oasdiff pattern); add Tier-3 escalation playbook (Mergify or AI-PR-bot survey); update conformance checklist.\n  - `examples/pokeedge-python/ci.yml`, `examples/pokeedge-web/ci.yml` — refresh to match live conformant pattern (currently stale: missing contract gate).\n  - `scripts/apply-ruleset.sh` — verify/extend for merge-method rule if needed.\n  - `self-test.yml` — update ruleset JSON assertions (strict now false; squash rule).\n  - `README.md` — pointer updates.\n- **Sharper-Flow/PokeEdge (cross-repo app edits):** remove stale `sonarcloud.yml` (retireSonarcloud drift); reconcile Dependabot state per new equal-path standard; confirm squash-only.\n- **Sharper-Flow/PokeEdge-Web (cross-repo app edits):** ensure conformance to standardized contract gate; confirm squash-only + auto-merge.\n- **Org ruleset apply:** privileged `apply-ruleset.sh` run (admin:org) — runbook/handoff step.\n\n## Tier 1 — dissolve the collision loop ($0, the actual fix)\n1. `strict_required_status_checks_policy: false` in ruleset JSON; apply via `apply-ruleset.sh --no-release-bypass` (keeps disk=live; fixes detected drift). Keep required check \"Sharperflow CI Gate\", keep `non_fast_forward`.\n2. Enforce squash-only merge method (surface TBD in design).\n3. Standardize `gh pr merge --squash --auto`; document auto-merge for both bot paths.\nEffect: no up-to-date requirement → no rebase/CI-rerun churn; PRs land serially server-side at GitHub. Works single- and multi-machine.\n\n## Tier 2 — standardize the EXISTING cross-repo contract gate ($0)\n4. Promote the shipped backend pattern (archived ciContractGateRunContractTests, 2026-05-10): `check-api-compat.yml` reusable workflow runs oasdiff comparing backend `openapi.json` vs frontend's committed `docs/openapi.json` baseline; `contract-gate` job path-filtered on spec changes; required check. Document oasdiff rationale (chosen for breaking-change detection on the OpenAPI surface). Replicate/document as canonical in ci-standard.md so all repos converge. Audit web side conformance; design makes final tool call (keep oasdiff vs alternative).\n\n## Tier 3 — documented escalation (no build now)\n5. Escalation trigger doc + candidates: Mergify free tier OR another AI-enabled PR-merge bot (surveyed at doc time). Verified caveats recorded: bot-author free-tier billing must be confirmed; bot-PR queueing config + end-to-end test required; keep any tool WITHIN rulesets (never bypass actor on a security-gates org).\n\n## Tier 4 — Dependabot equal-path reconcile (user reversal)\n6. Supersede adoptRenovateOrgWide's \"Renovate-only, one updater\" rule. Amend ci-standard.md to support Renovate OR Dependabot as equal paths, one-updater-PER-ECOSYSTEM-per-repo (verified hard rule). Document Dependabot parity: GA `cooldown` (7d default, matches Renovate minimumReleaseAge; security fixes exempt on both), `--auto --squash` auto-merge workflow, ecosystem support (uv/bun/pnpm/actions/docker) with weaker spots flagged (bun min-version, action SHA-comment edge cases, docker no-cooldown). Record inputs for the FUTURE per-repo re-assessment.\n\n## Tier 5 — fix live drift (in this change, per user)\n7. Remove stale `sonarcloud.yml` from PokeEdge (retireSonarcloud left it). Reconcile PokeEdge Dependabot state to conform to the new equal-path standard. Confirm both repos squash-only + allow_auto_merge (already true).\n\n## Residual risk (accepted)\nStrict OFF accepts a rare green-but-incompatible PR pair breaking main, caught by next PR's CI. The oasdiff cross-repo gate closes the highest-value coupling. Reassess if break frequency rises (→ Tier 3 escalation).\n\n## Out of scope\n- GitHub Enterprise Cloud upgrade. Agent-side Temporal merge mutex (wrong-fit: local hardware tax, cannot govern bot PRs). Native merge_queue rule (impossible on plan). Third-party queue ADOPTION (documented as escalation only). The future Renovate-vs-Dependabot per-repo decision (this change enables both; the choice is deferred).\n\n## Verified facts (discovery)\n- Org plan=team, both repos private → native merge queue impossible (422s were correct).\n- Live ruleset id 17335746 strict=true (collision cause); matches disk.\n- Both repos: allow_auto_merge=true, all 3 merge methods allowed, delete_branch_on_merge=true, default branch main.\n- Backend already: merge_group:, Sharperflow CI Gate summary, oasdiff contract-gate, Dependabot --auto --squash auto-merge, OpenAPI Drift Check; stale sonarcloud.yml present.\n- Dependabot now has GA cooldown (parity with Renovate); equal-path viable.",
+    "problemStatement": "Recent org-wide security/CI rollout left a merge-collision problem: many AI agents (and future multi-machine + Renovate/Dependabot bots) open PRs near-simultaneously and thrash.\n\nVERIFIED ROOT CAUSE (not the tickets' premise):\n- Org Sharper-Flow is GitHub **Team plan**, repos PokeEdge + PokeEdge-Web are **private** (confirmed via `gh api orgs/Sharper-Flow` → plan team; both repos private:true). GitHub-native merge queue is therefore IMPOSSIBLE (requires Enterprise Cloud for private repos). The two source tickets' \"enable merge queue\" premise is infeasible; the 422 errors were correct rejections, not bugs.\n- The collision loop is SELF-INFLICTED by `strict_required_status_checks_policy: true` (\"branch must be up to date\") in the org ruleset (live ruleset id 17335746, confirmed strict=true; matches committed rulesets/sharperflow-app-protection.json line 31). Ticket 1's claim that strict was \"flipped off\" is stale/wrong — strict is currently ON.\n- This is actually TWO problems conflated: (a) the rebase/CI-rerun collision loop, caused by strict=true; (b) cross-repo OpenAPI drift (backend spec change breaks a green frontend PR) — which NO merge queue addresses.\n\nCONSTRAINTS:\n- Rapid dev, mostly single machine today; must scale to multiple machines submitting PRs/pushes in future.\n- Must work natively with Renovate OR Dependabot (bot-authored PRs are first-class).\n- No GitHub Enterprise Cloud upgrade (cost rejected). No paid SaaS as the starting move.\n- Keep CI in GitHub's free cloud — do not pull verification onto local hardware (rules out agent-side Temporal merge mutex as primary: it taxes local compute and cannot govern bot PRs that never touch ADV).\n- This repo (sharperflow-security-gates) is the protection-as-code source of truth; fixes belong here (org ruleset JSON + apply-ruleset.sh), not UI clicking (avoids the code/live drift already detected).",
+    "agreement": "# Agreement — fixMergeCollisionStrategy\n\n## Objectives\n1. Dissolve the PR merge-collision loop by removing its verified cause (org ruleset strict=true): set strict-off + squash-only + native auto-merge, server-side at GitHub (works single- and multi-machine, Renovate- and Dependabot-native).\n2. Standardize the existing (already-shipped on backend) oasdiff cross-repo OpenAPI breaking-change contract gate org-wide, so backend→frontend API drift is caught pre-merge (the one coupling no merge queue addresses).\n3. Document a Tier-3 escalation path (Mergify free tier OR another AI-enabled PR-merge bot) for if collisions persist after strict-off — documentation only, no adoption.\n4. Reconcile ci-standard.md to support Renovate OR Dependabot as equal updater paths (supersedes adoptRenovateOrgWide \"Renovate-only, one updater\" rule per explicit user reversal); enforce one-updater-PER-ECOSYSTEM-per-repo; record inputs for a future per-repo re-assessment.\n5. Fix live drift discovered during discovery: remove stale sonarcloud.yml from PokeEdge (retireSonarcloud leftover); reconcile PokeEdge Dependabot state to the new equal-path standard.\n\n## Acceptance Criteria\n- **AC1** Org ruleset (rulesets/sharperflow-app-protection.json): strict_required_status_checks_policy=false; squash-only merge enforced (surface decided in design — ruleset merge-method rule vs repo settings); non_fast_forward + required check \"Sharperflow CI Gate\" retained; applied via apply-ruleset.sh --no-release-bypass; disk=live (drift resolved).\n- **AC2** self-test.yml ruleset-JSON assertions updated to match (strict now false; squash enforcement asserted).\n- **AC3** docs/ci-standard.md: §6 amended (strict-off + auto-merge + squash rationale replaces strict rationale); §Dependency-updates amended to Renovate-OR-Dependabot equal path (supersession of adoptRenovateOrgWide documented, carried-forward tradeoffs noted, one-updater-per-ecosystem-per-repo hard rule); new canonical cross-repo OpenAPI contract-gate section (oasdiff pattern promoted); Tier-3 escalation playbook section; conformance checklist updated.\n- **AC4** examples/pokeedge-python/ci.yml + examples/pokeedge-web/ci.yml refreshed to match live conformant pattern (currently stale — missing contract gate).\n- **AC5** oasdiff standardized via CLI or the NEW oasdiff/oasdiff-action ONLY (never deprecated Tufin/oasdiff-action); gate on --fail-on ERR (high-signal first); version-pinned + Renovate-bumpable.\n- **AC6** Sharper-Flow/PokeEdge: stale sonarcloud.yml removed; Dependabot state conformant to new equal-path standard; squash-only confirmed.\n- **AC7** Both PokeEdge + PokeEdge-Web verified: allow_auto_merge on, squash-only, required \"Sharperflow CI Gate\" intact, default branch main.\n- **AC8** README.md pointers updated where standard sections moved/changed.\n\n## Constraints\n- **C1** No GitHub Enterprise Cloud upgrade.\n- **C2** No new paid SaaS adoption (Tier-3 escalation is documentation only).\n- **C3** Keep CI execution in GitHub's free cloud — do not move verification onto local hardware.\n- **C4** Org-ruleset apply is a privileged operation (admin:org / GitHub App Administration:write) — a runbook/handoff step, not an automated CI mutation.\n- **C5** Cross-repo app edits (PokeEdge sonarcloud/dependabot) are privileged/cross-project — sequence as handoffs where this session cannot directly push.\n- **C6** Keep any escalation tool operating WITHIN rulesets — never a bypass actor on a security-gates org.\n- **C7** Maintain \"fail only on high-signal\" posture (oasdiff --fail-on ERR first).\n\n## Avoidances\n- **DONT1** Do not adopt/build agent-side Temporal merge mutex (local hardware tax; cannot govern bot PRs).\n- **DONT2** Do not attempt native merge_queue rule (impossible on Team+private; 422s were correct rejections).\n- **DONT3** Do not build a new oasdiff gate from scratch — promote/standardize the existing backend pattern.\n- **DONT4** Do not make the future Renovate-vs-Dependabot per-repo CHOICE in this change — enable both, defer the decision.\n- **DONT5** Do not weaken the ruleset with bypass actors to accommodate any tool.\n- **DONT6** Do not use the deprecated Tufin/oasdiff-action.\n\n## Accepted residual risk\nStrict-off allows a rare green-but-logically-incompatible PR pair to merge and break main, caught by the next PR's CI. The oasdiff cross-repo gate closes the highest-value coupling (backend→frontend API). Reassess and escalate (Tier 3) if break frequency rises.\n\n## Out of scope\nGHEC upgrade; agent-side Temporal mutex; native merge_queue; third-party queue ADOPTION (doc only); the future per-repo Renovate-vs-Dependabot decision (enabled here, decided later).\n\n## Sign-Off\nApproved by user (\"approve\") at agreement checkpoint, 2026-06-08.",
+    "design": "# Design — fixMergeCollisionStrategy\n\n(v2 — incorporates independent design-validator findings C-1, C-2, C-3.)\n\n## Architecture posture\nThis repo (sharperflow-security-gates) is the protection-as-code + CI-standard source of truth. All policy changes land here as code/docs; the org ruleset is applied via the existing privileged script; cross-repo app edits (PokeEdge) are sequenced as handoffs. Every external-surface decision below is GitHub-doc-verified (P34/P36).\n\n## Verified mechanics (design-load-bearing)\n- **Native merge queue impossible** (Team+private). Not pursued.\n- **Squash-only is ORG-RULESET enforceable**: `pull_request` rule param `allowed_merge_methods: [\"squash\"]` (REST repos/orgs rules; org-level since GitHub changelog 2024-12-04). Lowercase enum `merge|squash|rebase`, ≥1 required. → Tier 1 stays fully as-code in the existing org ruleset.\n- **CORRECTED (validator C-1): `non_fast_forward` ONLY blocks force-pushes — it does NOT forbid merge commits.** The merge-commit blocker would be `required_linear_history`, which is NOT in this ruleset. Therefore `allowed_merge_methods: [\"squash\"]` is the SOLE squash-only enforcer — it alone excludes BOTH merge-commit AND rebase. Keep `non_fast_forward` only as the force-push guard. (Earlier rationale claiming non_fast_forward gives the no-merge-commit guarantee was false; operational conclusion — squash-only via allowed_merge_methods — is unchanged and correct.)\n- **HARD PRECONDITION (validator C-2/C-3): repo `allow_squash_merge` MUST be true on BOTH repos BEFORE applying the squash-only ruleset.** GitHub: \"Merge methods set on the repository that conflict with the merge method rule will prevent merging.\" A squash-only ruleset against a repo with squash disabled = empty intersection = ALL merges hard-block (a self-inflicted outage of the same class this change fixes). Both repos currently have allow_squash_merge=true (verified in discovery), so safe — but the apply runbook MUST gate on a pre-apply check. Normalizing repo allow_merge_commit/allow_rebase → false is recommended hygiene (removes dead/blocked merge buttons), NOT load-bearing; allow_squash_merge=true IS load-bearing.\n- **strict=false** removes the \"branch up to date\" requirement (GitHub \"Loose\" mode). Loose checks are NOT re-evaluated post-merge → the NEXT PR's CI is the explicit safety net for a green-but-stale pair.\n- **oasdiff**: use CLI (as PokeEdge does) or NEW oasdiff/oasdiff-action; never deprecated Tufin action; `--fail-on ERR`; version-pinned + Renovate-bumped.\n- **Dependabot equal-path**: GA `cooldown` (default-days 7 ≈ Renovate minimumReleaseAge; security fixes exempt on both); `--auto --squash` auto-merge workflow w/ actor guard + contents:write+pull-requests:write + Dependabot secrets; one-updater-PER-ECOSYSTEM-per-repo (hard rule).\n\n## Implementation strategy by tier\n\n### Tier 0 — PRE-APPLY GUARD (new, from validator C-2/C-3) [AC7]\n- BEFORE applying the ruleset: verify `allow_squash_merge=true` on BOTH PokeEdge + PokeEdge-Web (gh api). If false anywhere, normalize first (PATCH allow_squash_merge=true) — otherwise the squash-only ruleset hard-blocks all merges. Recommended same-step hygiene: set allow_merge_commit=false + allow_rebase_merge=false to remove dead buttons. Add this as an explicit gate in the apply runbook.\n\n### Tier 1 — collision-loop fix (org ruleset as-code) [AC1, AC2]\n1. Edit `rulesets/sharperflow-app-protection.json`:\n   - required_status_checks rule: `strict_required_status_checks_policy: false` (was true).\n   - pull_request rule: add `allowed_merge_methods: [\"squash\"]` (keep the full existing param set — API requires all pull_request sub-fields).\n   - Keep non_fast_forward (force-push guard), required check \"Sharperflow CI Gate\", bypass_actors:[].\n2. Update `.github/workflows/self-test.yml` JSON assertions: change the hardcoded `strict ... is True` assertion (~L68) → assert False; ADD assertion that the pull_request rule's allowed_merge_methods == [\"squash\"]. (Validator confirmed only L68 breaks; L67 ctxs / L62 bypass_actors / target / enforcement assertions unaffected.)\n3. Apply: Tier-0 guard → `scripts/apply-ruleset.sh --dry-run` preview → `scripts/apply-ruleset.sh --no-release-bypass` (privileged, admin:org — runbook/handoff). Validator confirmed apply-ruleset.sh uses the JSON verbatim as PUT --input on the --no-release-bypass path; allowed_merge_methods cannot be stripped. No script edit needed.\n\n### Tier 2 — standardize existing oasdiff contract gate (doc-first) [AC3 contract section, AC4, AC5]\n- Canonical pattern already in PokeEdge: `check-api-compat.yml` (reusable workflow_call) runs oasdiff comparing backend openapi.json vs frontend's committed docs/openapi.json baseline; `contract-gate` job path-filters on openapi.json, required via \"Sharperflow CI Gate\".\n- Standardization = DOCUMENT as canonical in ci-standard.md (dedicated \"Cross-repo API contract gate\" section): baseline model (frontend committed spec = built-against), `--fail-on ERR`, CLI/new-action-only + version-pin, path-filter + skip=success, required-check rollup; reference PokeEdge impl as reference implementation.\n- Refresh examples/ to show the contract-gate job in the canonical CI template.\n- Audit PokeEdge-Web conformance (it has \"Generated API Drift Check\"/\"Backend Contract Sync Check\"); reconcile naming/behavior to the standard in docs; fix only if cheap+adjacent (campsite), else surface follow-up.\n- DESIGN DECISION (final): keep oasdiff (validated). Do NOT duplicate check-api-compat.yml into THIS repo unless web genuinely needs cross-repo consumption — prefer doc + reference impl. Execution audits whether a shared reusable workflow adds value vs doc-only.\n\n### Tier 3 — escalation playbook (doc only) [AC3 escalation section]\n- New ci-standard.md subsection: \"If collisions persist after strict-off\" → trigger criteria + candidates (Mergify free OR another AI-enabled PR-merge bot). Caveats: bot-author free-tier billing must be confirmed; bot-PR queueing config + end-to-end test required; tool MUST operate within rulesets (never bypass actor). No adoption.\n\n### Tier 4 — Dependabot equal-path reconcile [AC3 dependency-updates section]\n- Amend ci-standard.md §Dependency updates: \"Renovate, NOT Dependabot — one updater\" → \"Renovate OR Dependabot — one updater PER ECOSYSTEM per repo\". Document supersession of adoptRenovateOrgWide (date + reason: user reversal; future per-repo re-assessment). Carry forward tradeoffs (duplicate-PR/lockfile risk if mixed per ecosystem; Renovate bun maturity edge; Dependabot action SHA-comment edge cases; Dependabot docker no-cooldown). Include canonical Dependabot `--auto --squash` workflow + `cooldown` config block. List re-assessment inputs.\n\n### Tier 5 — fix live drift [AC6]\n- PokeEdge (cross-repo handoff PRs): remove stale `.github/workflows/sonarcloud.yml` (retireSonarcloud leftover); reconcile Dependabot state to the new standard (already runs Dependabot auto-merge — confirm conformance; no removal needed now that Dependabot is allowed). Confirm squash effective once ruleset applies (depends on Tier-0 guard).\n- Privileged cross-project edits — sequence as handoff steps (open PRs via gh where possible; org-owner merges/applies).\n\n### Verification [AC7, AC8]\n- self-test actionlint + ruleset-JSON assertions green.\n- Live post-apply: ruleset strict=false + allowed_merge_methods=[\"squash\"]; both repos allow_auto_merge on, allow_squash_merge=true, required check intact, default branch main.\n- README pointer updates.\n\n## Sequencing / dependencies (REVISED per validator C-3)\n1. Ruleset JSON + self-test assertions (this repo) → 2. ci-standard.md amendments + examples refresh (this repo) → 3. **Tier-0 pre-apply guard: verify/normalize repo allow_squash_merge=true on both repos** → 4. apply ruleset (privileged handoff, dry-run first) → 5. cross-repo drift PRs (PokeEdge) → 6. live verification.\nDocs (this repo) are independent and land first. The Tier-0 guard MUST precede the privileged apply.\n\n## Risks / mitigations\n- strict=false is privileged + feels irreversible: dry-run preview first; rollback = flip strict true + re-apply.\n- **Squash-only-vs-repo-settings hard-block (validator C-2): mitigated by the Tier-0 precondition guard — never apply before confirming allow_squash_merge=true on both repos.**\n- Cross-repo edits may exceed this session's push scope: sequence as explicit handoffs; do not bypass worktree/permission isolation.\n- oasdiff org-wide doc must not duplicate PokeEdge's working workflow: doc + reference impl preferred.\n- LBP: keep ruleset, standard doc, examples, self-test assertions mutually consistent (standard is normative; YAML/JSON wins on conflict per ci-standard.md precedence).\n\n## Design-validator disposition\nIndependent validator verdict: CONCERNS (approach valid). C-1 (false non_fast_forward rationale) FIXED above. C-2/C-3 (squash-precondition + sequencing) FIXED via new Tier-0 guard + revised sequencing + AC7 assertion of allow_squash_merge=true. Payload-pass-through (item 5) and self-test L68 (item 4) confirmed correct as designed. All 8 ACs / 7 constraints / 6 avoidances covered.",
+    "executiveSummary": "# Executive Summary — fixMergeCollisionStrategy\n\n## What it solves\nPR merge-collision loops on a small-seat org running many concurrent AI-agent/bot PRs. The verified root cause was **not** a missing merge queue — it was `strict_required_status_checks_policy: true` (\"branch must be up to date\") in the org ruleset, which forced endless rebase + CI-rerun churn as PRs raced.\n\n## Key finding (reframed the whole ask)\nThe two source tickets assumed GitHub merge queue could be enabled. **It cannot** on this account (Team plan + private repos require GitHub Enterprise Cloud for merge queue — confirmed via `gh api`: plan=team, both repos private). The 422 errors the prior agents hit were correct rejections, not bugs. With GHEC rejected on cost, the fix is built from plan-compatible GitHub primitives.\n\n## What was delivered\n**Tier 1 — collision-loop fix (live):** org ruleset `strict=false` + `allowed_merge_methods:[\"squash\"]`. PRs now merge serially via native auto-merge (`gh pr merge --squash --auto`) on a green `Sharperflow CI Gate` — server-side, no rebase churn, identical single- or multi-machine, Renovate/Dependabot-native. Applied live to ruleset 17335746; disk==live verified.\n\n**Tier 2 — cross-repo contract gate (standardized):** the backend↔frontend OpenAPI drift that no merge serialization can catch is closed by **oasdiff** breaking-change detection (already shipped on PokeEdge; validated as the de-facto best-practice tool). Documented as canonical in ci-standard.md (consumer-committed-spec baseline model, `--fail-on ERR`, CLI/new-action only — never the deprecated Tufin action, >1MB Git-Blobs-API gotcha). Both example CIs refreshed to show the producer (oasdiff) and consumer (sync) halves.\n\n**Tier 3 — escalation playbook (documented, not adopted):** if collisions persist, Mergify free tier or another AI-PR-bot — with verified caveats (bot-author billing, bot-PR config, must stay within rulesets).\n\n**Tier 4 — Dependabot equal-path:** reversed the 2-day-old Renovate-only rule per explicit user decision. ci-standard.md now supports Renovate OR Dependabot (one updater per ecosystem per repo), with Dependabot's GA cooldown + `--auto --squash` workflow documented and a re-assessment-inputs table for the future per-repo choice.\n\n**Tier 5 — live drift fix:** PokeEdge PR #347 opened removing the orphaned `sonarcloud.yml` (Sonar was retired org-wide), with squash auto-merge armed — itself a live demonstration of the new policy.\n\n## Verification\n- Local: actionlint clean, shellcheck clean, self-test ruleset-JSON assertions green (now assert strict-off + squash-only).\n- Live: ruleset 17335746 confirmed strict=false + methods=[\"squash\"] + bypass=[]; both repos squash-only + auto-merge on.\n- Contract: 21/21 items pass/respected (8 ACs, 7 constraints, 6 avoidances), 0 failing.\n- Independent design validator caught + we fixed: the false \"non_fast_forward blocks merge commits\" rationale (squash-only comes solely from allowed_merge_methods) and the squash-precondition hard-block hazard (pre-apply guard added).\n\n## Design integrity\n- No GHEC, no paid SaaS, no agent-side Temporal mutex (rejected: local-hardware tax + can't govern bot PRs), no native merge_queue (impossible on plan), no bypass actors (security-gates org keeps `bypass_actors: []`).\n- Accepted residual risk: strict-off lets a rare green-but-incompatible PR pair break main, caught by the next PR's CI; the oasdiff gate closes the highest-value (cross-repo API) coupling.\n\n## Follow-ups\n- ag-DJe50eGl: clean residual SonarCloud doc references in PokeEdge (docs-only, out of this change's workflow-removal scope).\n- Future: per-repo Renovate-vs-Dependabot re-assessment (enabled here, deferred by design).",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-08T21:17:25.932Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1** Org ruleset (rulesets/sharperflow-app-protection.json): strict_required_status_checks_policy=false; squash-only merge enforced (surface decided in design — ruleset merge-method rule vs repo settings); non_fast_forward + required check \"Sharperflow CI Gate\" retained; applied via apply-ruleset.sh --no-release-bypass; disk=live (drift resolved). | pass | rulesets JSON disk: strict_required_status_checks_policy=false, pull_request.allowed_merge_methods=[\"squash\"], non_fast_forward kept, ctx [\"Sharperflow CI Gate\"], bypass_actors=[]. Applied live via apply-ruleset.sh --no-release-bypass; gh api orgs/Sharper-Flow/rulesets/17335746 confirms live strict=false methods=[\"squash\"] — disk==live. |\n| AC2 | acceptance_criterion | **AC2** self-test.yml ruleset-JSON assertions updated to match (strict now false; squash enforcement asserted). | pass | self-test.yml ruleset-JSON assertion block asserts strict is False AND allowed_merge_methods==[\"squash\"] + non_fast_forward present; executes green against edited JSON (would fail on old strict=true shape). actionlint clean. |\n| AC3 | acceptance_criterion | **AC3** docs/ci-standard.md: §6 amended (strict-off + auto-merge + squash rationale replaces strict rationale); §Dependency-updates amended to Renovate-OR-Dependabot equal path (supersession of adoptRenovateOrgWide documented, carried-forward tradeoffs noted, one-updater-per-ecosystem-per-repo hard rule); new canonical cross-repo OpenAPI contract-gate section (oasdiff pattern promoted); Tier-3 escalation playbook section; conformance checklist updated. | pass | ci-standard.md: §6 amended (strict-off + squash-only + auto-merge; non_fast_forward correctly described as force-push guard); Merge serialization subsection; Dependency-updates retitled to Renovate-OR-Dependabot equal path (supersession of adoptRenovateOrgWide + one-updater-per-ecosystem + Dependabot cooldown/--auto --squash); Cross-repo API contract gate section (oasdiff); Tier-3 escalation; conformance checklist updated. All 4 sections present; intra-doc anchors resolve. |\n| AC4 | acceptance_criterion | **AC4** examples/pokeedge-python/ci.yml + examples/pokeedge-web/ci.yml refreshed to match live conformant pattern (currently stale — missing contract gate). | pass | examples/pokeedge-python/ci.yml: producer contract-gate job (pinned oasdiff v1.18.5, fetch consumer baseline, oasdiff breaking --fail-on ERR) wired to summary needs. examples/pokeedge-web/ci.yml: consumer contract-sync job (baseline freshness vs backend main, Git Blobs API for >1MB) wired to summary needs. actionlint clean on both. |\n| AC5 | acceptance_criterion | **AC5** oasdiff standardized via CLI or the NEW oasdiff/oasdiff-action ONLY (never deprecated Tufin/oasdiff-action); gate on --fail-on ERR (high-signal first); version-pinned + Renovate-bumpable. | pass | oasdiff documented via CLI + new oasdiff/oasdiff-action; --fail-on ERR (high-signal); version-pinned (v1.18.5) + Renovate-bumpable. Deprecated Tufin/oasdiff-action appears ONLY in explicit NEVER-use warnings (ci-standard.md + example comment), never as a uses:. |\n| AC6 | acceptance_criterion | **AC6** Sharper-Flow/PokeEdge: stale sonarcloud.yml removed; Dependabot state conformant to new equal-path standard; squash-only confirmed. | pass | PokeEdge PR #347 (chore/remove-stale-sonarcloud) OPEN, removes orphaned .github/workflows/sonarcloud.yml (132 lines), SQUASH auto-merge armed. sonar-project.properties already absent. Required check is Sharperflow CI Gate only (no orphaned required context). Dependabot conformant: Renovate active + no dependabot.yml = one-updater-per-ecosystem. Broader sonar doc-refs surfaced as agenda follow-up ag-DJe50eGl. |\n| AC7 | acceptance_criterion | **AC7** Both PokeEdge + PokeEdge-Web verified: allow_auto_merge on, squash-only, required \"Sharperflow CI Gate\" intact, default branch main. | pass | gh api live: both PokeEdge + PokeEdge-Web allow_squash_merge=true, allow_auto_merge=true, allow_merge_commit=false, allow_rebase_merge=false, default_branch=main. Required Sharperflow CI Gate intact in ruleset. Squash precondition satisfied before apply (no merge hard-block). |\n| AC8 | acceptance_criterion | **AC8** README.md pointers updated where standard sections moved/changed. | pass | README.md: dependency-updater pointer updated (Renovate-or-Dependabot one-per-ecosystem); branch-protection block updated (non-strict + squash-only + allow_squash_merge precondition + Merge-serialization link); strict/bypass disambiguated. All README->ci-standard anchors resolve (incl. pre-existing #5-pin-policy-lbp-supply-chain fixed). No broken anchors. |\n| C1 | constraint | **C1** No GitHub Enterprise Cloud upgrade. | respected | No GHEC upgrade; solution uses Team-plan-compatible GitHub primitives only. |\n| C2 | constraint | **C2** No new paid SaaS adoption (Tier-3 escalation is documentation only). | respected | No paid SaaS adopted; Tier-3 escalation (Mergify/AI-bot) is documentation only. |\n| C3 | constraint | **C3** Keep CI execution in GitHub's free cloud — do not move verification onto local hardware. | respected | All CI/verification stays in GitHub Actions cloud; no local-hardware verification path introduced (agent-side Temporal mutex explicitly rejected). |\n| C4 | constraint | **C4** Org-ruleset apply is a privileged operation (admin:org / GitHub App Administration:write) — a runbook/handoff step, not an automated CI mutation. | respected | Org-ruleset apply done via apply-ruleset.sh as an explicit privileged step (admin:org token), dry-run previewed first; user-authorized before firing. Not an automated CI mutation. |\n| C5 | constraint | **C5** Cross-repo app edits (PokeEdge sonarcloud/dependabot) are privileged/cross-project — sequence as handoffs where this session cannot directly push. | respected | PokeEdge cross-repo edit done as a PR (#347), not a direct push to main; user-authorized. |\n| C6 | constraint | **C6** Keep any escalation tool operating WITHIN rulesets — never a bypass actor on a security-gates org. | respected | bypass_actors=[] on disk and live; no tool added as bypass actor; escalation doc explicitly forbids bypass-actor tooling. |\n| C7 | constraint | **C7** Maintain \"fail only on high-signal\" posture (oasdiff --fail-on ERR first). | respected | oasdiff gated on --fail-on ERR (high-signal definite-breaks only); WARN advisory — matches repo fail-on-high-signal posture. |\n| DONT1 | avoidance | **DONT1** Do not adopt/build agent-side Temporal merge mutex (local hardware tax; cannot govern bot PRs). | respected | No agent-side Temporal merge mutex built; explicitly documented as rejected (local hardware tax, cannot govern bot PRs). |\n| DONT2 | avoidance | **DONT2** Do not attempt native merge_queue rule (impossible on Team+private; 422s were correct rejections). | respected | No merge_queue rule in ruleset (grep clean); native merge queue documented as impossible on Team+private. |\n| DONT3 | avoidance | **DONT3** Do not build a new oasdiff gate from scratch — promote/standardize the existing backend pattern. | respected | oasdiff pattern documented + referenced (PokeEdge check-api-compat.yml as reference impl); no duplicate reusable workflow added to this repo. Examples illustrate the pattern only. |\n| DONT4 | avoidance | **DONT4** Do not make the future Renovate-vs-Dependabot per-repo CHOICE in this change — enable both, defer the decision. | respected | Both Renovate and Dependabot enabled as equal paths; the per-repo CHOICE is explicitly deferred to a future re-assessment (Choosing-the-updater table lists inputs, makes no choice). |\n| DONT5 | avoidance | **DONT5** Do not weaken the ruleset with bypass actors to accommodate any tool. | respected | bypass_actors=[] retained disk+live; ruleset not weakened. |\n| DONT6 | avoidance | **DONT6** Do not use the deprecated Tufin/oasdiff-action. | respected | Deprecated Tufin/oasdiff-action never used as an action; appears only in NEVER-use warnings. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/proposal.md",
+      "updatedAt": "2026-06-08T20:35:26.825Z",
+      "contentHash": "cec2c17948bf4eb99988acee8d95bb8239c69478da616cbdb661b691fa9c6efe"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-08T19:14:37.889Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/agreement.md",
+      "updatedAt": "2026-06-08T20:39:59.839Z",
+      "contentHash": "f29a8c64dbc5801ff681cd06d0e18ac19a812aa30bd259147e51493564efe7dc"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/design.md",
+      "updatedAt": "2026-06-08T20:47:38.186Z",
+      "contentHash": "9f02bb0b9c4580c37c9a983d8708369244d88f796842e2c36b800c9efa58b6ee"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixMergeCollisionStrategy/executive-summary.md",
+      "updatedAt": "2026-06-08T21:17:48.774Z",
+      "contentHash": "1b98cbe4afcdf5a235e1858e1154e69c43640bdc662a0868ee3264af0ae73204"
+    }
+  },
+  "lastSignalAt": "2026-06-08T21:22:28.917Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "worktree_auto_managed": true
+}

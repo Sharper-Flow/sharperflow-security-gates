@@ -206,56 +206,135 @@ uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-
 - The **`# vX.Y.Z` comment** keeps the human-readable version local and visible
   (Locality of Behavior): the reader sees exactly which release is running without
   resolving the SHA.
-- **Renovate maintains both** — `helpers:pinGitHubActionDigests` bumps the SHA and
-  keeps the trailing version comment current (see
-  [Dependency updates](#dependency-updates-renovate)).
+- **The dependency updater maintains both** — Renovate
+  (`helpers:pinGitHubActionDigests`) or Dependabot (`github-actions` ecosystem)
+  bumps the SHA and keeps the trailing version comment current (see
+  [Dependency updates](#dependency-updates-renovate-or-dependabot)).
 - **No floating tags or branches** (`@v0`, `@main`) in app workflows or in this
   repo's examples.
 
 ---
 
-## Dependency updates (Renovate)
+## Dependency updates (Renovate — or Dependabot)
 
-Sharper Flow uses **Renovate** (one updater, org-wide) — **not Dependabot** — for
-automated dependency updates across all ecosystems (uv via `pep621`, bun, pnpm,
-`github-actions`, docker). One tool covers them all, with the best bun support and
-a built-in supply-chain cooldown.
+Sharper Flow uses **one automated dependency updater per ecosystem per repo**. Both
+**Renovate** and **GitHub Dependabot** are supported, equal paths. A repo MAY use
+either; the per-repo choice is made on its own merits (see
+[Choosing the updater](#choosing-the-updater)).
 
-- **Shared preset.** All repos extend one org preset:
+> **Supersession (2026-06-08).** This replaces the earlier `adoptRenovateOrgWide`
+> rule of "**Renovate only, not Dependabot**". That rule was reversed by explicit
+> decision: Dependabot is now a first-class equal path, and a future per-repo
+> re-assessment will pick the updater for each repo once the merge pathway is
+> settled. The original concerns (below) still inform that choice — they are
+> design inputs, not a ban.
+
+### The one hard rule: one updater per ecosystem per repo
+
+Do **not** run Renovate and Dependabot on the **same ecosystem** in the **same
+repo**. Both write the same manifests/lockfiles → duplicate PRs + competing
+lockfile rewrites. Coexistence is only safe when strictly partitioned (different
+repos, or non-overlapping ecosystems in one repo). When migrating between updaters,
+remove the old one's config for that ecosystem first.
+
+### Merge behavior (both updaters)
+
+Both gate auto-merge on the required check and **only merge green** — the
+`Sharperflow CI Gate` functional suite *is* the review. A breaking update fails the
+suite, the PR stays open red, and never merges. With strict-off + squash-only (see
+[Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge)),
+bot PRs use **`gh pr merge --squash --auto`** and merge serially on green, no
+rebase churn.
+
+- Repos with **no functional gate** do not auto-merge (e.g. advance has no
+  `Sharperflow CI Gate` yet → `automerge: false` + repo "Allow auto-merge" off,
+  double-guarded).
+- Enable **"Allow auto-merge"** in repo settings for either updater's auto-merge to
+  take effect.
+
+### Renovate path
+
+- **Shared preset.** All Renovate repos extend one org preset:
   ```json
   { "extends": ["github>Sharper-Flow/sharperflow-security-gates"] }
   ```
   The preset lives at `default.json` in this repo. Repo-specific tweaks go in each
   repo's `renovate.json`.
 - **Cooldown (supply-chain).** `minimumReleaseAge: "7 days"` — newly-published
-  versions wait 7 days before Renovate installs them (most malicious releases are
-  pulled within an hour). **Security fixes are exempt** (they skip the line).
-- **Automerge is gated on the required check, and only merges green.** Renovate
-  uses GitHub native auto-merge (`platformAutomerge` + top-level `automerge: true`),
-  so a PR merges **only after** the repo's required check passes — never on red.
-  Where the required check is a real functional test suite (`Sharperflow CI Gate`
-  on pokeedge/web rolls up unit + integration + e2e + contract; `self-test`
-  actionlint here), **all update types automerge on green — including majors and
-  production dependencies**. The test suite *is* the review: a breaking update
-   fails the suite, the PR stays open red, and Renovate never merges it. Combined
-   with the 7-day cooldown, every auto-merged release already survived a week in
-   the wild.
-- **Major updates require Dependency Dashboard approval.** Breaking majors (e.g.
-   `python 3.x`, framework majors) never go green on their own and would otherwise
-   re-run the full CI suite on every rebase forever. The preset gates `major`
-   updates behind an explicit human opt-in in the dashboard (`dependencyDashboardApproval`),
-   so they create **no PR/CI churn** until someone commits to the migration.
-   Minor/patch/digest updates still flow hands-off.
-- **Repos without a functional gate do not automerge.** advance has no
-  `Sharperflow CI Gate` yet (deferred until `conformAdvanceCi` lands one), so its
-  `renovate.json` sets `automerge: false` — Renovate opens PRs but never merges
-  them unreviewed.
-- **One updater per repo.** Do not run Dependabot alongside Renovate (duplicate
-  PRs + lockfile conflicts). Renovate ignores Dependabot PRs; remove
-  `.github/dependabot.yml` after Renovate onboarding.
-- **Install.** Renovate is the Mend GitHub App (org-admin install); each repo gets
-  a one-time onboarding PR. Enable "Allow auto-merge" in repo settings for the
-  automerge policy to take effect.
+  versions wait 7 days before install (most malicious releases are pulled within an
+  hour). **Security fixes are exempt.**
+- **Automerge.** `platformAutomerge` + top-level `automerge: true` → native
+  auto-merge on green required check, all update types (majors gated behind
+  Dependency Dashboard approval to avoid endless rebase/CI churn).
+- **Install.** Renovate is the Mend GitHub App (org-admin install); one onboarding
+  PR per repo.
+
+### Dependabot path
+
+- **Config.** `.github/dependabot.yml` with one `package-ecosystem` entry per
+  ecosystem the repo uses (`uv`, `bun`, `npm` for pnpm, `github-actions`,
+  `docker`).
+- **Cooldown (supply-chain).** Dependabot's GA `cooldown` is the analogue of
+  Renovate's `minimumReleaseAge`, with finer semver granularity:
+  ```yaml
+  # .github/dependabot.yml (per ecosystem)
+  updates:
+    - package-ecosystem: "uv"
+      directory: "/"
+      schedule: { interval: "daily" }
+      cooldown:
+        default-days: 7        # ≈ Renovate minimumReleaseAge 7d
+        semver-major-days: 30
+        semver-minor-days: 7
+        semver-patch-days: 3
+  ```
+  **Cooldown applies to version updates only — NOT security updates** (security
+  fixes are never delayed; same as Renovate). Note: cooldown semver tiers work for
+  `uv`/`bun`/`npm` but **`docker` and `github-actions` get `default-days` only**.
+- **Auto-merge** is a GitHub Actions workflow (Dependabot itself cannot enable
+  auto-merge):
+  ```yaml
+  # .github/workflows/dependabot-auto-merge.yml
+  name: Dependabot auto-merge
+  on: pull_request
+  permissions:
+    contents: write
+    pull-requests: write
+  jobs:
+    auto-merge:
+      runs-on: ubuntu-latest
+      if: github.event.pull_request.user.login == 'dependabot[bot]'
+      steps:
+        - id: meta
+          uses: dependabot/fetch-metadata@<sha>  # pin + Renovate/Dependabot-bump
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+        # widen/narrow which update tiers auto-merge via the if: below
+        - if: ${{ steps.meta.outputs.update-type != 'version-update:semver-major' }}
+          run: gh pr merge --auto --squash "$PR_URL"
+          env:
+            PR_URL: ${{ github.event.pull_request.html_url }}
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ```
+  Use `--squash` (matches the squash-only ruleset). Secrets Dependabot needs are
+  **Dependabot secrets**, not Actions secrets. Keep `Sharperflow CI Gate` required
+  — it is the only-merge-green guard.
+
+### Choosing the updater
+
+The per-repo choice is deferred to a future re-assessment. Inputs that decide it:
+
+| Input | Renovate | Dependabot |
+|---|---|---|
+| Bun support maturity | strong | supported, min Bun version-gated (verify live) |
+| `github-actions` SHA-pin + version-comment | `helpers:pinGitHubActionDigests`, battle-tested | pins SHA + updates comment, but has stale-comment edge cases on release-branch actions |
+| Cooldown | uniform `minimumReleaseAge` | GA `cooldown` with semver tiers; **no cooldown for docker** |
+| pnpm security updates | full | limited (npm v7/v8) |
+| Grouping / config ergonomics | rich (shared preset, grouping rules) | `groups` + `dependabot.yml` |
+| Multi-machine future | server-side (neutral) | server-side (neutral) |
+
+Both are fully compatible with the strict-off + squash + auto-merge merge strategy;
+neither has a single-machine dependency.
 
 ---
 
@@ -268,14 +347,25 @@ and is applied via [`scripts/apply-ruleset.sh`](../scripts/apply-ruleset.sh).
 
 Policy:
 
-- **Required status checks**: `Sharperflow CI Gate` only, `strict` (branch must be
-  up to date before merging).
+- **Required status checks**: `Sharperflow CI Gate` only, **non-strict**
+  (`strict_required_status_checks_policy: false`). The branch does **not** have to
+  be up to date before merging — see [Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge) for why.
+- **Squash-only merges**: the `pull_request` rule sets
+  `allowed_merge_methods: ["squash"]`. This is the **sole** squash-only enforcer:
+  it excludes merge-commit **and** rebase, giving a linear squash history. (The
+  `non_fast_forward` rule only blocks force-pushes — it does **not** forbid merge
+  commits; that would be `required_linear_history`, which this ruleset does not
+  use.)
+- **Force-push guard**: `non_fast_forward` prevents force-pushing the default
+  branch.
 - **Enforced for admins**: `enforcement: active` and `bypass_actors: []` — no one
   bypasses, including org owners and repo admins. Releases adhere to the ruleset
   via [tag-only release](#release-automation) (the default); a bypass actor is an
-  escape hatch only for repos that must push release commits to `main`.
+  escape hatch only for repos that must push release commits to `main`. **No tool
+  (merge bot, queue, etc.) is ever added as a bypass actor** — protection-as-code
+  on a security-gates org must not be weakened to accommodate tooling.
 - **No required human review**: `required_approving_review_count: 0`. Automated
-  gates are the merge authority; this keeps Renovate auto-merge clean. PRs are
+  gates are the merge authority; this keeps bot auto-merge clean. PRs are
   still required (no direct pushes to the default branch).
 - **Targeting**: by `repository_name.include` with `protected: true` (resists
   rename-evasion). Switch to a `repository_property` custom property as the app set
@@ -283,6 +373,69 @@ Policy:
 - **Optional hardening**: add `integration_id` to the required status check to bind
   it to the GitHub Actions app and prevent a write-capable actor from spoofing the
   context.
+
+### Merge serialization (strict-off + squash-only + auto-merge)
+
+The protection model is tuned for **many concurrent PRs from AI agents and bots**
+(single machine today, multiple machines and Renovate/Dependabot in future) on a
+small-seat org. GitHub's native merge queue is **not available** here (it requires
+GitHub Enterprise Cloud for private repos; this org is on the Team plan), so the
+serialization strategy is built from GitHub primitives that work on any plan and
+are server-side (machine-count-independent):
+
+- **`strict` is OFF.** Strict ("require branches to be up to date before merging")
+  is what caused the collision loop: PR A merges → PR B is suddenly "not up to
+  date" → B rebases + reruns CI → meanwhile C merges → B is stale again. Disabling
+  strict removes that churn. PRs merge serially as their required check goes green,
+  ordered by GitHub server-side.
+- **Native auto-merge does the serialization.** Use
+  `gh pr merge --squash --auto`. GitHub merges each PR only after
+  `Sharperflow CI Gate` passes — never on red — and arbitrates ordering itself. No
+  manual "update branch", no local compute, identical behavior across machines.
+- **Squash-only** keeps `main` linear and each PR a single commit.
+- **Residual risk (accepted):** loose checks are **not** re-evaluated against the
+  new base after another PR merges, so a green-but-logically-incompatible pair can
+  land and break `main`. This is caught by **the next PR's CI** (and, for the
+  backend↔frontend API surface specifically, by the
+  [cross-repo contract gate](#cross-repo-api-contract-gate-openapi-breaking-changes)).
+  At small-team PR volume this is an acceptable trade vs the constant rebase churn
+  of strict mode. If main-breaking pairs become frequent, escalate
+  ([If collisions persist](#if-collisions-persist-after-strict-off)).
+- **Hard precondition before applying squash-only:** every targeted repo MUST have
+  **`allow_squash_merge: true`**. A squash-only ruleset against a repo whose squash
+  button is disabled produces an *empty* allowed-method intersection and **blocks
+  all merges**. The apply runbook verifies this first (see
+  [`apply-ruleset.sh`](#release-automation) and the conformance checklist).
+  Normalizing `allow_merge_commit`/`allow_rebase_merge` to `false` is recommended
+  hygiene (removes dead buttons) but is not load-bearing; `allow_squash_merge:
+  true` is.
+
+### If collisions persist after strict-off
+
+Strict-off + auto-merge + squash dissolves the rebase-churn loop without serialized
+pre-merge re-testing. If, after this is in place, you still observe
+**green-but-incompatible PR pairs breaking `main` often enough to hurt**, escalate
+to a real serializing merge queue. Native GitHub merge queue stays unavailable on
+the Team plan for private repos, so the candidates are:
+
+- **Mergify** (free tier ≤5 active users on private repos) — speculative/batched
+  queue; reads and respects existing rulesets/required checks.
+- **Another AI-enabled PR-merge bot** — survey current options at adoption time
+  (Trunk, Aviator, etc.).
+
+Before adopting any of them, **verified caveats** (do not skip):
+
+- **Confirm bot-author billing.** Free tiers count "active users"; many bot/agent
+  PR authors can silently consume the free seat limit. Verify before relying.
+- **Bot-PR queueing needs explicit config** (e.g. a `bot_account`) and has a
+  documented regression history — test a Renovate/Dependabot PR end-to-end first.
+- **Keep the tool WITHIN the ruleset — never as a bypass actor.** A security-gates
+  org must not hand merge authority that skips its own gates.
+
+This is a documented escalation path only; **no third-party queue is adopted by
+this standard.** Agent-side merge serialization (e.g. a Temporal mutex) is
+explicitly **not** used: it taxes local hardware and cannot govern bot PRs that
+never pass through the orchestrator.
 
 ### Ruleset ↔ classic protection coexistence
 
@@ -397,15 +550,113 @@ out of scope (no-hosted-dashboard posture).
 
 ---
 
+## Cross-repo API contract gate (OpenAPI breaking changes)
+
+Where one repo produces an API another repo consumes (backend OpenAPI → frontend
+client), a **breaking backend change can make a *green* frontend PR wrong** — a
+class of drift that no merge serialization (queue, auto-merge, or otherwise) can
+catch, because it spans two repos. The standard's answer is a **contract gate**
+using **oasdiff** to detect breaking OpenAPI changes pre-merge.
+
+This is **mandatory** for repos in a producer/consumer API pair (PokeEdge ↔
+PokeEdge-Web); other repos may ignore it.
+
+### Tool: oasdiff
+
+[oasdiff](https://github.com/oasdiff/oasdiff) is the de-facto open-source OpenAPI
+breaking-change detector (Apache-2.0, actively maintained, single Go binary). Gate
+on **`oasdiff breaking BASE REVISION`** — exit code `1` = breaking change found →
+fail the PR. High-signal first (this repo's posture): treat **ERR** (definite
+breaks) as blocking; `WARN` is advisory.
+
+- ✅ Use the **oasdiff CLI** (download the pinned release in CI) **or** the
+  maintained **`oasdiff/oasdiff-action`**.
+- ⛔ **NEVER use the deprecated `Tufin/oasdiff-action`** — it is archived.
+- **Pin** the oasdiff version (release tag or action SHA) and let the dependency
+  updater bump it, same as any other `uses:`.
+
+### Baseline model
+
+The **consumer's committed spec is the baseline** ("what the consumer was built
+against"); the **producer's current spec is the revision**:
+
+- Frontend commits a copy of the spec it generates its client from (e.g.
+  `docs/openapi.json`).
+- The backend's contract gate fetches that committed frontend spec as `BASE`, uses
+  its own `openapi.json` as `REVISION`, and runs `oasdiff breaking BASE REVISION`.
+- A breaking diff means the backend change would break the frontend that exists
+  today → block until coordinated.
+
+### Canonical job shape
+
+The gate is a job under the repo's `Sharperflow CI Gate` summary, **path-filtered**
+to spec changes (skip = success so non-spec PRs are unaffected):
+
+```yaml
+contract-gate:
+  name: Contract Gate (spec compat)
+  needs: changes                      # dorny/paths-filter detecting openapi.json
+  if: ${{ needs.changes.outputs.openapi == 'true' }}
+  runs-on: ubuntu-latest
+  permissions: { contents: read, pull-requests: read }
+  steps:
+    - uses: actions/checkout@<sha>  # v6
+    - name: Install oasdiff (pinned)
+      run: |  # download a pinned oasdiff release tarball to /usr/local/bin
+        ...
+    - name: Fetch consumer's committed spec (baseline)
+      run: gh api repos/<org>/<consumer>/contents/docs/openapi.json --jq .content | base64 -d > /tmp/base.json
+    - name: Compare for breaking changes
+      run: oasdiff breaking /tmp/base.json openapi.json --fail-on ERR
+```
+
+**Reference implementation:** `Sharper-Flow/PokeEdge` —
+`.github/workflows/check-api-compat.yml` (reusable workflow: fetch frontend spec →
+normalize for oasdiff 3.1 parser compatibility → `oasdiff breaking`) invoked from
+the `contract-gate` job in `pr-gate.yml`, required via `Sharperflow CI Gate`. New
+producer/consumer pairs should follow that pattern rather than re-deriving it.
+
+**Two complementary halves of the contract:**
+
+| Side | Repo | Check | Enforces |
+|---|---|---|---|
+| Producer (breaking-change) | backend (PokeEdge) | `oasdiff breaking` consumer-spec vs backend spec | backend change does not break the consumer the frontend was built against |
+| Consumer (spec-sync) | frontend (PokeEdge-Web) | `Backend Contract Sync Check`: canonicalized equality of committed `docs/openapi.json` vs backend `main` | the consumer's committed baseline is not stale vs the producer |
+
+Both are required (each under its repo's `Sharperflow CI Gate`); neither replaces
+the other. The producer side proves *no breaking change*; the consumer side proves
+*the baseline is current*.
+
+> **Gotcha — specs over 1 MB.** GitHub's Contents API returns **empty content for
+> files larger than 1 MB**. PokeEdge's `openapi.json` crossed that threshold on
+> 2026-05-23. To fetch a large spec cross-repo, resolve its blob SHA then use the
+> **Git Blobs API** (handles up to 100 MB):
+> ```bash
+> BLOB_SHA=$(gh api 'repos/<org>/<producer>/contents/openapi.json?ref=main' --jq .sha)
+> gh api "repos/<org>/<producer>/git/blobs/${BLOB_SHA}" --jq .content | base64 -d > spec.json
+> ```
+> The simple `gh api .../contents/...` form in the canonical job shape above is fine
+> only while the spec stays under 1 MB.
+
+**Complements (not replacements):** [Spectral](https://github.com/stoplightio/spectral)
+for API *design* linting; [Schemathesis](https://github.com/schemathesis/schemathesis)
+for *runtime* contract/property testing. oasdiff is the static breaking-change
+differ; the others cover different layers.
+
+---
+
 ## App-owned gates
 
 The standard does **not** standardize, and apps keep ownership of:
 
 - Coverage thresholds and which suites are blocking.
 - Migration-chain / schema-integrity validation.
-- Spec/contract gates (e.g. OpenAPI drift, API compatibility).
 - Complexity/size gates (Lizard, etc.).
 - Deploy/release workflows.
+
+(OpenAPI breaking-change / API-compatibility gating is **standardized** — see
+[Cross-repo API contract gate](#cross-repo-api-contract-gate-openapi-breaking-changes)
+— not app-owned, for producer/consumer API pairs.)
 
 These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 
@@ -422,10 +673,18 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
       SHA-pinned with version comment; no standalone pilot, no inline duplicate
       scanners.
 - [ ] Setup via the shared `setup-python-uv` / `setup-bun-node` composite.
-- [ ] All org `uses:` SHA-pinned + version comment; Renovate enabled
-      (`renovate.json` extends the org preset).
+- [ ] All org `uses:` SHA-pinned + version comment; one dependency updater
+      enabled (`renovate.json` extends the org preset, **or** Dependabot —
+      one updater per ecosystem per repo; see [Dependency updates](#dependency-updates-renovate-or-dependabot)).
+- [ ] Repo merge buttons normalized: **`allow_squash_merge: true`** (load-bearing
+      precondition for the squash-only ruleset — without it all merges block),
+      `allow_merge_commit: false`, `allow_rebase_merge: false`, `allow_auto_merge:
+      true`.
 - [ ] Org ruleset applied (`apply-ruleset.sh --no-release-bypass` for the default
       tag-only release; `--bypass-app-id <App ID>` only if the repo must push
       release commits to `main`); classic required-check contexts removed.
+      Ruleset is non-strict + squash-only (see [Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge)).
+- [ ] Auto-merge standardized: PRs merged via `gh pr merge --squash --auto`; bot
+      PRs (Renovate/Dependabot) auto-merge on green `Sharperflow CI Gate`.
 - [ ] Release is tag-only (semantic-release tags but pushes no commit to `main`)
       — verify a release lands the tag and the staging promote stamps the version.

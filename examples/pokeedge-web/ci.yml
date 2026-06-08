@@ -62,10 +62,35 @@ jobs:
       lockfile-path: "bun.lock"
       semgrep-excludes: "src/lib/api/generated .svelte-kit build coverage playwright-report test-results node_modules"
 
+  # Consumer-side half of the cross-repo API contract gate (see docs/ci-standard.md
+  # "Cross-repo API contract gate"). The frontend's committed docs/openapi.json is
+  # the "built-against" baseline; this proves it has not drifted from the producer's
+  # current spec. (The producer/backend runs the oasdiff BREAKING half.) Spec >1MB
+  # uses the Git Blobs API — the Contents API returns empty over 1MB.
+  contract-sync:
+    name: Backend Contract Sync Check
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - name: Compare committed baseline vs backend main spec
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          BLOB_SHA=$(gh api 'repos/Sharper-Flow/PokeEdge/contents/openapi.json?ref=main' --jq '.sha')
+          gh api "repos/Sharper-Flow/PokeEdge/git/blobs/${BLOB_SHA}" --jq '.content' | base64 -d > /tmp/backend-openapi.json
+          if ! diff -q <(jq -S . /tmp/backend-openapi.json) <(jq -S . docs/openapi.json) >/dev/null; then
+            echo "::error::docs/openapi.json is out of sync with backend main openapi.json — run the regen and commit."
+            exit 1
+          fi
+
   ci-gate:
     name: Sharperflow CI Gate
     if: ${{ !cancelled() }}
-    needs: [fast-checks, test, build, security]
+    needs: [fast-checks, test, build, security, contract-sync]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}
