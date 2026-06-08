@@ -65,17 +65,18 @@ jobs:
           rsc = next(r for r in d["rules"] if r["type"] == "required_status_checks")
           ctxs = [c["context"] for c in rsc["parameters"]["required_status_checks"]]
           assert ctxs == ["Sharperflow CI Gate"], f"required check must be the summary only, got {ctxs}"
-          # strict (require-branch-up-to-date) is intentionally OFF: it caused the
-          # PR merge-collision loop (rebase + CI-rerun churn) on a 2-seat org with
-          # many concurrent agent/bot PRs. Serialization is via native auto-merge +
-          # squash; loose checks are caught by the next PR's CI. See ci-standard.md s6.
+          # strict require-branch-up-to-date is intentionally OFF: it caused the
+          # PR merge-collision loop (rebase plus CI-rerun churn) on a small-seat org
+          # with many concurrent agent/bot PRs. Serialization is via native
+          # auto-merge plus squash; loose checks are caught by the next PR CI run.
+          # See ci-standard.md section 6 Merge serialization.
           assert rsc["parameters"]["strict_required_status_checks_policy"] is False, "strict policy must be OFF (collision-loop fix)"
-          # Squash-only is enforced SOLELY by allowed_merge_methods (non_fast_forward
-          # only blocks force-pushes, NOT merge commits). This excludes merge-commit
-          # AND rebase, giving linear squash history.
+          # Squash-only is enforced SOLELY by allowed_merge_methods. non_fast_forward
+          # only blocks force-pushes, NOT merge commits. squash-only excludes
+          # merge-commit AND rebase, giving linear squash history.
           pr = next(r for r in d["rules"] if r["type"] == "pull_request")
-          assert pr["parameters"]["allowed_merge_methods"] == ["squash"], \
-            f"merge method must be squash-only, got {pr['parameters'].get('allowed_merge_methods')}"
+          methods = pr["parameters"].get("allowed_merge_methods")
+          assert methods == ["squash"], f"merge method must be squash-only, got {methods}"
           assert "non_fast_forward" in types, "non_fast_forward (force-push guard) required"
           print("ruleset JSON valid:", types, ctxs, "merge=squash-only strict=off")
           '

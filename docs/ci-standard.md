@@ -550,15 +550,91 @@ out of scope (no-hosted-dashboard posture).
 
 ---
 
+## Cross-repo API contract gate (OpenAPI breaking changes)
+
+Where one repo produces an API another repo consumes (backend OpenAPI → frontend
+client), a **breaking backend change can make a *green* frontend PR wrong** — a
+class of drift that no merge serialization (queue, auto-merge, or otherwise) can
+catch, because it spans two repos. The standard's answer is a **contract gate**
+using **oasdiff** to detect breaking OpenAPI changes pre-merge.
+
+This is **mandatory** for repos in a producer/consumer API pair (PokeEdge ↔
+PokeEdge-Web); other repos may ignore it.
+
+### Tool: oasdiff
+
+[oasdiff](https://github.com/oasdiff/oasdiff) is the de-facto open-source OpenAPI
+breaking-change detector (Apache-2.0, actively maintained, single Go binary). Gate
+on **`oasdiff breaking BASE REVISION`** — exit code `1` = breaking change found →
+fail the PR. High-signal first (this repo's posture): treat **ERR** (definite
+breaks) as blocking; `WARN` is advisory.
+
+- ✅ Use the **oasdiff CLI** (download the pinned release in CI) **or** the
+  maintained **`oasdiff/oasdiff-action`**.
+- ⛔ **NEVER use the deprecated `Tufin/oasdiff-action`** — it is archived.
+- **Pin** the oasdiff version (release tag or action SHA) and let the dependency
+  updater bump it, same as any other `uses:`.
+
+### Baseline model
+
+The **consumer's committed spec is the baseline** ("what the consumer was built
+against"); the **producer's current spec is the revision**:
+
+- Frontend commits a copy of the spec it generates its client from (e.g.
+  `docs/openapi.json`).
+- The backend's contract gate fetches that committed frontend spec as `BASE`, uses
+  its own `openapi.json` as `REVISION`, and runs `oasdiff breaking BASE REVISION`.
+- A breaking diff means the backend change would break the frontend that exists
+  today → block until coordinated.
+
+### Canonical job shape
+
+The gate is a job under the repo's `Sharperflow CI Gate` summary, **path-filtered**
+to spec changes (skip = success so non-spec PRs are unaffected):
+
+```yaml
+contract-gate:
+  name: Contract Gate (spec compat)
+  needs: changes                      # dorny/paths-filter detecting openapi.json
+  if: ${{ needs.changes.outputs.openapi == 'true' }}
+  runs-on: ubuntu-latest
+  permissions: { contents: read, pull-requests: read }
+  steps:
+    - uses: actions/checkout@<sha>  # v6
+    - name: Install oasdiff (pinned)
+      run: |  # download a pinned oasdiff release tarball to /usr/local/bin
+        ...
+    - name: Fetch consumer's committed spec (baseline)
+      run: gh api repos/<org>/<consumer>/contents/docs/openapi.json --jq .content | base64 -d > /tmp/base.json
+    - name: Compare for breaking changes
+      run: oasdiff breaking /tmp/base.json openapi.json --fail-on ERR
+```
+
+**Reference implementation:** `Sharper-Flow/PokeEdge` —
+`.github/workflows/check-api-compat.yml` (reusable workflow: fetch frontend spec →
+normalize for oasdiff 3.1 parser compatibility → `oasdiff breaking`) invoked from
+the `contract-gate` job in `pr-gate.yml`, required via `Sharperflow CI Gate`. New
+producer/consumer pairs should follow that pattern rather than re-deriving it.
+
+**Complements (not replacements):** [Spectral](https://github.com/stoplightio/spectral)
+for API *design* linting; [Schemathesis](https://github.com/schemathesis/schemathesis)
+for *runtime* contract/property testing. oasdiff is the static breaking-change
+differ; the others cover different layers.
+
+---
+
 ## App-owned gates
 
 The standard does **not** standardize, and apps keep ownership of:
 
 - Coverage thresholds and which suites are blocking.
 - Migration-chain / schema-integrity validation.
-- Spec/contract gates (e.g. OpenAPI drift, API compatibility).
 - Complexity/size gates (Lizard, etc.).
 - Deploy/release workflows.
+
+(OpenAPI breaking-change / API-compatibility gating is **standardized** — see
+[Cross-repo API contract gate](#cross-repo-api-contract-gate-openapi-breaking-changes)
+— not app-owned, for producer/consumer API pairs.)
 
 These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 
