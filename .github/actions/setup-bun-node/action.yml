@@ -1,7 +1,7 @@
 name: Setup Bun + Node
 description: >-
-  Shared Sharper Flow composite: install Bun and Node, then install JS/TS
-  dependencies. Consume cross-repo by SHA pin.
+  Shared Sharper Flow composite: install Bun and Node, cache the Bun global
+  store, then install JS/TS dependencies. Consume cross-repo by SHA pin.
 
 inputs:
   node-version:
@@ -31,6 +31,19 @@ runs:
       uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
       with:
         node-version: ${{ inputs.node-version }}
+
+    # rq-workflowDeterminism: cache the Bun global store (~/.bun/install/cache)
+    # so `bun ci` hits cached packages instead of re-downloading. Bun uses a
+    # hardlink/symlink model — restoring the global store means `bun ci` only
+    # recreates the node_modules symlink tree (<2s on cache hit).
+    - name: Cache Bun dependencies
+      if: inputs.install-mode != 'none'
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-bun-
 
     - name: Install dependencies
       shell: bash
