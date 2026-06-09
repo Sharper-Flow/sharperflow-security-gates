@@ -666,6 +666,24 @@ deliberate research→decision followup rather than silently dropped:
 Coverage **trends**, the **dashboard**, and **PR decoration** are intentionally
 out of scope (no-hosted-dashboard posture).
 
+### Workflow hygiene
+
+Keep `.github/workflows/` to workflows that actually run.
+
+- **Don't leave disabled workflow files committed.** A `disabled_manually`
+  workflow that nobody runs is clutter and drift risk — delete the file. Git
+  history is the recovery path (`git revert`); capture the intent in the change
+  record if the capability may return.
+- **GitHub-managed scan features stay OFF unless explicitly adopted** under this
+  standard — **Code Quality** (`code-quality/setup`), **security CodeQL/code
+  scanning**, and the **Copilot coding agent** (`dynamic/copilot-swe-agent`). They
+  burn Actions minutes and/or report to hosted dashboards outside the
+  `Sharperflow CI Gate` contract.
+- **Ghost workflow records** (file deleted from the default branch but the Actions
+  registry still lists the workflow as `disabled_manually`) are harmless: no file,
+  no runs, no cost. GitHub has no workflow-record delete API; they age out. No
+  action required.
+
 ---
 
 ## Cross-repo API contract gate (OpenAPI breaking changes)
