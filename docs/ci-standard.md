@@ -603,32 +603,47 @@ These are recommended but MUST NOT require per-app secrets to pass CI:
 
 ## Code quality beyond the security gate
 
-**CodeQL is retired.** Sharper Flow does not use GitHub CodeQL. On a **private,
-Team-plan repo without GitHub Advanced Security (GHAS)**, CodeQL still *runs* (it
-consumes Actions minutes) but its results are **paywalled** — Code Scanning alerts
-never surface, the check goes green regardless, and the `code-scanning` REST API
-returns `403 Code Security must be enabled`. A scan whose output you cannot read is
-**false assurance, not coverage**. CodeQL is **NOT** part of the `Sharperflow CI
-Gate` contract, and its `dynamic/github-code-scanning/codeql` context MUST never
-enter branch-protection required checks (§2).
+**GitHub CodeQL is retired — in both of its forms.** GitHub ships CodeQL through
+two *separate* features; Sharper Flow uses neither. Don't conflate them.
 
-If a repo has **default-setup CodeQL** active (a GitHub-managed `dynamic/…`
-workflow, not a committed `.yml`), disable it. **There is no CLI/API path on the
-no-GHAS plan** — both `PATCH /repos/{o}/{r}/code-scanning/default-setup` and the
-Actions `disable` endpoint are refused (`403` / `422`). Disable it once via the UI:
+**1. GitHub Code Quality** (`Settings → Code quality`) — the one that actually
+runs. A **public-preview** feature that runs CodeQL *quality* (maintainability)
+analysis on every push/PR via the GitHub-managed `dynamic/github-code-scanning/codeql`
+workflow. Findings surface on the hosted **Security and quality → Code quality**
+pages. Sharper Flow does **not** use it, for three posture reasons:
 
+- It reports through a **hosted GitHub dashboard** — the standard prefers
+  repo-owned config and takes no hosted-dashboard dependency.
+- It is **public preview and not billed *yet***, but **bills at GA** (premium
+  requests + Actions minutes) — and it **burns Actions minutes today**.
+- It is **not** part of the `Sharperflow CI Gate` contract: non-blocking,
+  unwatched, and its `dynamic/github-code-scanning/codeql` context MUST never
+  enter branch-protection required checks (§2).
+
+Disable it per repo with its **dedicated API** (separate from the GHAS-gated
+`code-scanning` API — this one is *not* paywalled):
+
+```bash
+gh api -X PATCH repos/<org>/<repo>/code-quality/setup -f state=not-configured
+gh api repos/<org>/<repo>/code-quality/setup   # verify → state: not-configured
 ```
-https://github.com/<org>/<repo>/settings/security_analysis
-→ "Code scanning" → "CodeQL analysis" → ⋯ → Disable
-```
 
-Disabling code-scanning default setup is **isolated**: it does **not** affect
-secret scanning, the dependency graph, or Dependabot (those are separate
-`dynamic/…` features). Any committed `.github/codeql/codeql-config.yml` left behind
-is an inert orphan once default setup is off — delete it.
+(Equivalent UI: `Settings → Code quality → Disable`.) Reversible via
+`state=configured`.
 
-CodeQL's genuine value was **interprocedural dataflow/taint** analysis, which the
-OSS gate does not replace (Semgrep CE is intraprocedural — single-function /
+**2. Security CodeQL / code scanning** (`Settings → Advanced Security → Code
+Security`) — the SAST product. On a **private, Team-plan repo without GitHub
+Advanced Security**, enabling it is impossible: the `code-scanning` REST API
+returns `403 Code Security must be enabled`, and alerts never surface without the
+paid add-on. Sharper Flow does not buy GHAS and does **not** use it. No SARIF
+upload, no Code Scanning alerts surface.
+
+Both are **isolated** from secret scanning, the dependency graph, and Dependabot
+(separate features). Any committed `.github/codeql/codeql-config.yml` is an inert
+orphan once Code Quality is off — delete it.
+
+CodeQL's genuine value was **interprocedural dataflow/taint** SAST, which the OSS
+gate does not replace (Semgrep CE is intraprocedural — single-function /
 single-file; cross-function taint is Pro-only). That gap is **consciously
 deferred**, tracked as `deepenSastDataflow` in the followup table below — not
 silently dropped, and explicitly **not** a reason to buy GHAS.
