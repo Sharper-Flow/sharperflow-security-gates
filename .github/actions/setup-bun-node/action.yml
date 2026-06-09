@@ -57,3 +57,4 @@ runs:
           none) echo "install-mode=none; skipping dependency install" ;;
           *) echo "::error::invalid install-mode '${INSTALL_MODE}' (expected ci|install|none)"; exit 1 ;;
         esac
+
