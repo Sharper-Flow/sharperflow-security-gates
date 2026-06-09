@@ -603,6 +603,36 @@ These are recommended but MUST NOT require per-app secrets to pass CI:
 
 ## Code quality beyond the security gate
 
+**CodeQL is retired.** Sharper Flow does not use GitHub CodeQL. On a **private,
+Team-plan repo without GitHub Advanced Security (GHAS)**, CodeQL still *runs* (it
+consumes Actions minutes) but its results are **paywalled** — Code Scanning alerts
+never surface, the check goes green regardless, and the `code-scanning` REST API
+returns `403 Code Security must be enabled`. A scan whose output you cannot read is
+**false assurance, not coverage**. CodeQL is **NOT** part of the `Sharperflow CI
+Gate` contract, and its `dynamic/github-code-scanning/codeql` context MUST never
+enter branch-protection required checks (§2).
+
+If a repo has **default-setup CodeQL** active (a GitHub-managed `dynamic/…`
+workflow, not a committed `.yml`), disable it. **There is no CLI/API path on the
+no-GHAS plan** — both `PATCH /repos/{o}/{r}/code-scanning/default-setup` and the
+Actions `disable` endpoint are refused (`403` / `422`). Disable it once via the UI:
+
+```
+https://github.com/<org>/<repo>/settings/security_analysis
+→ "Code scanning" → "CodeQL analysis" → ⋯ → Disable
+```
+
+Disabling code-scanning default setup is **isolated**: it does **not** affect
+secret scanning, the dependency graph, or Dependabot (those are separate
+`dynamic/…` features). Any committed `.github/codeql/codeql-config.yml` left behind
+is an inert orphan once default setup is off — delete it.
+
+CodeQL's genuine value was **interprocedural dataflow/taint** analysis, which the
+OSS gate does not replace (Semgrep CE is intraprocedural — single-function /
+single-file; cross-function taint is Pro-only). That gap is **consciously
+deferred**, tracked as `deepenSastDataflow` in the followup table below — not
+silently dropped, and explicitly **not** a reason to buy GHAS.
+
 **SonarCloud is retired.** Sharper Flow no longer uses SonarCloud (no hosted
 dashboard, no `sonar-project.properties`, no `SONAR_TOKEN`). The required path is
 the OSS gates (Semgrep, Bandit, OSV, Gitleaks, Trivy) plus app-owned coverage and
