@@ -603,6 +603,51 @@ These are recommended but MUST NOT require per-app secrets to pass CI:
 
 ## Code quality beyond the security gate
 
+**GitHub CodeQL is retired — in both of its forms.** GitHub ships CodeQL through
+two *separate* features; Sharper Flow uses neither. Don't conflate them.
+
+**1. GitHub Code Quality** (`Settings → Code quality`) — the one that actually
+runs. A **public-preview** feature that runs CodeQL *quality* (maintainability)
+analysis on every push/PR via the GitHub-managed `dynamic/github-code-scanning/codeql`
+workflow. Findings surface on the hosted **Security and quality → Code quality**
+pages. Sharper Flow does **not** use it, for three posture reasons:
+
+- It reports through a **hosted GitHub dashboard** — the standard prefers
+  repo-owned config and takes no hosted-dashboard dependency.
+- It is **public preview and not billed *yet***, but **bills at GA** (premium
+  requests + Actions minutes) — and it **burns Actions minutes today**.
+- It is **not** part of the `Sharperflow CI Gate` contract: non-blocking,
+  unwatched, and its `dynamic/github-code-scanning/codeql` context MUST never
+  enter branch-protection required checks (§2).
+
+Disable it per repo with its **dedicated API** (separate from the GHAS-gated
+`code-scanning` API — this one is *not* paywalled):
+
+```bash
+gh api -X PATCH repos/<org>/<repo>/code-quality/setup -f state=not-configured
+gh api repos/<org>/<repo>/code-quality/setup   # verify → state: not-configured
+```
+
+(Equivalent UI: `Settings → Code quality → Disable`.) Reversible via
+`state=configured`.
+
+**2. Security CodeQL / code scanning** (`Settings → Advanced Security → Code
+Security`) — the SAST product. On a **private, Team-plan repo without GitHub
+Advanced Security**, enabling it is impossible: the `code-scanning` REST API
+returns `403 Code Security must be enabled`, and alerts never surface without the
+paid add-on. Sharper Flow does not buy GHAS and does **not** use it. No SARIF
+upload, no Code Scanning alerts surface.
+
+Both are **isolated** from secret scanning, the dependency graph, and Dependabot
+(separate features). Any committed `.github/codeql/codeql-config.yml` is an inert
+orphan once Code Quality is off — delete it.
+
+CodeQL's genuine value was **interprocedural dataflow/taint** SAST, which the OSS
+gate does not replace (Semgrep CE is intraprocedural — single-function /
+single-file; cross-function taint is Pro-only). That gap is **consciously
+deferred**, tracked as `deepenSastDataflow` in the followup table below — not
+silently dropped, and explicitly **not** a reason to buy GHAS.
+
 **SonarCloud is retired.** Sharper Flow no longer uses SonarCloud (no hosted
 dashboard, no `sonar-project.properties`, no `SONAR_TOKEN`). The required path is
 the OSS gates (Semgrep, Bandit, OSV, Gitleaks, Trivy) plus app-owned coverage and
