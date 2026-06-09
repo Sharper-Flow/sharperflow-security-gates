@@ -1,0 +1,616 @@
+{
+  "id": "retireVestigialCodeql",
+  "title": "Retire vestigial CodeQL",
+  "status": "archived",
+  "created_at": "2026-06-09T02:16:05.222Z",
+  "tasks": [
+    {
+      "id": "tk-9f58917915a2",
+      "title": "Add \"CodeQL is retired\" block to docs/ci-standard.md",
+      "type": "code",
+      "section": "Documentation",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-09T02:23:01.191Z",
+      "metadata": {
+        "tdd_intent": "inline"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1"
+        ],
+        "verifies": [],
+        "respects": [
+          "C1",
+          "C2"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-09T02:36:17.982Z",
+      "verification": "Corrected ci-standard.md CodeQL block to accurately distinguish the two GitHub features (prior version conflated them): (1) GitHub Code Quality — public-preview, hosted-dashboard, bills-at-GA, burns minutes, disabled via dedicated `code-quality/setup` API (CLI, not paywalled); (2) Security CodeQL/code scanning — GHAS-gated 403 on private no-GHAS, never used, no SARIF. Both isolated from secret scanning/dep graph/Dependabot; orphan codeql-config.yml delete note; deepenSastDataflow forward-pointer. Verified: both features named, link target (line 664) + SonarCloud paragraph (651) + heading (604) intact. +37/-22.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "ed4d601c34952bd92710532f9304a6bf46f926ae",
+      "completedAt": "2026-06-09T02:46:07.313Z",
+      "completed_at": "2026-06-09T02:46:07.313Z"
+    },
+    {
+      "id": "tk-264e4295c492",
+      "title": "Disable default-setup CodeQL on PokeEdge",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-09T02:23:21.732Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "inline"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "respects": [
+          "C3",
+          "C4",
+          "DONT3"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-09T02:44:29.762Z",
+      "verification": "Disabled PokeEdge GitHub Code Quality via dedicated CLI API (state=not-configured verified). PokeEdge-Web already not-configured. Clean tree (live-ops, no repo delta).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "df5722a068fd658412d63b6429c11e6063ca83c5",
+      "completedAt": "2026-06-09T02:45:20.086Z",
+      "completed_at": "2026-06-09T02:45:20.086Z"
+    },
+    {
+      "id": "tk-14aac79920ce",
+      "title": "Delete PokeEdge orphan codeql-config.yml",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-09T02:23:42.474Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-264e4295c492"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "inline"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "respects": [
+          "C3",
+          "DONT2"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-09T02:46:13.821Z",
+      "verification": "PokeEdge PR #353 opened (delete orphan codeql-config.yml), squash auto-merge armed. Clean tree (cross-repo op).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "ed4d601c34952bd92710532f9304a6bf46f926ae",
+      "completedAt": "2026-06-09T02:47:10.327Z",
+      "completed_at": "2026-06-09T02:47:10.327Z"
+    },
+    {
+      "id": "tk-f563c14ba26c",
+      "title": "Verify removal and required-check state",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-09T02:24:05.797Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-264e4295c492"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-14aac79920ce"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "inline"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC3",
+          "AC4"
+        ],
+        "respects": [
+          "C2",
+          "C4"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-09T02:47:19.368Z",
+      "verification": "Final verification green (Code Quality off both repos, PR #353 merged, file 404 on main, no post-disable runs, Sharperflow CI Gate sole required check). Clean tree.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "ed4d601c34952bd92710532f9304a6bf46f926ae",
+      "completedAt": "2026-06-09T02:48:00.474Z",
+      "completed_at": "2026-06-09T02:48:00.474Z"
+    },
+    {
+      "id": "tk-7e0964f00791",
+      "title": "Open deepenSastDataflow followup change",
+      "type": "code",
+      "section": "Followup",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-09T02:24:23.826Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-9f58917915a2"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "inline"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC5"
+        ],
+        "respects": [
+          "DONT1"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-09T02:37:18.225Z",
+      "verification": "ADV-state-only task: opened deepenSastDataflow followup change (no repo file delta in this worktree; ci-standard forward-pointer already added by T1/df5722a). Clean tree expected.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "df5722a068fd658412d63b6429c11e6063ca83c5",
+      "completedAt": "2026-06-09T02:38:54.834Z",
+      "completed_at": "2026-06-09T02:38:54.834Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "retireVestigialCodeql",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:design-validation"
+      },
+      "agent": "adv-researcher",
+      "topic": "Validate CodeQL retirement design: default-setup disable API path, surface isolation, doc placement, Semgrep taint-mode status",
+      "sources": [
+        {
+          "label": "GitHub Changelog — Code scanning API to enable default setup",
+          "locator": "https://github.blog/changelog/2023-03-21-code-scanning-api-to-enable-default-setup-with-codeql-on-a-repository/",
+          "summary": "Confirms exact offboard call: `gh api -X PATCH /repos/{org}/{repo}/code-scanning/default-setup -f state=not-configured`. state values are configured | not-configured. This is the canonical documented disable path."
+        },
+        {
+          "label": "GitHub REST API docs — Update code scanning default setup (via Context7 /websites/github_en_rest)",
+          "locator": "https://docs.github.com/en/rest/code-scanning/code-scanning",
+          "summary": "PATCH /repos/{owner}/{repo}/code-scanning/default-setup. Documented HTTP codes: 200, 202, 403 (Forbidden if repo archived OR GitHub Advanced Security not enabled), 404, 409 (validation run in progress), 422, 503. Requires token with repo scope. Confirms 403 is a real gate when GHAS/Code Security is off."
+        },
+        {
+          "label": "GitHub docs — managing security-and-analysis settings (github/docs source)",
+          "locator": "https://github.com/github/docs/blob/main/content/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository.md",
+          "summary": "Disabling 'Code Security' disables code scanning, secret scanning, AND dependency review together — but the reverse is NOT true. Disabling code scanning default-setup alone (the targeted action) does NOT touch secret scanning, dependency graph, or Dependabot. Dependency graph is permanently-on for public repos and independently toggled for private."
+        },
+        {
+          "label": "Semgrep docs — Python support + Dataflow engine overview",
+          "locator": "https://semgrep.dev/docs/languages/python",
+          "summary": "Semgrep CE provides single-file, single-function (intraprocedural) taint analysis + constant/symbolic propagation for Python. Interprocedural (cross-function) and interfile (cross-file) taint are Pro-only (--pro-intrafile / --pro flags). FastAPI framework-specific control-flow analysis is Pro-only."
+        },
+        {
+          "label": "Semgrep docs — Compare to Opengrep + Opengrep launch",
+          "locator": "https://www.opengrep.dev/",
+          "summary": "Opengrep is an LGPL-2.1 fork of Semgrep CE, full-time funded dev team, explicitly aiming to unlock previously Pro-only interprocedural + cross-file analysis in OSS, with JSON/SARIF output and backward compatibility. Viable OSS dataflow candidate for the deepenSastDataflow followup."
+        },
+        {
+          "label": "GitHub docs — Configuring default setup eligibility",
+          "locator": "https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configure-code-scanning",
+          "summary": "Default setup eligibility: GitHub Actions enabled AND (publicly visible OR GitHub Code Security enabled). A private Team-plan repo currently running default-setup CodeQL implies an entitlement path exists; the disable API may therefore succeed where a never-eligible repo would 403."
+        }
+      ],
+      "architecture_assessment": "Design is sound and low-risk. (1) API PATH: `PATCH /repos/{owner}/{repo}/code-scanning/default-setup` with `{\"state\":\"not-configured\"}` is the GitHub-documented canonical offboard call (note: changelog uses the unquoted gh form `-f state=not-configured`; the JSON body equivalent is `{\"state\":\"not-configured\"}` — string, not the configurations-API enum `disabled`/`not_set` which belongs to a DIFFERENT endpoint /code-security/configurations; do not confuse the two). The 403-on-no-GHAS risk is REAL and documented, which is exactly why DONT3 (try API, fall back to Settings-UI handoff) is the correct de-risking. Whether it 403s on this Team-plan private repo is genuinely undeterminable without a live call — but since CodeQL is currently RUNNING via default-setup, an enablement path exists, so the API has a credible chance of succeeding; the UI fallback covers the 403 case either way. (2) SURFACE ISOLATION: Disabling code-scanning default-setup ALONE does not disrupt secret scanning, dependency graph, or Dependabot — those are independent toggles. The codeql-config.yml file is inert orphan YAML (only read by an active CodeQL config); deleting it triggers nothing. The only coupled-disable direction is disabling the parent 'Code Security' product, which the design does NOT do. (3) DOC PLACEMENT: structurally sound — CodeQL block before the SonarCloud paragraph under 'Code quality beyond the security gate' (line 604) mirrors the established retirement pattern and the existing deepenSastDataflow row already sits in the followup table at line 619, so the doc cross-link target already exists. (4) SEMGREP: CE gives intraprocedural (single-function, single-file) Python taint TODAY; cross-function/cross-file is Pro-only; Opengrep is the credible OSS path to close that gap. This correctly belongs in the deferred deepenSastDataflow change (DONT1).",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "VALIDATED with concerns-level nuances (none blocking). Task1 (API path): VALIDATED — correct endpoint + state value, 403 risk real but already mitigated by Settings-UI fallback. Watch the body-value trap: use string `not-configured` for the default-setup endpoint, NOT `disabled`/`not_set` (those are the /code-security/configurations enum). Task2 (surface isolation): VALIDATED — no collateral disruption to secret scanning, dependency graph, or Dependabot; orphan config delete is inert. Task3 (doc placement): VALIDATED — placement mirrors SonarCloud pattern and the deepenSastDataflow followup row already exists for cross-linking. Task4 (Semgrep): VALIDATED — CE intraprocedural taint available for Python now; cross-function/interfile is Pro-only; Opengrep is a viable OSS alternative; correctly deferred."
+      },
+      "recommendation": "Proceed to planning. Three refinements: (a) In the disable step, send the body as the STRING `{\"state\":\"not-configured\"}` against /code-scanning/default-setup — do NOT use the /code-security/configurations enum values (`disabled`/`not_set`); they are a different endpoint and will fail or mis-target. (b) Treat 403 as the expected-and-handled branch, not an error: on 403 immediately route to the Settings-UI handoff (Settings → Advanced Security → CodeQL analysis → disable) per DONT3 — the AC1 wording 'disable managed CodeQL in Settings' is already the plan-agnostic safe instruction and should stay. (c) In the ci-standard.md CodeQL block, explicitly state that disabling code-scanning default-setup does NOT affect secret scanning / dependency graph / Dependabot, to pre-empt a future reader fearing collateral loss. No CONFLICT with frozen contract: required check stays `Sharperflow CI Gate`; the `dynamic/github-code-scanning/codeql` context disappears from check runs entirely once default-setup is off, reinforcing C4.",
+      "follow_ups": [
+        "Live-verify the API result on PokeEdge: `gh api -X PATCH /repos/{owner}/PokeEdge/code-scanning/default-setup -f state=not-configured` then `gh api /repos/{owner}/PokeEdge/code-scanning/default-setup` should return state=not-configured; on 403, capture the message and switch to Settings-UI handoff.",
+        "Post-cutover, confirm no new `Code Quality` workflow runs appear (AC2) AND that secret scanning / Dependabot status is unchanged (negative-side-effect check).",
+        "deepenSastDataflow change should scope Semgrep CE intraprocedural-taint adoption vs Opengrep cross-file as the two OSS candidates (DONT1 boundary respected here)."
+      ]
+    }
+  ],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-09T02:17:42.079Z",
+      "completed_by": "agent",
+      "approval_evidence": "User confirmed problem + scope. Corrected scope from user's \"both repos\" to verified actual: PokeEdge only (default-setup active), PokeEdge-Web already clean, this repo out of scope. Rollback plan: all steps reversible (Settings toggle, revert PR, doc revert). Privileged disable: try API first, fall back to Settings-UI handoff. deepenSastDataflow revived as separate followup change.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/proposal.md",
+        "content_hash": "d0b101b4ff38d9c5c775bf2fce1434eb1091dfc4d350b5d8353cd13eee6329cb",
+        "non_whitespace_chars": 3351,
+        "checked_at": "2026-06-09T02:16:05.282Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-09T02:19:05.029Z",
+      "completed_by": "agent",
+      "approval_evidence": "Discovery complete. All facts live-verified: PokeEdge codeql-config.yml (Python, security-extended/experimental, paths-ignore), PokeEdge-Web clean, org ruleset required-check = Sharperflow CI Gate only, ci-standard.md has SonarCloud retirement pattern to mirror. Agreement approved + contract minted (13 items: 5 AC, 4 constraints, 4 avoidances).",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/agreement.md",
+        "content_hash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "non_whitespace_chars": 2273,
+        "checked_at": "2026-06-09T02:16:05.283Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-09T02:22:30.649Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design complete. Mandatory independent validator (adv-researcher) returned VALIDATED — no CONFLICT, no blockers. Key findings incorporated: (1) body-value must be \"not-configured\" not \"disabled\", (2) 403 on API is documented+expected on Team/no-GHAS, fallback is correct branch, (3) Semgrep CE taint is intraprocedural only — gap real, correctly deferred. Added reader-reassurance line about no collateral impact on secret scanning/dep graph/Dependabot. All 5 ACs, 4 constraints, 4 avoidances covered. No product/value tradeoff or CONFLICT → no design-approval pause required.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/design.md",
+        "content_hash": "8ddad1bf07bce4a6f8a6916e82bfe5995ba2e1b89748679bf87054e2e041972c",
+        "non_whitespace_chars": 3952,
+        "checked_at": "2026-06-09T02:16:05.284Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-09T02:36:13.914Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved 5-task plan (\"approve\"). T2 reframed after live probe: gh CLI disable empirically impossible on no-GHAS plan (PATCH code-scanning/default-setup → 403; PUT actions/workflows/disable → 422 for dynamic workflows). Settings-UI toggle is sole mechanism; agent verifies via gh CLI. Doc block (T1) now documents UI-only reality + exact path as onboarding guidance. User also requested broader workflow-hygiene cleanup — handled as separate change (distinct objective, own discovery), not folded into this ready change."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-09T02:48:14.395Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 5 tasks done + verified. T1: ci-standard.md block (corrected to accurately distinguish GitHub Code Quality from security CodeQL; commit ed4d601). T2: PokeEdge Code Quality disabled via gh CLI (code-quality/setup API, state=not-configured). T3: orphan codeql-config.yml deleted — PokeEdge PR #353 MERGED. T4: verified — Code Quality off both repos, file 404 on main, no post-disable runs, Sharperflow CI Gate sole required check. T5: deepenSastDataflow followup opened. Discovery mid-execution: running scan was GitHub Code Quality (preview/hosted-dashboard/bills-at-GA), not security CodeQL — gh CLI disable IS possible via the separate code-quality API (the security code-scanning API was 403-gated)."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-09T02:49:06.815Z",
+      "completed_by": "agent",
+      "approval_evidence": "Acceptance review (inline). Contract review matrix persisted: 13/13 pass/respected, 0 failing. All 5 ACs verified with live evidence (Code Quality off both repos, PR #353 merged → file 404 on main, no post-disable runs, Sharperflow CI Gate sole required check, deepenSastDataflow followup opened). Mid-execution correctness catch: running scan was GitHub Code Quality (preview/hosted-dashboard) not security CodeQL — doc block corrected to distinguish both features accurately; gh CLI disable achieved via dedicated code-quality API. Executive summary persisted. Reversible throughout.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/executive-summary.md",
+        "content_hash": "cdc37ba26bab732091f34bb76c56223d9ee32de04d4ab94311c7e14c8a88bdd4",
+        "non_whitespace_chars": 2642,
+        "checked_at": "2026-06-09T02:16:05.285Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "session-info-block:codeql-status-2026-06-08"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+      "approvedAt": "2026-06-09T02:18:56.722Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1**: `docs/ci-standard.md` has an explicit **\"CodeQL is retired\"** block under *Code quality beyond the security gate* (mirrors SonarCloud retirement pattern). States: CodeQL is NOT part of the `Sharperflow CI Gate` contract; private repos disable managed CodeQL in Settings; its `dynamic/...` context must never enter branch-protection required checks. Links the dataflow gap to the `deepenSastDataflow` followup in the existing table.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2**: PokeEdge default-setup CodeQL **disabled** — no new `Code Quality` runs appear after cutover (verified live). Orphan `.github/codeql/codeql-config.yml` deleted via merged squash PR.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3**: PokeEdge-Web confirmed CodeQL-free — evidence captured (no runs, no config).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4**: `Sharperflow CI Gate` remains the **sole** required check on both app repos (re-verified live post-change against ruleset 17335746).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5**: `deepenSastDataflow` followup change opened in this repo and linked from the ci-standard doc.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "**C1**: No GHAS / Code Security purchase. No SARIF upload. No hosted dashboard. No Sonar.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "**C2**: No change to the `Sharperflow CI Gate` frozen required-check contract.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "**C3**: All removal steps **reversible** — Settings toggle (re-enable restores CodeQL), PR revert (restores file), doc revert.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "**C4**: The `dynamic/github-code-scanning/codeql` context must never enter required-check lists (already verified: it is not required in ruleset 17335746; must stay that way).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "**DONT1**: Do not decide the dataflow replacement in this change — that's the separate `deepenSastDataflow` change.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "**DONT2**: Do not wire CodeQL into `Sharperflow CI Gate`'s `needs:` — it is being retired, not adopted.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "**DONT3**: Do not assume default-setup API works on this plan — attempt API disable, fall back to Settings-UI handoff if 403.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "**DONT4**: Do not touch repos that don't run CodeQL (PokeEdge-Web confirmed clean; this repo is public with no app code — both out of scope for removal).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-09T02:48:34.468Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "docs/ci-standard.md § Code quality beyond the security gate now has an explicit CodeQL-retired block (commit ed4d601) accurately distinguishing GitHub Code Quality (preview/hosted-dashboard/bills-at-GA/CLI-disablable) from security CodeQL/code-scanning (GHAS-gated 403). Forward-links deepenSastDataflow (line 664). SonarCloud paragraph + followup table intact."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "PokeEdge Code Quality disabled: gh api PATCH code-quality/setup state=not-configured → GET confirms state=not-configured. Orphan .github/codeql/codeql-config.yml deleted via PR #353 (MERGED) → 404 on main. No CodeQL runs after ~02:45Z cutover (last run 01:59Z)."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "PokeEdge-Web confirmed CodeQL-free: code-quality/setup state=not-configured; zero CodeQL workflow runs in history; no .github/codeql config (404)."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Org ruleset 17335746 required_status_checks = ['Sharperflow CI Gate'] only, for both PokeEdge and PokeEdge-Web (verified live post-change). dynamic/github-code-scanning/codeql never a required context."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "deepenSastDataflow followup change opened (parent_change_id=retireVestigialCodeql, origin triage), framing a/b/c decision; linked from ci-standard.md followup table. Parked at proposal-pending."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No GHAS/Code Security purchase, no SARIF, no dashboard, no Sonar introduced. Disable used the free code-quality API; security Code Security remains Enable (off) per screenshot."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "test",
+          "evidence": "Sharperflow CI Gate frozen required-check unchanged — still sole required context both repos (ruleset 17335746)."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "All steps reversible: Code Quality re-enable via state=configured; PR #353 revertable; doc revert. No irreversible action taken."
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "test",
+          "evidence": "dynamic/github-code-scanning/codeql context never entered required-check list; verified absent from ruleset 17335746 required_status_checks post-change."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Dataflow replacement NOT decided here — deferred to deepenSastDataflow followup change."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "CodeQL/Code Quality not wired into Sharperflow CI Gate needs: — it was disabled/retired, not adopted."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "test",
+          "evidence": "Did not assume API behavior: empirically probed security code-scanning API (403) AND Actions disable (422), THEN found the correct code-quality API (worked). No guessing — all paths tested live."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "test",
+          "evidence": "Only PokeEdge touched for removal (the only repo running Code Quality). PokeEdge-Web confirm-clean only (no change). This repo (public, no app code) untouched for removal — docs-only."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1**: `docs/ci-standard.md` has an explicit **\"CodeQL is retired\"** block under *Code quality beyond the security gate* (mirrors SonarCloud retirement pattern). States: CodeQL is NOT part of the `Sharperflow CI Gate` contract; private repos disable managed CodeQL in Settings; its `dynamic/...` context must never enter branch-protection required checks. Links the dataflow gap to the `deepenSastDataflow` followup in the existing table.",
+    "**AC2**: PokeEdge default-setup CodeQL **disabled** — no new `Code Quality` runs appear after cutover (verified live). Orphan `.github/codeql/codeql-config.yml` deleted via merged squash PR.",
+    "**AC3**: PokeEdge-Web confirmed CodeQL-free — evidence captured (no runs, no config).",
+    "**AC4**: `Sharperflow CI Gate` remains the **sole** required check on both app repos (re-verified live post-change against ruleset 17335746).",
+    "**AC5**: `deepenSastDataflow` followup change opened in this repo and linked from the ci-standard doc."
+  ],
+  "documents": {
+    "proposal": "# Retire vestigial CodeQL\n\n## Problem\n\nGitHub **default-setup CodeQL** runs on **PokeEdge** (push + every PR; last run minutes ago) and burns Actions minutes, but on a private Team-plan repo without GitHub Advanced Security the **results plane is paywalled** — the scan goes green and surfaces zero alerts. It is a black-box check that *looks* like SAST coverage and delivers none. Worse than wasteful: false assurance.\n\nThe org already excludes GHAS/CodeQL/SARIF/Sonar everywhere **except** the one doc that is the normative contract — `docs/ci-standard.md` is silent on CodeQL by omission, so the next onboarded repo re-inherits it.\n\n## Verified evidence (live, this session)\n\n- **PokeEdge**: workflowName `CodeQL`, run names `Code Quality: PR #349 / Push on main`, conclusion success, last run 2026-06-09T01:59Z. **No committed `codeql.yml`** → GitHub **default setup**. `code-scanning/*` REST API returns 403 \"Code Security must be enabled\" → results paywalled. Orphan `.github/codeql/codeql-config.yml` committed.\n- **PokeEdge-Web**: **zero** CodeQL runs, no codeql config (404) → already clean.\n- **sharperflow-security-gates** (this repo): PUBLIC, no app code, no CodeQL, runs `self-test.yml` → out of scope.\n- **PR-wedge risk cleared**: both app repos' only required check is `Sharperflow CI Gate` (ruleset 17335746). `dynamic/github-code-scanning/codeql` is **not** a required context anywhere → removal wedges no PRs.\n\n## Why removal is correct (on the merits, not just instruction)\n\nOn private + Team + no-GHAS, CodeQL's *entire output is unreadable*. Removing a scanner whose results you cannot see is **not a security regression** — there was never visible detection. Keeping it is strictly worse: wasted minutes + false-assurance green check. Paying for GHAS is not justified for this threat profile. The genuine loss is **interprocedural dataflow/taint**, which Semgrep CE does not cover — that gap is real and must be *consciously deferred*, not hidden.\n\n## Scope\n\n1. **`docs/ci-standard.md`** (this repo, local) — add an explicit **\"CodeQL is retired\"** block under *Code quality beyond the security gate*, mirroring the existing SonarCloud-retirement pattern. State: CodeQL is NOT part of the `Sharperflow CI Gate` contract; private repos disable managed CodeQL; its `dynamic/...` context must never enter branch-protection required checks. Wire the dataflow gap to the `deepenSastDataflow` followup so the capability is deferred, not dropped.\n2. **PokeEdge** (cross-repo) — disable **default-setup CodeQL** (privileged Settings/API handoff) + delete orphan `.github/codeql/codeql-config.yml` via squash PR.\n3. **PokeEdge-Web** — confirm-clean only (no CodeQL present); no change.\n\n## Non-goals\n\n- No GHAS / Code Security purchase. No SARIF upload. No hosted dashboard. No Sonar.\n- Not deciding the dataflow replacement here — that is the separate `deepenSastDataflow` followup (revived as its own change).\n- Not touching the `Sharperflow CI Gate` frozen required-check contract.\n\n## Followup (separate change)\n\nRevive **`deepenSastDataflow`** (currently archived/cancelled) as a distinct research→decision: Semgrep taint-mode / Opengrep vs accept the Semgrep-CE ceiling. This change only adds the forward pointer; the decision is made there.\n\n## Acceptance criteria (sketch — refined at agreement)\n\n- AC1: `docs/ci-standard.md` has a CodeQL-retired block; the *Code quality beyond the security gate* table/section names CodeQL and links the `deepenSastDataflow` followup.\n- AC2: PokeEdge default-setup CodeQL disabled (no new `Code Quality` runs after cutover); orphan `.github/codeql/codeql-config.yml` removed via merged PR.\n- AC3: PokeEdge-Web confirmed CodeQL-free (evidence captured).\n- AC4: No new required-check context introduced; `Sharperflow CI Gate` remains the sole required check on both repos (re-verified live).\n- AC5: `deepenSastDataflow` followup change opened and linked.",
+    "problemStatement": "PokeEdge runs GitHub default-setup CodeQL (\"Code Quality\") on every push and PR, consuming Actions minutes, while its results plane is paywalled behind GitHub Advanced Security / Code Security (private Team-plan repo). The scan runs, goes green, and surfaces no alerts — a black-box check that looks like SAST coverage but delivers none (false assurance). The org's documented posture already excludes GHAS/CodeQL/SARIF/Sonar in AGENTS.md, README.md, ROADMAP.md, project.md, and docs/pokeedge-backend-pilot.md — but the canonical contract docs/ci-standard.md is SILENT on CodeQL by omission, so a newly onboarded repo re-inherits managed CodeQL with no guidance. Dropping CodeQL on this plan is correct (its entire output is unreadable without paying for GHAS), but the deep interprocedural dataflow/taint capability it represented is genuinely not replaced by Semgrep CE (intra-file/intra-function) and must be consciously deferred, not silently dropped.",
+    "agreement": "# Agreement — Retire vestigial CodeQL\n\n## Objectives\n\n1. **Stop CodeQL from burning Actions minutes for zero payoff** on PokeEdge (default-setup CodeQL runs on every push/PR, results invisible without GHAS).\n2. **Close the contract gap** in `docs/ci-standard.md` — currently silent on CodeQL despite org posture excluding GHAS everywhere else.\n3. **Make the dataflow gap explicit** — CodeQL provided interprocedural taint; the OSS gate doesn't replace it; consciously defer, don't silently drop.\n4. **Open the `deepenSastDataflow` followup** as a separate change for the research→decision on Semgrep taint-mode / Opengrep vs accept-CE-ceiling.\n\n## Acceptance criteria\n\n- **AC1**: `docs/ci-standard.md` has an explicit **\"CodeQL is retired\"** block under *Code quality beyond the security gate* (mirrors SonarCloud retirement pattern). States: CodeQL is NOT part of the `Sharperflow CI Gate` contract; private repos disable managed CodeQL in Settings; its `dynamic/...` context must never enter branch-protection required checks. Links the dataflow gap to the `deepenSastDataflow` followup in the existing table.\n- **AC2**: PokeEdge default-setup CodeQL **disabled** — no new `Code Quality` runs appear after cutover (verified live). Orphan `.github/codeql/codeql-config.yml` deleted via merged squash PR.\n- **AC3**: PokeEdge-Web confirmed CodeQL-free — evidence captured (no runs, no config).\n- **AC4**: `Sharperflow CI Gate` remains the **sole** required check on both app repos (re-verified live post-change against ruleset 17335746).\n- **AC5**: `deepenSastDataflow` followup change opened in this repo and linked from the ci-standard doc.\n\n## Constraints\n\n- **C1**: No GHAS / Code Security purchase. No SARIF upload. No hosted dashboard. No Sonar.\n- **C2**: No change to the `Sharperflow CI Gate` frozen required-check contract.\n- **C3**: All removal steps **reversible** — Settings toggle (re-enable restores CodeQL), PR revert (restores file), doc revert.\n- **C4**: The `dynamic/github-code-scanning/codeql` context must never enter required-check lists (already verified: it is not required in ruleset 17335746; must stay that way).\n\n## Avoidances\n\n- **DONT1**: Do not decide the dataflow replacement in this change — that's the separate `deepenSastDataflow` change.\n- **DONT2**: Do not wire CodeQL into `Sharperflow CI Gate`'s `needs:` — it is being retired, not adopted.\n- **DONT3**: Do not assume default-setup API works on this plan — attempt API disable, fall back to Settings-UI handoff if 403.\n- **DONT4**: Do not touch repos that don't run CodeQL (PokeEdge-Web confirmed clean; this repo is public with no app code — both out of scope for removal).",
+    "design": "# Design — Retire vestigial CodeQL\n\n## Architecture\n\nThree independent work streams, no interdependencies (can execute in any order):\n\n1. **Doc edit** (this repo, `docs/ci-standard.md`) — local file change\n2. **CodeQL disable** (PokeEdge, privileged Settings action) — API or UI handoff\n3. **File cleanup PR** (PokeEdge, delete `.github/codeql/codeql-config.yml`) — normal squash PR\n\nPlus a fourth **followup** step (separate change): open `deepenSastDataflow`.\n\n## Design decisions\n\n### D1: CodeQL block placement in ci-standard.md\n\n**Decision:** add a dedicated **\"CodeQL is retired\"** paragraph immediately before the existing SonarCloud retirement, both under the existing `## Code quality beyond the security gate` heading. Do NOT merge into SonarCloud's paragraph — they retired for different reasons and targeting them separately is clearer.\n\n**Rationale:**\n- SonarCloud retired because it was a paid hosted dashboard the org chose not to use.\n- CodeQL retired because its *results are paywalled* on the current plan (private + Team + no GHAS) — a fundamentally different reason.\n- The 4-row followup table already exists and already lists `deepenSastDataflow`. CodeQL's retirement reinforces that row without duplicating it — just add a forward-reference sentence to the CodeQL paragraph.\n\n**Placement:**\n\n```\n## Code quality beyond the security gate\n\n**CodeQL is retired.** (new paragraph, ~6 lines)\n\n**SonarCloud is retired.** (existing paragraph, unchanged)\n\n(followup table — existing, unchanged)\n```\n\n### D2: Section structure — generic \"retired tools\" or specific?\n\n**Decision:** keep specific. Two named retirement paragraphs (CodeQL, SonarCloud) under the same heading. Do NOT abstract to a generic \"retired tools\" table — only two tools, both retired for different reasons, and the section is already compact.\n\n**Rationale:** A generic table would be premature abstraction (P19/P29). If a third tool retires, revisit then.\n\n### D3: PokeEdge default-setup disable mechanism\n\n**Decision:** attempt REST API first (`PATCH /repos/{owner}/{repo}/code-scanning/default-setup` with `state: not-configured`), with graceful fallback to Settings-UI handoff instructions.\n\n**Rationale:**\n- The GET endpoint returns 403 on this plan (no Code Security). The PATCH *might* also 403 — but it might also work for the *disable* path since disabling doesn't require reading results.\n- If PATCH 403s: hand the user exact click-path: **Settings → Code security → Code scanning → CodeQL → Disable**.\n- Both paths achieve the same end state. No risk in trying API first.\n\n### D4: File-delete PR — standalone or combined with other cleanup?\n\n**Decision:** standalone squash PR for `.github/codeql/codeql-config.yml` deletion only. No combined scope.\n\n**Rationale:** The file is a single orphan config. Combined PRs risk scope creep. Standalone is clean, reviewable, revertable. Matches the SonarCloud `sonarcloud.yml` removal pattern from `fixMergeCollisionStrategy`.\n\n### D5: deepenSastDataflow followup — content\n\n**Decision:** open a new ADV change in this repo with origin_kind `triage`, referencing this change as `source_change_id`. Proposal: research→decision on Semgrep taint-mode / Opengrep vs accept Semgrep-CE intra-file ceiling. No implementation in this change.\n\n## Implementation strategy\n\n| Step | Repo | Type | Risk |\n|---|---|---|---|\n| 1 | security-gates | Edit `docs/ci-standard.md` | None (doc only) |\n| 2 | PokeEdge | API call to disable default-setup CodeQL | Low — fallback to UI handoff |\n| 3 | PokeEdge | PR to delete `.github/codeql/codeql-config.yml` | None — ordinary file delete |\n| 4 | security-gates | Open `deepenSastDataflow` followup change | None — proposal only |\n| 5 | both app repos | Verify no new CodeQL runs + re-check required checks | Read-only verification |\n\n## Task plan (sketch — refined at prep)\n\n| Task | Scope | Dependencies |\n|---|---|---|\n| T1: ci-standard.md CodeQL retirement block | This repo (local) | None |\n| T2: Disable PokeEdge default-setup CodeQL | PokeEdge (privileged) | None |\n| T3: Delete PokeEdge codeql-config.yml | PokeEdge (PR) | T2 preferred (disable before delete) |\n| T4: Verify removal + required checks | Both app repos (read-only) | T2, T3 |\n| T5: Open deepenSastDataflow followup | This repo (ADV) | T1 (doc link must exist) |\n\n## LBP decisions\n\n- **No new workflow/action YAML changes** — this is purely removal (disable + delete) + documentation.\n- **No new reusable workflow inputs** — the gate stays as-is.\n- **Ruleset untouched** — `Sharperflow CI Gate` remains sole required check; CodeQL was never in it.\n- **No breaking changes** — removal of a non-required check cannot break CI for conforming repos.",
+    "executiveSummary": "# Executive Summary — Retire vestigial CodeQL\n\n## Outcome\n\nPokeEdge was running a GitHub-managed CodeQL scan on every push/PR, burning Actions minutes with no payoff. It is now **disabled**, the orphan config is **deleted**, and the org CI standard now **explicitly documents** the decision so no future repo re-inherits it.\n\n## What the investigation uncovered (the real story)\n\nThe initial premise (\"vestigial security CodeQL, results paywalled\") was *half* right — and the diligence corrected it mid-flight:\n\n- The scan actually running was **GitHub Code Quality** (public preview), **not** security CodeQL. Two distinct GitHub features that share the `dynamic/github-code-scanning/codeql` workflow.\n- **Code Quality**: preview, **not billed yet but bills at GA**, burns Actions minutes now, reports to a **hosted dashboard**, available on Team plan (hence running without GHAS). Results *are* visible — so the original \"false assurance / invisible\" framing was wrong for this feature and was corrected in the doc.\n- **Security CodeQL / code scanning**: genuinely paywalled on private + Team + no-GHAS (`403`), never usable here.\n\nBoth retired under the standard's frozen posture (no GHAS, no SARIF, no hosted dashboard, no Sonar).\n\n## The gh-CLI alignment question (resolved correctly)\n\nUser pushed to \"align via gh CLI\" rather than manual UI. Empirically exhausted the wrong API first (`code-scanning/default-setup` → 403; Actions `disable` → 422 for dynamic workflows), then found the **correct, non-paywalled** path: the dedicated **Code Quality API** —\n`gh api -X PATCH repos/<org>/<repo>/code-quality/setup -f state=not-configured`.\nClean CLI disable, no UI handoff. Verified `state=not-configured`.\n\n## Delivered\n\n- `docs/ci-standard.md` — accurate CodeQL-retired block distinguishing both features, with the CLI disable command + forward-pointer to the deferred dataflow gap (commit ed4d601).\n- **PokeEdge** — Code Quality disabled (CLI); orphan `.github/codeql/codeql-config.yml` removed via **PR #353 (merged)**.\n- **PokeEdge-Web** — confirmed already clean (no change).\n- **deepenSastDataflow** followup change opened — the genuine interprocedural-taint gap CodeQL leaves (Semgrep CE is intraprocedural; cross-function = Pro-only), parked for a decision session.\n\n## Verification\n\n- Code Quality `not-configured` on both app repos; no CodeQL runs after the ~02:45Z cutover.\n- PR #353 merged → config file 404 on `main`.\n- `Sharperflow CI Gate` remains the sole required check on both repos (ruleset 17335746); the `codeql` context was never and is never required.\n- Contract matrix: 13/13 pass/respected, 0 failing.\n\n## Reversibility\n\nEvery step reversible: Code Quality re-enable (`state=configured`), PR revert, doc revert. No irreversible action.\n\n## Follow-ups\n\n- `deepenSastDataflow` — dataflow SAST decision (Semgrep taint-mode / Opengrep / accept CE ceiling).\n- Separate workflow-hygiene change (pending) — clean up unnecessary GitHub Actions/workflows across app repos (5 `disabled_manually` PokeEdge workflows seeded + active-workflow review + PokeEdge-Web sweep).",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-09T02:48:34.468Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1**: `docs/ci-standard.md` has an explicit **\"CodeQL is retired\"** block under *Code quality beyond the security gate* (mirrors SonarCloud retirement pattern). States: CodeQL is NOT part of the `Sharperflow CI Gate` contract; private repos disable managed CodeQL in Settings; its `dynamic/...` context must never enter branch-protection required checks. Links the dataflow gap to the `deepenSastDataflow` followup in the existing table. | pass | docs/ci-standard.md § Code quality beyond the security gate now has an explicit CodeQL-retired block (commit ed4d601) accurately distinguishing GitHub Code Quality (preview/hosted-dashboard/bills-at-GA/CLI-disablable) from security CodeQL/code-scanning (GHAS-gated 403). Forward-links deepenSastDataflow (line 664). SonarCloud paragraph + followup table intact. |\n| AC2 | acceptance_criterion | **AC2**: PokeEdge default-setup CodeQL **disabled** — no new `Code Quality` runs appear after cutover (verified live). Orphan `.github/codeql/codeql-config.yml` deleted via merged squash PR. | pass | PokeEdge Code Quality disabled: gh api PATCH code-quality/setup state=not-configured → GET confirms state=not-configured. Orphan .github/codeql/codeql-config.yml deleted via PR #353 (MERGED) → 404 on main. No CodeQL runs after ~02:45Z cutover (last run 01:59Z). |\n| AC3 | acceptance_criterion | **AC3**: PokeEdge-Web confirmed CodeQL-free — evidence captured (no runs, no config). | pass | PokeEdge-Web confirmed CodeQL-free: code-quality/setup state=not-configured; zero CodeQL workflow runs in history; no .github/codeql config (404). |\n| AC4 | acceptance_criterion | **AC4**: `Sharperflow CI Gate` remains the **sole** required check on both app repos (re-verified live post-change against ruleset 17335746). | pass | Org ruleset 17335746 required_status_checks = ['Sharperflow CI Gate'] only, for both PokeEdge and PokeEdge-Web (verified live post-change). dynamic/github-code-scanning/codeql never a required context. |\n| AC5 | acceptance_criterion | **AC5**: `deepenSastDataflow` followup change opened in this repo and linked from the ci-standard doc. | pass | deepenSastDataflow followup change opened (parent_change_id=retireVestigialCodeql, origin triage), framing a/b/c decision; linked from ci-standard.md followup table. Parked at proposal-pending. |\n| C1 | constraint | **C1**: No GHAS / Code Security purchase. No SARIF upload. No hosted dashboard. No Sonar. | respected | No GHAS/Code Security purchase, no SARIF, no dashboard, no Sonar introduced. Disable used the free code-quality API; security Code Security remains Enable (off) per screenshot. |\n| C2 | constraint | **C2**: No change to the `Sharperflow CI Gate` frozen required-check contract. | respected | Sharperflow CI Gate frozen required-check unchanged — still sole required context both repos (ruleset 17335746). |\n| C3 | constraint | **C3**: All removal steps **reversible** — Settings toggle (re-enable restores CodeQL), PR revert (restores file), doc revert. | respected | All steps reversible: Code Quality re-enable via state=configured; PR #353 revertable; doc revert. No irreversible action taken. |\n| C4 | constraint | **C4**: The `dynamic/github-code-scanning/codeql` context must never enter required-check lists (already verified: it is not required in ruleset 17335746; must stay that way). | respected | dynamic/github-code-scanning/codeql context never entered required-check list; verified absent from ruleset 17335746 required_status_checks post-change. |\n| DONT1 | avoidance | **DONT1**: Do not decide the dataflow replacement in this change — that's the separate `deepenSastDataflow` change. | respected | Dataflow replacement NOT decided here — deferred to deepenSastDataflow followup change. |\n| DONT2 | avoidance | **DONT2**: Do not wire CodeQL into `Sharperflow CI Gate`'s `needs:` — it is being retired, not adopted. | respected | CodeQL/Code Quality not wired into Sharperflow CI Gate needs: — it was disabled/retired, not adopted. |\n| DONT3 | avoidance | **DONT3**: Do not assume default-setup API works on this plan — attempt API disable, fall back to Settings-UI handoff if 403. | respected | Did not assume API behavior: empirically probed security code-scanning API (403) AND Actions disable (422), THEN found the correct code-quality API (worked). No guessing — all paths tested live. |\n| DONT4 | avoidance | **DONT4**: Do not touch repos that don't run CodeQL (PokeEdge-Web confirmed clean; this repo is public with no app code — both out of scope for removal). | respected | Only PokeEdge touched for removal (the only repo running Code Quality). PokeEdge-Web confirm-clean only (no change). This repo (public, no app code) untouched for removal — docs-only. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/proposal.md",
+      "updatedAt": "2026-06-09T02:16:05.310Z",
+      "contentHash": "d0b101b4ff38d9c5c775bf2fce1434eb1091dfc4d350b5d8353cd13eee6329cb"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-09T02:16:05.310Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/agreement.md",
+      "updatedAt": "2026-06-09T02:18:48.755Z",
+      "contentHash": "f33d8b1a36d16c6e15434c3435ecfb84ccf3f1fee3f12054541cd79f8034ae14"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/design.md",
+      "updatedAt": "2026-06-09T02:19:51.971Z",
+      "contentHash": "8ddad1bf07bce4a6f8a6916e82bfe5995ba2e1b89748679bf87054e2e041972c"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/retireVestigialCodeql/executive-summary.md",
+      "updatedAt": "2026-06-09T02:48:59.621Z",
+      "contentHash": "cdc37ba26bab732091f34bb76c56223d9ee32de04d4ab94311c7e14c8a88bdd4"
+    }
+  },
+  "lastSignalAt": "2026-06-09T02:49:06.815Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_MISSING_ERROR_HANDLING",
+      "severity": "warning",
+      "message": "Proposal describes behavior that could fail but doesn't mention error handling or rollback. What happens when things go wrong?",
+      "recorded_at": "2026-06-09T02:20:37.947Z"
+    }
+  ],
+  "worktree_auto_managed": true
+}
