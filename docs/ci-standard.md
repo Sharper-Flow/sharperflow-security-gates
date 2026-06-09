@@ -437,6 +437,79 @@ this standard.** Agent-side merge serialization (e.g. a Temporal mutex) is
 explicitly **not** used: it taxes local hardware and cannot govern bot PRs that
 never pass through the orchestrator.
 
+### Local branch hygiene (worktree-first PRs)
+
+The server-side serialization above governs how PRs *merge*. This section governs
+how PRs are *created locally* when many AI agents and sessions share one checkout
+of a repo. It is a hard rule, not a preference.
+
+**The trunk/main checkout of a repo MUST stay on its default branch.** Every branch
+that becomes a PR — feature fix, bot-style change, or orchestrated change — is
+created and pushed from a **git worktree**, never by switching the shared trunk
+checkout to a feature branch.
+
+Why: multiple agents/sessions operate against the same working directory
+concurrently. A feature branch checked out in the shared trunk directory is
+inherited by every other session pointed at it, causing cross-agent collisions,
+stale-branch confusion, and lost work. GitHub CI does not know or care where a
+branch was checked out locally — it triggers on the pushed ref + PR event — so
+pushing from a worktree produces an **identical** `Sharperflow CI Gate` run to
+pushing from trunk. Worktrees change only the local checkout location, removing the
+contention.
+
+```bash
+# ❌ WRONG — parks the shared trunk checkout on a feature branch
+git checkout -b fix/thing            # in /path/to/repo (trunk)
+git push -u origin fix/thing && gh pr create
+
+# ✅ CORRECT — trunk stays on the default branch
+git worktree add ../<repo>-wt/fix-thing -b fix/thing
+cd ../<repo>-wt/fix-thing
+git push -u origin fix/thing && gh pr create
+# after merge:
+git worktree remove ../<repo>-wt/fix-thing && git branch -d fix/thing
+```
+
+Rules:
+
+- **Trunk stays on default.** Never `git checkout -b` / `git switch -c` a feature
+  branch in the main/trunk checkout.
+- **Every PR comes from a worktree.** Orchestrated changes (e.g. ADV) already do
+  this automatically — push + open the PR from the change worktree, not trunk.
+- **Merge before worktree delete.** Never remove a worktree until its branch is
+  merged to the default branch.
+- **If trunk drifted onto a feature branch,** surface it; restore to default only
+  after confirming the feature branch is pushed (so no work is lost), then relocate
+  the work into a worktree.
+
+Enforcement is currently **trusted-prose** (this standard + an always-on agent
+instruction). A structural guard (post-checkout hook / git wrapper) was considered
+and deferred to avoid intercepting all git calls and colliding with the
+`pre-commit` framework that owns per-repo `.git/hooks`. Revisit a structural guard
+only if drift recurs.
+
+### Concurrent migration-version collisions
+
+A direct consequence of strict-off + many concurrent worktree PRs: two branches that
+both forked before the other merged can each claim the **same next migration
+version number**. Neither branch is wrong in isolation; the collision only
+materializes when the second PR merges into a `main` that already contains the
+first.
+
+This is detected, not silently merged — a migration-identity guard (e.g.
+`test_migration_identity` in the consuming app) fails the PR with a
+`CollisionViolation(version=..., filenames=(...))`. **Fix forward by renumbering the
+later branch's migration to the next free slot** (verify the slot is free against
+`origin/main`, not just locally), updating any paired test/path references, then
+re-push. Do **not** force the duplicate number through.
+
+Example (PokeEdge #349): branch added `192_add_card_var_serving.sql`; PR #344
+merged `192_extend_work_items_cn_budget_classes.sql` to `main` after the branch
+forked. Resolution: renumber `192 → 193` (next free slot, confirmed against
+`origin/main`) + update the paired arch-test path. This is the migration-domain
+instance of the accepted "loose checks not re-evaluated against new base" residual
+risk above — caught by the guard, fixed forward.
+
 ### Ruleset ↔ classic protection coexistence
 
 GitHub evaluates classic branch protection **and** rulesets together, and the
@@ -686,5 +759,8 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
       Ruleset is non-strict + squash-only (see [Merge serialization](#merge-serialization-strict-off-squash-only-auto-merge)).
 - [ ] Auto-merge standardized: PRs merged via `gh pr merge --squash --auto`; bot
       PRs (Renovate/Dependabot) auto-merge on green `Sharperflow CI Gate`.
+- [ ] Local branch hygiene: trunk/main checkout stays on the default branch; every
+      PR is created and pushed from a git worktree, never by switching the shared
+      trunk checkout (see [Local branch hygiene](#local-branch-hygiene-worktree-first-prs)).
 - [ ] Release is tag-only (semantic-release tags but pushes no commit to `main`)
       — verify a release lands the tag and the staging promote stamps the version.
