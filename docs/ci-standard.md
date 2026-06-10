@@ -166,6 +166,19 @@ pilot. The "measure before making it required" phase is over.
   `caller / reusable-job` context strings. Apps require only the summary, but the
   job names stay stable as a contract.
 
+- **Scanner responsibility partition.** Secret scanning is partitioned by gate
+  type to avoid redundant work:
+
+  | Gate type | Secret scanner | Rationale |
+  |-----------|---------------|-----------|
+  | Source-code (python, javascript) | Gitleaks | Full git history, allowlists, redaction |
+  | Container image | Trivy `secret` | No git history in built images |
+
+  Trivy in source-code gates runs `vuln,misconfig` only — Gitleaks owns secrets.
+  Trivy in the container gate runs `vuln,secret` — it is the sole secret scanner
+  for images. Callers that need additional secret scanning should add a local job,
+  not re-enable Trivy `secret` in the reusable gate.
+
 ---
 
 ## 4. Shared building blocks

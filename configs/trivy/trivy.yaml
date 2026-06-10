@@ -10,7 +10,6 @@ ignore-unfixed: true
 
 scanners:
   - vuln
-  - secret
   - misconfig
 
 skip-dirs:
