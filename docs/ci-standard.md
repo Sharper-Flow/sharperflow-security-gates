@@ -139,7 +139,7 @@ pilot. The "measure before making it required" phase is over.
 
   ```yaml
   security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@<sha>  # v0.3.1
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@<sha>  # v0.3.2
     permissions:
       contents: read
     with:
@@ -193,7 +193,7 @@ Setup is defined once in this repo and consumed cross-repo, never copy-pasted.
 Consumed from an app workflow:
 
 ```yaml
-- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@<sha>  # v0.3.1
+- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@<sha>  # v0.3.2
   with:
     python-version: "3.13"
     sync-args: "--all-groups"
@@ -212,7 +212,7 @@ inside the composites themselves — pins a **full commit SHA with a trailing
 version comment**:
 
 ```yaml
-uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
 ```
 
 - The **SHA** is immutable — supply-chain safe, not movable by a re-tagged release.

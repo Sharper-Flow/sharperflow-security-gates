@@ -14,7 +14,7 @@ Add the gate as a `security` job inside the web CI workflow and require only the
 ```yaml
 jobs:
   security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
     permissions:
       contents: read
     with:

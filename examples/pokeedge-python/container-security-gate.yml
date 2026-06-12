@@ -8,6 +8,6 @@ on:
 
 jobs:
   image-security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
     with:
       image-ref: "ghcr.io/Sharper-Flow/pokeedge-api:${{ github.sha }}"
