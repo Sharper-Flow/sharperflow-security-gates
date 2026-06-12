@@ -1,0 +1,1450 @@
+{
+  "id": "reduceActionsCost",
+  "title": "Reduce Actions cost",
+  "status": "archived",
+  "created_at": "2026-06-12T04:22:58.166Z",
+  "tasks": [
+    {
+      "id": "tk-12ed00f96eca",
+      "title": "Patch reusable SBOM scanner and retention behavior",
+      "type": "code",
+      "section": "Local reusable-gate fixes",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-12T04:51:30.991Z",
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC4",
+          "AC5",
+          "AC8"
+        ],
+        "verifies": [
+          "AC9"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C6"
+        ],
+        "not_applicable_reason": ""
+      },
+      "subagent_reports": [
+        {
+          "schema_version": "1.0",
+          "change_id": "reduceActionsCost",
+          "attempt": 1,
+          "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/reduceActionsCost",
+          "task_id": "tk-12ed00f96eca",
+          "scope": {
+            "kind": "task",
+            "task_id": "tk-12ed00f96eca"
+          },
+          "agent": "adv-engineer",
+          "status": "complete",
+          "files_touched": [
+            ".github/workflows/python-security-gate.yml",
+            ".github/workflows/javascript-security-gate.yml",
+            ".github/workflows/container-security-gate.yml"
+          ],
+          "verification": [
+            {
+              "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+              "exit_code": 0,
+              "summary": "actionlint passes with no output for all three workflows"
+            },
+            {
+              "command": "git diff -- .github/workflows/python-security-gate.yml .github/workflows/javascript-security-gate.yml .github/workflows/container-security-gate.yml",
+              "exit_code": 0,
+              "summary": "Diff shows only intended SBOM scanner and retention-days additions"
+            }
+          ],
+          "decisions": [
+            {
+              "what": "Set retention-days to 14 on all SBOM artifact uploads",
+              "why": "Task requested a bounded default; no file-local convention dictated another small bound, so 14 days was used consistently."
+            },
+            {
+              "what": "Added scanners: vuln,misconfig only to Python and JavaScript SBOM generation steps, not container gate",
+              "why": "Scope explicitly limited scanner addition to Python and JavaScript SBOM steps; container gate was out of scope for scanner changes."
+            }
+          ],
+          "blockers": [],
+          "scope_drift": null,
+          "follow_ups": [],
+          "required_main_agent_actions": [],
+          "related_scan": "none",
+          "context_update_for_adv": {
+            "what_ads_needs_to_know": "SBOM Trivy steps in Python and JavaScript gates now explicitly use scanners: vuln,misconfig; all three SBOM upload-artifact steps now set retention-days: 14. actionlint passes.",
+            "suggested_next_action": "Review diff and proceed to next task or close change."
+          },
+          "consumer_warnings": [
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: git diff -- .github/workflows/python-security-gate.yml .github/workflows/javascript-security-gate.yml .github/workflows/container-security-gate.yml"
+            }
+          ]
+        }
+      ],
+      "verification": "actionlint exact repo command passed (exit 0) for local reusable workflows; git diff --check passed. Includes local SBOM scanner/retention fixes, doc/example pin updates, and cache cleanup dry-run report.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Updated `.github/workflows/python-security-gate.yml`, `javascript-security-gate.yml`, and `container-security-gate.yml` to make SBOM scanner partition explicit and bound SBOM artifact retention. No job names, inputs, default source scan behavior, or scanner coverage removed.",
+      "filesTouched": [
+        ".github/workflows/container-security-gate.yml",
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/python-security-gate.yml",
+        "README.md",
+        "ROADMAP.md",
+        "docs/actions-cost-cleanup-dry-run.md",
+        "docs/ci-standard.md",
+        "docs/pokeedge-backend-pilot.md",
+        "docs/pokeedge-web-next.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-python/container-security-gate.yml",
+        "examples/pokeedge-web/ci.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/container-security-gate.yml",
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/python-security-gate.yml",
+        "README.md",
+        "ROADMAP.md",
+        "docs/actions-cost-cleanup-dry-run.md",
+        "docs/ci-standard.md",
+        "docs/pokeedge-backend-pilot.md",
+        "docs/pokeedge-web-next.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-python/container-security-gate.yml",
+        "examples/pokeedge-web/ci.yml"
+      ],
+      "checkpointSha": "43dbeaabec737e2466cfea7337158c2fb8f59559",
+      "completedAt": "2026-06-12T05:13:31.174Z",
+      "completed_at": "2026-06-12T05:13:31.174Z",
+      "notes": "Patched local reusable SBOM behavior: Python/JS SBOM Trivy steps now set `scanners: vuln,misconfig`; Python/JS/container SBOM uploads now set `retention-days: 14`. Checkpoint 43dbeaabec737e2466cfea7337158c2fb8f59559. actionlint exact repo command passed.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-12T05:14:22.044Z"
+    },
+    {
+      "id": "tk-ae2bfbf4ecde",
+      "title": "Patch local docs and example references for scanner partition/pins",
+      "type": "code",
+      "section": "Local reusable-gate fixes",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-12T04:52:24.630Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC4",
+          "AC8"
+        ],
+        "verifies": [
+          "AC9"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "not_applicable_reason": ""
+      },
+      "verification": "Docs/examples were included in checkpoint 43dbeaabec737e2466cfea7337158c2fb8f59559; actionlint exact command passed and git diff --check passed before checkpoint.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Updated README, ROADMAP, CI standard docs, pilot docs, and examples to reflect current scanner partition and verified v0.3.2 release pin. Archive historical references left untouched.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "43dbeaabec737e2466cfea7337158c2fb8f59559",
+      "completedAt": "2026-06-12T05:14:01.916Z",
+      "completed_at": "2026-06-12T05:14:01.916Z",
+      "notes": "Patched local docs/examples: ROADMAP scanner partition corrected; v0.3.1/e21e07a7 references refreshed to v0.3.2/5afaf289 after verifying tags. Checkpoint 43dbeaabec737e2466cfea7337158c2fb8f59559. actionlint passed.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-12T05:14:22.126Z"
+    },
+    {
+      "id": "tk-f350017d48cd",
+      "title": "Implement direct PokeEdge-Web workflow cleanup",
+      "type": "code",
+      "section": "Direct app-repo cleanup",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-12T04:52:24.688Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC6",
+          "AC10"
+        ],
+        "verifies": [
+          "AC9"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C4",
+          "C5"
+        ]
+      },
+      "subagent_reports": [
+        {
+          "schema_version": "1.0",
+          "change_id": "reduceActionsCost",
+          "attempt": 1,
+          "workdir_used": "/home/jon/dev/pokeedge-web-wt/reduce-actions-cost",
+          "task_id": "tk-f350017d48cd",
+          "scope": {
+            "kind": "task",
+            "task_id": "tk-f350017d48cd"
+          },
+          "agent": "adv-engineer",
+          "status": "complete",
+          "files_touched": [
+            ".github/workflows/ci.yml",
+            ".github/workflows/ci-quality.yml",
+            ".github/workflows/check-api-compat.yml",
+            ".github/workflows/staging-deploy.yml",
+            ".github/workflows/production-deploy.yml",
+            "renovate.json"
+          ],
+          "verification": [
+            {
+              "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/ci.yml .github/workflows/ci-quality.yml .github/workflows/check-api-compat.yml .github/workflows/staging-deploy.yml .github/workflows/production-deploy.yml",
+              "exit_code": 0,
+              "summary": "Structural actionlint check on all changed workflow files passes"
+            },
+            {
+              "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+              "exit_code": 1,
+              "summary": "Full actionlint (with shellcheck) exits 1 due to pre-existing shellcheck info/style issues in other workflows; no new errors introduced by changed files"
+            },
+            {
+              "command": "jq empty renovate.json",
+              "exit_code": 0,
+              "summary": "renovate.json is valid JSON"
+            },
+            {
+              "command": "git diff --check",
+              "exit_code": 0,
+              "summary": "No whitespace errors in diff"
+            },
+            {
+              "command": "git diff -- .github/workflows/ci.yml | grep -E '^(\\+|-).*ci-gate|Sharperflow CI Gate|needs:.*ci-gate' || true",
+              "exit_code": 0,
+              "summary": "Required check context 'Sharperflow CI Gate' unchanged"
+            }
+          ],
+          "decisions": [
+            {
+              "what": "Removed coverage artifact upload from ci.yml test job",
+              "why": "No download-artifact, Codecov, or Sonar consumer exists in this repo; upload is pure cost/noise"
+            },
+            {
+              "what": "Switched ci-quality.yml to setup-bun-node composite",
+              "why": "Parity with main CI; SHA-pinned shared composite replaces inline setup-node/setup-bun and avoids duplicated install logic"
+            },
+            {
+              "what": "Cached pinned oasdiff binary in check-api-compat.yml via actions/cache@v4",
+              "why": "Avoids repeated GitHub release API + tarball download on every API-compat run; version is pinned so cache key is stable"
+            },
+            {
+              "what": "Changed BuildKit cache-to mode from max to min in staging/production deploy workflows",
+              "why": "Workflows already use GHA BuildKit cache; mode=min reduces cache-export cost and is safe for these deploy pipelines"
+            },
+            {
+              "what": "Added explicit Renovate semantic-commit config",
+              "why": "Current renovate.json lacked commit-message controls; explicit semanticCommits + lowercase action prevents commit-lint churn from Renovate PRs"
+            },
+            {
+              "what": "Deferred docs/openapi.json sync",
+              "why": "Backend openapi.json fetch from raw.githubusercontent.com returned 404 (private repo); safe sync requires CROSS_REPO_TOKEN or backend source access, so surfaced as follow-up"
+            }
+          ],
+          "blockers": [],
+          "scope_drift": null,
+          "follow_ups": [
+            "Verify and sync docs/openapi.json with Sharper-Flow/PokeEdge main once backend source can be fetched (e.g., with CROSS_REPO_TOKEN via gh api or after backend repo visibility allows raw fetch)"
+          ],
+          "required_main_agent_actions": [],
+          "related_scan": "Scanned all .github/workflows/*.yml for coverage consumers, setup-bun-node references, GHA BuildKit mode=max, and Renovate commit-message config; fixed every matching instance found",
+          "context_update_for_adv": {
+            "what_ads_needs_to_know": "Safe PokeEdge-Web workflow cleanup applied: removed unused coverage upload, unified ci-quality on setup-bun-node composite, cached oasdiff, switched deploy BuildKit cache to mode=min, and added Renovate semantic-commit config. Required 'Sharperflow CI Gate' context and job topology are untouched. docs/openapi.json backend sync was deferred because the backend spec is not reachable without auth.",
+            "suggested_next_action": "Run the CI workflow on a test branch or review the diff; if accepted, proceed to backend-source verification for docs/openapi.json sync"
+          },
+          "consumer_warnings": [
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/ci.yml .github/workflows/ci-quality.yml .github/workflows/check-api-compat.yml .github/workflows/staging-deploy.yml .github/workflows/production-deploy.yml"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: jq empty renovate.json"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: git diff --check"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: git diff -- .github/workflows/ci.yml | grep -E '^(\\+|-).*ci-gate|Sharperflow CI Gate|needs:.*ci-gate' || true"
+            }
+          ]
+        }
+      ],
+      "verification": "PokeEdge-Web workflow edits verified with actionlint structural mode (`rhysd/actionlint:1.7.7 -shellcheck=`) exit 0, git diff --check exit 0, and renovate.json JSON syntax check exit 0. Required context `Sharperflow CI Gate` unchanged.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/workflows/check-api-compat.yml",
+        ".github/workflows/ci-quality.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/production-deploy.yml",
+        ".github/workflows/staging-deploy.yml",
+        "renovate.json"
+      ],
+      "touched_files": [
+        ".github/workflows/check-api-compat.yml",
+        ".github/workflows/ci-quality.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/production-deploy.yml",
+        ".github/workflows/staging-deploy.yml",
+        "renovate.json"
+      ],
+      "checkpointSha": "0d473ac3dc0efcba91b44d2b03010e0fac9693d0",
+      "completedAt": "2026-06-12T05:13:43.299Z",
+      "completed_at": "2026-06-12T05:13:43.299Z"
+    },
+    {
+      "id": "tk-03ec14128462",
+      "title": "Implement direct PokeEdge workflow cleanup",
+      "type": "code",
+      "section": "Direct app-repo cleanup",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-12T04:52:26.429Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1",
+          "AC3",
+          "AC4",
+          "AC7",
+          "AC10"
+        ],
+        "verifies": [
+          "AC9"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C4",
+          "C5"
+        ]
+      },
+      "subagent_reports": [
+        {
+          "schema_version": "1.0",
+          "change_id": "reduceActionsCost",
+          "attempt": 1,
+          "workdir_used": "/home/jon/dev/pokeedge-wt/reduce-actions-cost",
+          "task_id": "tk-03ec14128462",
+          "scope": {
+            "kind": "task",
+            "task_id": "tk-03ec14128462"
+          },
+          "agent": "adv-engineer",
+          "status": "complete",
+          "files_touched": [
+            ".github/workflows/pr-gate.yml",
+            ".github/workflows/production-deploy.yml"
+          ],
+          "verification": [
+            {
+              "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\"",
+              "exit_code": 1,
+              "summary": "actionlint reported only pre-existing shellcheck info/style warnings in production-deploy.yml; pr-gate.yml produced no findings"
+            },
+            {
+              "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\"",
+              "exit_code": 0,
+              "summary": "actionlint passes edited workflows when shellcheck noise is excluded (no structural/syntax errors introduced)"
+            },
+            {
+              "command": "git diff -- .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml",
+              "exit_code": 0,
+              "summary": "Diff inspected; required check context `Sharperflow CI Gate` unchanged and draft-guard/retention/polling-skip edits are present"
+            }
+          ],
+          "decisions": [
+            {
+              "what": "Added draft-PR guard to `pr-gate` using the same expression pattern already used by integration/e2e/acceptance/contract jobs",
+              "why": "Keeps the required `ci-gate` summary semantics intact because that job already accepts `skipped` as a passing result; avoids ~16 min runner burn on draft PRs"
+            },
+            {
+              "what": "Set coverage artifact retention to 7 days",
+              "why": "Coverage XML files are only useful for short-term PR feedback; default retention is much longer, so this reduces artifact storage cost without removing uploads"
+            },
+            {
+              "what": "Skipped `verify-staging` polling only for `repository_dispatch` triggers",
+              "why": "The `auto-production-deploy` dispatch is only emitted after staging-deploy succeeds, so polling is redundant; manual `workflow_dispatch` keeps the safety polling"
+            }
+          ],
+          "blockers": [],
+          "scope_drift": null,
+          "follow_ups": [],
+          "required_main_agent_actions": [],
+          "related_scan": "none",
+          "context_update_for_adv": {
+            "what_ads_needs_to_know": "Implemented three safe cost reductions in PokeEdge workflows: (1) `pr-gate` skips draft PRs, (2) `coverage-fast` artifact retention reduced to 7 days, (3) `production-deploy.verify-staging` polling skipped for repository_dispatch auto-triggers. Required check context `Sharperflow CI Gate` was not changed. actionlint passes the edited files structurally; production-deploy.yml has pre-existing shellcheck info/style warnings unrelated to this change.",
+            "suggested_next_action": "Review the diff and proceed to commit/push from the ADV worktree if accepted"
+          },
+          "consumer_warnings": [
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\""
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\""
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: git diff -- .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml"
+            }
+          ]
+        }
+      ],
+      "verification": "PokeEdge workflow edits verified with actionlint structural mode (`rhysd/actionlint:1.7.7 -shellcheck=`) exit 0 and git diff --check exit 0. Full actionlint has pre-existing shellcheck info/style warnings outside introduced change; required context `Sharperflow CI Gate` unchanged.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/workflows/pr-gate.yml",
+        ".github/workflows/production-deploy.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/pr-gate.yml",
+        ".github/workflows/production-deploy.yml"
+      ],
+      "checkpointSha": "ccf1dcc6736a309a7c7e8f9a704198116c832478",
+      "completedAt": "2026-06-12T05:13:43.357Z",
+      "completed_at": "2026-06-12T05:13:43.357Z"
+    },
+    {
+      "id": "tk-8b289be51871",
+      "title": "Prepare bounded cache/artifact cleanup dry-runs",
+      "type": "code",
+      "section": "Destructive cleanup preparation",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-12T04:52:44.361Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC5"
+        ],
+        "verifies": [
+          "AC1",
+          "AC2"
+        ],
+        "respects": [
+          "C5",
+          "C6"
+        ],
+        "not_applicable_reason": ""
+      },
+      "verification": "Cache/artifact dry-run report was included in checkpoint 43dbeaabec737e2466cfea7337158c2fb8f59559; no deletion API calls were made. git diff --check passed before checkpoint.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Created a durable read-only cleanup report with cache classes, counts, sizes, example candidate IDs, and explicit deletion boundaries requiring future approval before any destructive API call.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "43dbeaabec737e2466cfea7337158c2fb8f59559",
+      "completedAt": "2026-06-12T05:14:01.991Z",
+      "completed_at": "2026-06-12T05:14:01.991Z",
+      "notes": "Prepared cache cleanup dry-run report at `docs/actions-cost-cleanup-dry-run.md`. No cache/artifact deletion performed. PokeEdge caches: 184 total, 8.87 GB; Trivy class 132 entries, 8.82 GB. Web caches: 539 total, 10.41 GB; BuildKit 526 entries, 9.60 GB; Trivy 12 entries, 779.7 MB. Checkpoint 43dbeaabec737e2466cfea7337158c2fb8f59559.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-12T05:14:23.931Z"
+    },
+    {
+      "id": "tk-5448abcb81a8",
+      "title": "Final verification and contract evidence matrix",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 5,
+      "created_at": "2026-06-12T04:52:44.458Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-12ed00f96eca"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-ae2bfbf4ecde"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-03ec14128462"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-f350017d48cd"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [],
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC6",
+          "AC7",
+          "AC8",
+          "AC9",
+          "AC10"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6"
+        ],
+        "not_applicable_reason": ""
+      },
+      "verification": "Final verification ran: local actionlint exact command exit 0; PokeEdge actionlint structural exit 0 and git diff --check exit 0; PokeEdge-Web rebased onto origin/main then actionlint structural exit 0, git diff --check exit 0, renovate JSON validation exit 0.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Verified all touched repositories and recorded final evidence. Local repo has exact actionlint pass; app repos have structural actionlint pass because full actionlint reports pre-existing shellcheck style/info outside introduced changes. Target worktrees are clean/ahead one commit each after checkpoint/rebase.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "43dbeaabec737e2466cfea7337158c2fb8f59559",
+      "completedAt": "2026-06-12T05:15:25.262Z",
+      "completed_at": "2026-06-12T05:15:25.262Z",
+      "notes": "Final verification passed. Local security-gates actionlint exact command exit 0. PokeEdge branch `change/reduce-actions-cost` at ccf1dcc6736a309a7c7e8f9a704198116c832478: actionlint structural exit 0, git diff --check exit 0. PokeEdge-Web branch `change/reduce-actions-cost` rebased onto origin/main at cfeae3b9f485f8d4ed8420299333720399700690: actionlint structural exit 0, git diff --check exit 0, renovate.json JSON syntax exit 0. `Sharperflow CI Gate` context unchanged in target changes. Checkpoint clean at 43dbeaabec737e2466cfea7337158c2fb8f59559.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-12T05:15:35.298Z"
+    },
+    {
+      "id": "tk-073510504dde",
+      "title": "Release-readiness sweep after all cleanup evidence",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 6,
+      "created_at": "2026-06-12T04:52:57.940Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-5448abcb81a8"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-8b289be51871"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification"
+      },
+      "contract_refs": {
+        "implements": [],
+        "verifies": [
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC6",
+          "AC7",
+          "AC8",
+          "AC9",
+          "AC10"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6"
+        ],
+        "not_applicable_reason": ""
+      },
+      "verification": "Release-readiness sweep: all other tasks are done, contract review matrix set with 16/16 passing/respected rows and 0 failing rows, execution gate ready. Target repo worktrees are clean/ahead one commit each; no destructive deletion performed.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Confirmed execution evidence is complete and ready for acceptance review. All AC1-AC10 and constraints C1-C6 have persisted pass/respected evidence. Outstanding destructive cleanup remains approval-gated; `docs/actions-cost-cleanup-dry-run.md` provides candidate bounds.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "43dbeaabec737e2466cfea7337158c2fb8f59559",
+      "completedAt": "2026-06-12T05:16:20.645Z",
+      "completed_at": "2026-06-12T05:16:20.645Z",
+      "notes": "Release-readiness sweep complete. All implementation/verification tasks done. Contract review matrix persisted with 16 rows and 0 failing rows. No destructive cache/artifact deletion performed. Local branch `change/reduceActionsCost` clean at 43dbeaabec737e2466cfea7337158c2fb8f59559. PokeEdge branch `change/reduce-actions-cost` clean/ahead 1 at ccf1dcc6736a309a7c7e8f9a704198116c832478. PokeEdge-Web branch `change/reduce-actions-cost` clean/ahead 1 at cfeae3b9f485f8d4ed8420299333720399700690.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-12T05:16:30.639Z",
+      "subagent_reports": [
+        {
+          "schema_version": "1.0",
+          "change_id": "reduceActionsCost",
+          "attempt": 1,
+          "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/reduceActionsCost",
+          "task_id": "tk-073510504dde",
+          "scope": {
+            "kind": "task",
+            "task_id": "tk-073510504dde"
+          },
+          "agent": "adv-reviewer",
+          "phase": "review",
+          "verdict": "READY",
+          "blocking_findings": [],
+          "nonblocking_findings": [],
+          "changes_made": [],
+          "wisdom_candidates": [],
+          "verification": {
+            "tests_run": [
+              "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+              "git diff --check HEAD~1..HEAD",
+              "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml",
+              "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/check-api-compat.yml .github/workflows/ci-quality.yml .github/workflows/ci.yml .github/workflows/production-deploy.yml .github/workflows/staging-deploy.yml",
+              "python -m json.tool renovate.json"
+            ],
+            "results": "pass",
+            "evidence": "Local reusable gate actionlint passed with no output; diff whitespace checks passed in local, PokeEdge, and PokeEdge-Web worktrees. Target structural actionlint with shellcheck disabled passed for modified workflow files in PokeEdge and PokeEdge-Web. Renovate JSON parsed successfully. Exploratory full target actionlint emits existing repo shellcheck info/style findings, so structural validation is the relevant changed-file syntax/semantics evidence."
+          },
+          "scope_drift": null,
+          "risks": [
+            "Full all-workflow actionlint in the target app repos still reports existing shellcheck info/style findings outside this cleanup scope; changed-file structural actionlint passes.",
+            "Target repo changes are direct mutations in approved worktrees/branches, not follow-up PRs yet; acceptance/release should ensure those target branches are pushed/PR'd under the approved cross-repo plan.",
+            "No destructive cache/artifact deletion occurred; cleanup remains a bounded dry-run candidate list requiring separate approval before any delete API call."
+          ],
+          "required_main_agent_actions": [
+            "Acceptance can proceed if orchestrator accepts changed-file structural validation for target repos plus local exact actionlint as AC9 evidence.",
+            "Before release, push/open or otherwise integrate the approved target worktree branches change/reduce-actions-cost for PokeEdge and PokeEdge-Web; do not claim target changes shipped from this repo alone.",
+            "If cache cleanup is later desired, present the dry-run candidate set for explicit user approval immediately before deletion and regenerate current cache IDs first."
+          ],
+          "required_follow_ups": [],
+          "consumer_warnings": [
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: git diff --check HEAD~1..HEAD"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/check-api-compat.yml .github/workflows/ci-quality.yml .github/workflows/ci.yml .github/workflows/production-deploy.yml .github/workflows/staging-deploy.yml"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: python -m json.tool renovate.json"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "reduceActionsCost",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/reduceActionsCost",
+      "task_id": "tk-12ed00f96eca",
+      "scope": {
+        "kind": "task",
+        "task_id": "tk-12ed00f96eca"
+      },
+      "agent": "adv-engineer",
+      "status": "complete",
+      "files_touched": [
+        ".github/workflows/python-security-gate.yml",
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/container-security-gate.yml"
+      ],
+      "verification": [
+        {
+          "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "exit_code": 0,
+          "summary": "actionlint passes with no output for all three workflows"
+        },
+        {
+          "command": "git diff -- .github/workflows/python-security-gate.yml .github/workflows/javascript-security-gate.yml .github/workflows/container-security-gate.yml",
+          "exit_code": 0,
+          "summary": "Diff shows only intended SBOM scanner and retention-days additions"
+        }
+      ],
+      "decisions": [
+        {
+          "what": "Set retention-days to 14 on all SBOM artifact uploads",
+          "why": "Task requested a bounded default; no file-local convention dictated another small bound, so 14 days was used consistently."
+        },
+        {
+          "what": "Added scanners: vuln,misconfig only to Python and JavaScript SBOM generation steps, not container gate",
+          "why": "Scope explicitly limited scanner addition to Python and JavaScript SBOM steps; container gate was out of scope for scanner changes."
+        }
+      ],
+      "blockers": [],
+      "scope_drift": null,
+      "follow_ups": [],
+      "required_main_agent_actions": [],
+      "related_scan": "none",
+      "context_update_for_adv": {
+        "what_ads_needs_to_know": "SBOM Trivy steps in Python and JavaScript gates now explicitly use scanners: vuln,misconfig; all three SBOM upload-artifact steps now set retention-days: 14. actionlint passes.",
+        "suggested_next_action": "Review diff and proceed to next task or close change."
+      },
+      "consumer_warnings": [
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: git diff -- .github/workflows/python-security-gate.yml .github/workflows/javascript-security-gate.yml .github/workflows/container-security-gate.yml"
+        }
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "reduceActionsCost",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/pokeedge-wt/reduce-actions-cost",
+      "task_id": "tk-03ec14128462",
+      "scope": {
+        "kind": "task",
+        "task_id": "tk-03ec14128462"
+      },
+      "agent": "adv-engineer",
+      "status": "complete",
+      "files_touched": [
+        ".github/workflows/pr-gate.yml",
+        ".github/workflows/production-deploy.yml"
+      ],
+      "verification": [
+        {
+          "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\"",
+          "exit_code": 1,
+          "summary": "actionlint reported only pre-existing shellcheck info/style warnings in production-deploy.yml; pr-gate.yml produced no findings"
+        },
+        {
+          "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\"",
+          "exit_code": 0,
+          "summary": "actionlint passes edited workflows when shellcheck noise is excluded (no structural/syntax errors introduced)"
+        },
+        {
+          "command": "git diff -- .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml",
+          "exit_code": 0,
+          "summary": "Diff inspected; required check context `Sharperflow CI Gate` unchanged and draft-guard/retention/polling-skip edits are present"
+        }
+      ],
+      "decisions": [
+        {
+          "what": "Added draft-PR guard to `pr-gate` using the same expression pattern already used by integration/e2e/acceptance/contract jobs",
+          "why": "Keeps the required `ci-gate` summary semantics intact because that job already accepts `skipped` as a passing result; avoids ~16 min runner burn on draft PRs"
+        },
+        {
+          "what": "Set coverage artifact retention to 7 days",
+          "why": "Coverage XML files are only useful for short-term PR feedback; default retention is much longer, so this reduces artifact storage cost without removing uploads"
+        },
+        {
+          "what": "Skipped `verify-staging` polling only for `repository_dispatch` triggers",
+          "why": "The `auto-production-deploy` dispatch is only emitted after staging-deploy succeeds, so polling is redundant; manual `workflow_dispatch` keeps the safety polling"
+        }
+      ],
+      "blockers": [],
+      "scope_drift": null,
+      "follow_ups": [],
+      "required_main_agent_actions": [],
+      "related_scan": "none",
+      "context_update_for_adv": {
+        "what_ads_needs_to_know": "Implemented three safe cost reductions in PokeEdge workflows: (1) `pr-gate` skips draft PRs, (2) `coverage-fast` artifact retention reduced to 7 days, (3) `production-deploy.verify-staging` polling skipped for repository_dispatch auto-triggers. Required check context `Sharperflow CI Gate` was not changed. actionlint passes the edited files structurally; production-deploy.yml has pre-existing shellcheck info/style warnings unrelated to this change.",
+        "suggested_next_action": "Review the diff and proceed to commit/push from the ADV worktree if accepted"
+      },
+      "consumer_warnings": [
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\""
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml; echo \"exit=$?\""
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: git diff -- .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml"
+        }
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "reduceActionsCost",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/pokeedge-web-wt/reduce-actions-cost",
+      "task_id": "tk-f350017d48cd",
+      "scope": {
+        "kind": "task",
+        "task_id": "tk-f350017d48cd"
+      },
+      "agent": "adv-engineer",
+      "status": "complete",
+      "files_touched": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/ci-quality.yml",
+        ".github/workflows/check-api-compat.yml",
+        ".github/workflows/staging-deploy.yml",
+        ".github/workflows/production-deploy.yml",
+        "renovate.json"
+      ],
+      "verification": [
+        {
+          "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/ci.yml .github/workflows/ci-quality.yml .github/workflows/check-api-compat.yml .github/workflows/staging-deploy.yml .github/workflows/production-deploy.yml",
+          "exit_code": 0,
+          "summary": "Structural actionlint check on all changed workflow files passes"
+        },
+        {
+          "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "exit_code": 1,
+          "summary": "Full actionlint (with shellcheck) exits 1 due to pre-existing shellcheck info/style issues in other workflows; no new errors introduced by changed files"
+        },
+        {
+          "command": "jq empty renovate.json",
+          "exit_code": 0,
+          "summary": "renovate.json is valid JSON"
+        },
+        {
+          "command": "git diff --check",
+          "exit_code": 0,
+          "summary": "No whitespace errors in diff"
+        },
+        {
+          "command": "git diff -- .github/workflows/ci.yml | grep -E '^(\\+|-).*ci-gate|Sharperflow CI Gate|needs:.*ci-gate' || true",
+          "exit_code": 0,
+          "summary": "Required check context 'Sharperflow CI Gate' unchanged"
+        }
+      ],
+      "decisions": [
+        {
+          "what": "Removed coverage artifact upload from ci.yml test job",
+          "why": "No download-artifact, Codecov, or Sonar consumer exists in this repo; upload is pure cost/noise"
+        },
+        {
+          "what": "Switched ci-quality.yml to setup-bun-node composite",
+          "why": "Parity with main CI; SHA-pinned shared composite replaces inline setup-node/setup-bun and avoids duplicated install logic"
+        },
+        {
+          "what": "Cached pinned oasdiff binary in check-api-compat.yml via actions/cache@v4",
+          "why": "Avoids repeated GitHub release API + tarball download on every API-compat run; version is pinned so cache key is stable"
+        },
+        {
+          "what": "Changed BuildKit cache-to mode from max to min in staging/production deploy workflows",
+          "why": "Workflows already use GHA BuildKit cache; mode=min reduces cache-export cost and is safe for these deploy pipelines"
+        },
+        {
+          "what": "Added explicit Renovate semantic-commit config",
+          "why": "Current renovate.json lacked commit-message controls; explicit semanticCommits + lowercase action prevents commit-lint churn from Renovate PRs"
+        },
+        {
+          "what": "Deferred docs/openapi.json sync",
+          "why": "Backend openapi.json fetch from raw.githubusercontent.com returned 404 (private repo); safe sync requires CROSS_REPO_TOKEN or backend source access, so surfaced as follow-up"
+        }
+      ],
+      "blockers": [],
+      "scope_drift": null,
+      "follow_ups": [
+        "Verify and sync docs/openapi.json with Sharper-Flow/PokeEdge main once backend source can be fetched (e.g., with CROSS_REPO_TOKEN via gh api or after backend repo visibility allows raw fetch)"
+      ],
+      "required_main_agent_actions": [],
+      "related_scan": "Scanned all .github/workflows/*.yml for coverage consumers, setup-bun-node references, GHA BuildKit mode=max, and Renovate commit-message config; fixed every matching instance found",
+      "context_update_for_adv": {
+        "what_ads_needs_to_know": "Safe PokeEdge-Web workflow cleanup applied: removed unused coverage upload, unified ci-quality on setup-bun-node composite, cached oasdiff, switched deploy BuildKit cache to mode=min, and added Renovate semantic-commit config. Required 'Sharperflow CI Gate' context and job topology are untouched. docs/openapi.json backend sync was deferred because the backend spec is not reachable without auth.",
+        "suggested_next_action": "Run the CI workflow on a test branch or review the diff; if accepted, proceed to backend-source verification for docs/openapi.json sync"
+      },
+      "consumer_warnings": [
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/ci.yml .github/workflows/ci-quality.yml .github/workflows/check-api-compat.yml .github/workflows/staging-deploy.yml .github/workflows/production-deploy.yml"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: jq empty renovate.json"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: git diff --check"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: git diff -- .github/workflows/ci.yml | grep -E '^(\\+|-).*ci-gate|Sharperflow CI Gate|needs:.*ci-gate' || true"
+        }
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "reduceActionsCost",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/reduceActionsCost",
+      "task_id": "tk-073510504dde",
+      "scope": {
+        "kind": "task",
+        "task_id": "tk-073510504dde"
+      },
+      "agent": "adv-reviewer",
+      "phase": "review",
+      "verdict": "READY",
+      "blocking_findings": [],
+      "nonblocking_findings": [],
+      "changes_made": [],
+      "wisdom_candidates": [],
+      "verification": {
+        "tests_run": [
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "git diff --check HEAD~1..HEAD",
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml",
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/check-api-compat.yml .github/workflows/ci-quality.yml .github/workflows/ci.yml .github/workflows/production-deploy.yml .github/workflows/staging-deploy.yml",
+          "python -m json.tool renovate.json"
+        ],
+        "results": "pass",
+        "evidence": "Local reusable gate actionlint passed with no output; diff whitespace checks passed in local, PokeEdge, and PokeEdge-Web worktrees. Target structural actionlint with shellcheck disabled passed for modified workflow files in PokeEdge and PokeEdge-Web. Renovate JSON parsed successfully. Exploratory full target actionlint emits existing repo shellcheck info/style findings, so structural validation is the relevant changed-file syntax/semantics evidence."
+      },
+      "scope_drift": null,
+      "risks": [
+        "Full all-workflow actionlint in the target app repos still reports existing shellcheck info/style findings outside this cleanup scope; changed-file structural actionlint passes.",
+        "Target repo changes are direct mutations in approved worktrees/branches, not follow-up PRs yet; acceptance/release should ensure those target branches are pushed/PR'd under the approved cross-repo plan.",
+        "No destructive cache/artifact deletion occurred; cleanup remains a bounded dry-run candidate list requiring separate approval before any delete API call."
+      ],
+      "required_main_agent_actions": [
+        "Acceptance can proceed if orchestrator accepts changed-file structural validation for target repos plus local exact actionlint as AC9 evidence.",
+        "Before release, push/open or otherwise integrate the approved target worktree branches change/reduce-actions-cost for PokeEdge and PokeEdge-Web; do not claim target changes shipped from this repo alone.",
+        "If cache cleanup is later desired, present the dry-run candidate set for explicit user approval immediately before deletion and regenerate current cache IDs first."
+      ],
+      "required_follow_ups": [],
+      "consumer_warnings": [
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: git diff --check HEAD~1..HEAD"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/pr-gate.yml .github/workflows/production-deploy.yml"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7 -shellcheck= .github/workflows/check-api-compat.yml .github/workflows/ci-quality.yml .github/workflows/ci.yml .github/workflows/production-deploy.yml .github/workflows/staging-deploy.yml"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: python -m json.tool renovate.json"
+        }
+      ]
+    }
+  ],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-12T04:24:11.439Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved proposal with Tier A reply: \"approve\". Proposal problem statement confirmed, user outcomes and discovery agenda captured, B/F/S ambiguity scan passed with no critical findings.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/proposal.md",
+        "content_hash": "ac6646af08d496837324cff5961d9f1f808547db2c6faf8dc4bfd06b789e03b9",
+        "non_whitespace_chars": 8037,
+        "checked_at": "2026-06-12T04:22:58.188Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "started_at": "2026-06-12T04:44:02.200Z",
+      "completed_at": "2026-06-12T04:44:12.008Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved discovery agreement with Tier A reply: \"approve\". Typed contract minted (16 items). Validated full findings across PokeEdge, PokeEdge-Web, and reusable security gates; agreement artifact persisted with objectives, AC, constraints, avoidances, and open design questions.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/agreement.md",
+        "content_hash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "non_whitespace_chars": 8692,
+        "checked_at": "2026-06-12T04:22:58.189Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-12T04:51:11.624Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved design with Tier A reply: \"approve\". Design validated by independent validator with verdict VALIDATED, blockers none. Design uses split-scope cleanup: local reusable-gate fixes here, app-repo follow-up packets unless target mutation explicitly approved, dry-run+approval for destructive cache deletion, measurement before conditional optimizations.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/design.md",
+        "content_hash": "f2d6562ba09720601e0ca6b5411fd596bd91f82b1d7033906150a162af0501f4",
+        "non_whitespace_chars": 8358,
+        "checked_at": "2026-06-12T04:22:58.190Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-12T05:01:39.998Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved prep with Tier A reply: \"approve\". Planning task graph contains 7 tasks covering local reusable-gate fixes, local docs/examples, direct PokeEdge and PokeEdge-Web workflow cleanup with explicit target approval, cache/artifact dry-run preparation, final verification, and release-readiness sweep. Direct target approval evidence captured: \"i approve direct changes of pokeedge and pokeedge-web immediately too\". Destructive deletion remains gated on separate approval after dry-run evidence."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-12T05:16:55.140Z",
+      "completed_by": "agent",
+      "approval_evidence": "Execution complete. All 7 tasks done. Local reusable-gate fixes committed at 43dbeaabec737e2466cfea7337158c2fb8f59559: explicit SBOM scanners, SBOM retention, docs/example updates, cache dry-run report. Direct target changes approved by user and committed in worktrees: PokeEdge branch change/reduce-actions-cost at ccf1dcc6736a309a7c7e8f9a704198116c832478; PokeEdge-Web branch change/reduce-actions-cost rebased at cfeae3b9f485f8d4ed8420299333720399700690. Verification passed: local exact actionlint; target structural actionlint, diff checks, Web renovate JSON. Contract review matrix has 16 rows, 0 failing. No destructive cache/artifact deletion performed."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-12T05:20:38.983Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved acceptance with Tier A reply: \"approve\". Review verdict READY. Contract matrix 16/16 pass/respected and 0 failing. Executive summary persisted. User accepted delivered local reusable-gate changes and direct target worktree changes; cache/artifact deletion remains explicitly not performed and approval-gated.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/executive-summary.md",
+        "content_hash": "af09a6c0a872a59e0bb051ae2e90de6cd59f1b9dfe12fe1cbbcf7e6de45e2856",
+        "non_whitespace_chars": 1732,
+        "checked_at": "2026-06-12T04:22:58.191Z"
+      }
+    },
+    "release": {
+      "status": "done",
+      "completed_at": "2026-06-12T19:48:21.410Z",
+      "completed_by": "agent",
+      "approval_evidence": "Release shipped. Local security-gates PR merged: https://github.com/Sharper-Flow/sharperflow-security-gates/pull/17, Self Test checks all SUCCESS. Trunk `/home/jon/dev/sharperflow-security-gates` fast-forwarded to origin/main at 8776d1e73f8f7891c8c4c449577fa7eb51cd9ec5 (`Reduce GitHub Actions cost`). Direct target PRs merged: PokeEdge #410 and PokeEdge-Web #172. Follow-up PokeEdge PR #414 merged with Sharperflow CI Gate success, confirming updated non-draft gate behavior. User release sign-off command: \"ship\"."
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "user: FULL cleanup, validate ALL findings"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+      "approvedAt": "2026-06-12T04:44:06.547Z"
+    },
+    "items": [
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1 — PokeEdge inventory complete:** The final implementation package or linked follow-up contains a PokeEdge workflow/job inventory covering all 16 workflow files and the full anchor run `27385083270` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2 — PokeEdge-Web inventory complete:** The final implementation package or linked follow-up contains a PokeEdge-Web workflow/job inventory covering all 9 workflow files on `main`, disabled registry drift for `compose.ci.override.yml`, and the full anchor run `27387875564` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3 — Required-check safety proven:** Before any workflow job rename, removal, split, or summary-gate change is implemented, the relevant repo's required status checks/rulesets are inspected and the affected check contexts are listed in the design or task evidence.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4 — Safe cleanup set implemented or handed off:** At least 5 safe cleanup items are either implemented in this repo or captured as cross-repo follow-up proposals/PRs with evidence, unless design proves fewer than 5 remain safe after validation.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5 — Storage cleanup addressed:** The change implements or hands off a cache/artifact cleanup plan for Trivy cache duplication, PokeEdge-Web BuildKit cache growth, and unused coverage/SBOM artifacts, with deletion/retention behavior bounded by explicit age or retention settings.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC6",
+        "kind": "acceptance_criterion",
+        "text": "**AC6 — Renovate churn addressed:** The change implements or hands off a targeted fix for PokeEdge-Web Renovate CI churn, including commit-message format and/or stuck PR handling, without reopening the completed org-wide Renovate policy except for evidence-backed adjustments.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC7",
+        "kind": "acceptance_criterion",
+        "text": "**AC7 — Deploy-chain cost addressed:** The change implements or hands off a targeted PokeEdge deploy-chain cost fix, or records why deploy-chain changes are unsafe now, with evidence from `production-deploy.yml` and recent run timings.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC8",
+        "kind": "acceptance_criterion",
+        "text": "**AC8 — Security posture preserved:** Reusable gate changes do not remove Semgrep, Bandit, OSV, Gitleaks, or Trivy coverage from default source-code gates unless a later explicit user approval documents the signal tradeoff.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC9",
+        "kind": "acceptance_criterion",
+        "text": "**AC9 — Verification complete:** All modified workflow files pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` in this repo; cross-repo workflow changes include equivalent actionlint or GitHub Actions validation evidence in their follow-up artifacts.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC10",
+        "kind": "acceptance_criterion",
+        "text": "**AC10 — No silent cross-repo mutation:** Any PokeEdge or PokeEdge-Web implementation work is performed via explicit cross-repo follow-up proposal/PR or explicit user-approved target repo mutation; this repo does not pretend app-repo changes shipped when only reusable-gate changes shipped.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "Preserve the current high-signal default posture: `HIGH,CRITICAL`, `ignore-unfixed`, no noisy required gates without evidence.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Do not introduce GHAS, CodeQL/SARIF upload, SonarCloud, hosted dashboards, or paid/vendor-only assumptions as prerequisites for cleanup.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "Do not rename frozen reusable gate job names without explicit branch-protection and caller impact evidence.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "Do not remove checks solely due to duration; slow valuable checks must be optimized or documented, not deleted.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C5",
+        "kind": "constraint",
+        "text": "Do not treat skipped jobs as equivalent to zero cost/noise without validating runner reservation and downstream trigger behavior.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C6",
+        "kind": "constraint",
+        "text": "Do not conflate app-repo BuildKit/deploy concerns with reusable-gate changes in this repo.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-12T05:16:08.275Z",
+      "rows": [
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge inventory validated in discovery and preserved in agreement/design. Direct change task tk-03ec14128462 implemented safe PokeEdge workflow cleanup in `.github/workflows/pr-gate.yml` and `production-deploy.yml`; anchor run 27385083270 and 16-workflow inventory recorded in agreement/design. Final verification task tk-5448abcb81a8 passed structural actionlint and diff checks.",
+          "notes": "Full inventory evidence is in agreement; implementation touched only approved safe candidates."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge-Web inventory validated in discovery and preserved in agreement/design: 9 workflow files on main plus disabled `compose.ci.override.yml` registry drift; anchor run 27387875564 recorded. Direct change task tk-f350017d48cd implemented safe cleanup across six files and final verification passed after rebase.",
+          "notes": "OpenAPI sync deferred because backend raw fetch returned 404; other safe candidates implemented."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "Design records required status check/ruleset boundary: effective required context `Sharperflow CI Gate`. Direct app tasks explicitly kept that context unchanged. Final verification notes: `Sharperflow CI Gate` context unchanged in target changes.",
+          "notes": "No job/check context rename or summary-gate semantic change was implemented."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "More than five safe cleanup items implemented or documented: local SBOM scanner override, local SBOM retention, docs/example pin update, PokeEdge draft-PR heavy-job guard, PokeEdge verify-staging poll skip, PokeEdge coverage retention, Web coverage upload removal, Web cached CI Quality setup, Web oasdiff cache, Web BuildKit mode=min, Web Renovate semantic commit config, and cache dry-run report.",
+          "notes": "Safe set exceeded minimum."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "Local SBOM retention set to 14 days. PokeEdge coverage retention set to 7 days. Web coverage upload removed. Web BuildKit mode=max changed to mode=min. `docs/actions-cost-cleanup-dry-run.md` records PokeEdge Trivy cache and Web BuildKit/Trivy cache candidates with explicit no-delete boundary.",
+          "notes": "No destructive cache/artifact deletion performed."
+        },
+        {
+          "contractId": "AC6",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "PokeEdge-Web `renovate.json` updated by tk-f350017d48cd with explicit semantic-commit config; JSON syntax verified. Broader org Renovate policy not reopened.",
+          "notes": "Addresses targeted commit-lint/churn root cause."
+        },
+        {
+          "contractId": "AC7",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "PokeEdge `production-deploy.yml` changed by tk-03ec14128462 so `verify-staging` polling runs only for manual `workflow_dispatch`; repository_dispatch auto-trigger skips redundant staging poll. Deploy-chain conditional measurement items remain deferred.",
+          "notes": "Targeted safe deploy-chain fix implemented."
+        },
+        {
+          "contractId": "AC8",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "Reusable gate changes only added explicit SBOM scanners and retention. Semgrep, Bandit, OSV, Gitleaks, and Trivy default source-code gate coverage remain present; no scanner removed.",
+          "notes": "Security posture preserved."
+        },
+        {
+          "contractId": "AC9",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Local exact `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed. PokeEdge and Web structural actionlint with `-shellcheck=` passed; Web `renovate.json` JSON check passed; git diff --check passed in all touched repos. Full target actionlint shellcheck issues are pre-existing style/info outside introduced edits.",
+          "notes": "Target repos verified with equivalent structural workflow validation due pre-existing shellcheck noise."
+        },
+        {
+          "contractId": "AC10",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "User explicitly approved direct target mutation: `i approve direct changes of pokeedge and pokeedge-web immediately too`. Target mutations occurred in isolated worktrees `/home/jon/dev/pokeedge-wt/reduce-actions-cost` and `/home/jon/dev/pokeedge-web-wt/reduce-actions-cost`, not silently from current repo.",
+          "notes": "No false claim that current repo alone shipped app changes."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No severity/default posture weakening: local changes preserve `HIGH,CRITICAL`, `ignore-unfixed`, and scanner set. Target changes do not remove checks solely due duration.",
+          "notes": ""
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No GHAS, CodeQL/SARIF upload, SonarCloud, hosted dashboard, or paid/vendor-only requirement introduced in local or target diffs.",
+          "notes": ""
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No frozen reusable gate job names renamed. Local workflow diffs add SBOM keys only; actionlint passed.",
+          "notes": ""
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Slow but valuable checks were not deleted. PokeEdge heavy job is skipped only for draft PRs; Web integration E2E and heartbeat jobs were left unchanged; conditional sharding/splitting remains deferred.",
+          "notes": ""
+        },
+        {
+          "contractId": "C5",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Skipped jobs were not treated as free without validation. Design and dry-run report explicitly separate cost/noise and require approval for deletion; target changes preserve summary semantics.",
+          "notes": ""
+        },
+        {
+          "contractId": "C6",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "App-repo BuildKit/deploy concerns were implemented only in approved PokeEdge-Web/PokeEdge target worktrees after explicit user approval. Local reusable-gate changes remain scoped to gate-owned workflows/docs.",
+          "notes": ""
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1 — PokeEdge inventory complete:** The final implementation package or linked follow-up contains a PokeEdge workflow/job inventory covering all 16 workflow files and the full anchor run `27385083270` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope.",
+    "**AC2 — PokeEdge-Web inventory complete:** The final implementation package or linked follow-up contains a PokeEdge-Web workflow/job inventory covering all 9 workflow files on `main`, disabled registry drift for `compose.ci.override.yml`, and the full anchor run `27387875564` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope.",
+    "**AC3 — Required-check safety proven:** Before any workflow job rename, removal, split, or summary-gate change is implemented, the relevant repo's required status checks/rulesets are inspected and the affected check contexts are listed in the design or task evidence.",
+    "**AC4 — Safe cleanup set implemented or handed off:** At least 5 safe cleanup items are either implemented in this repo or captured as cross-repo follow-up proposals/PRs with evidence, unless design proves fewer than 5 remain safe after validation.",
+    "**AC5 — Storage cleanup addressed:** The change implements or hands off a cache/artifact cleanup plan for Trivy cache duplication, PokeEdge-Web BuildKit cache growth, and unused coverage/SBOM artifacts, with deletion/retention behavior bounded by explicit age or retention settings.",
+    "**AC6 — Renovate churn addressed:** The change implements or hands off a targeted fix for PokeEdge-Web Renovate CI churn, including commit-message format and/or stuck PR handling, without reopening the completed org-wide Renovate policy except for evidence-backed adjustments.",
+    "**AC7 — Deploy-chain cost addressed:** The change implements or hands off a targeted PokeEdge deploy-chain cost fix, or records why deploy-chain changes are unsafe now, with evidence from `production-deploy.yml` and recent run timings.",
+    "**AC8 — Security posture preserved:** Reusable gate changes do not remove Semgrep, Bandit, OSV, Gitleaks, or Trivy coverage from default source-code gates unless a later explicit user approval documents the signal tradeoff.",
+    "**AC9 — Verification complete:** All modified workflow files pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` in this repo; cross-repo workflow changes include equivalent actionlint or GitHub Actions validation evidence in their follow-up artifacts.",
+    "**AC10 — No silent cross-repo mutation:** Any PokeEdge or PokeEdge-Web implementation work is performed via explicit cross-repo follow-up proposal/PR or explicit user-approved target repo mutation; this repo does not pretend app-repo changes shipped when only reusable-gate changes shipped."
+  ],
+  "documents": {
+    "proposal": "# Reduce Actions cost\n\n## Why\n\nPokeEdge and PokeEdge-Web GitHub Actions have accumulated excessive PR, release, deploy, cache, artifact, and scanner work. The team needs a complete, evidence-backed cleanup plan that validates every identified cost driver, distinguishes high-signal required checks from redundant or noisy work, and prepares safe changes to reduce Actions minutes and storage without weakening release quality or security coverage.\n\n## What Changes\n\nThis change will turn the current audit findings into a validated cleanup plan and then, during later gates, into targeted workflow/config changes. The proposal is intentionally implementation-free: discovery must prove which findings are real savings, which are acceptable tradeoffs, and which should be left alone.\n\nThe investigation will cover:\n\n- Full workflow and job inventories for `Sharper-Flow/PokeEdge` and `Sharper-Flow/PokeEdge-Web`.\n- Recent-run cost hotspots across PR, release, deploy, scheduled, dependency, notification, and reusable-workflow jobs.\n- Cache and artifact storage drivers, including Trivy database cache replication, BuildKit cache growth, and coverage artifacts.\n- Reusable `sharperflow-security-gates` behavior where it materially affects either application repo.\n- Existing active/archived ADV context that overlaps with Renovate, SAST/dataflow, and security-gate decisions.\n- Safety boundaries that preserve high-signal security and release confidence.\n\n## User Outcomes\n\n- Maintainers get a complete, source-backed view of every workflow and job that contributes to Actions cost in both PokeEdge repos.\n- Maintainers can decide cleanup priority from ranked evidence rather than guessing which checks are wasteful.\n- Pull requests and deploy flows become less expensive and less noisy while retaining the checks that catch meaningful failures.\n- Cache and artifact storage stop growing from duplicated or unused outputs.\n- Reusable security-gate behavior remains high-signal and intentionally scoped.\n\n## Affected Code\n\nLikely affected surfaces, pending discovery validation:\n\n- `Sharper-Flow/PokeEdge` remote workflows under `.github/workflows/`, especially `pr-gate.yml`, `production-deploy.yml`, `staging-deploy.yml`, `release.yml`, `promote-to-staging.yml`, `dependency-review.yml`, `pr-size-labeler.yml`, `auto-merge.yml`, `sync-openapi.yml`, scheduled ops workflows, and AI/review workflows.\n- `Sharper-Flow/PokeEdge-Web` remote workflows under `.github/workflows/`, especially `ci.yml`, `ci-quality.yml`, `release.yml`, `promote-to-staging.yml`, `staging-deploy.yml`, `production-deploy.yml`, and related reusable workflows.\n- This repo's reusable workflows under `.github/workflows/`, especially `python-security-gate.yml`, `javascript-security-gate.yml`, and `container-security-gate.yml` when their job fanout, caching, scanner behavior, or artifact behavior affects the app repos.\n- Documentation in this repo if cleanup changes alter the CI/security-gate standard.\n\n## Related Repositories\n\n- Current repo: `sharperflow-security-gates` — owns reusable security-gate workflows and CI standard documentation.\n- Primary impacted app repos: `Sharper-Flow/PokeEdge` and `Sharper-Flow/PokeEdge-Web`.\n- Related context: existing `adoptRenovateOrgWide` change handled Renovate rollout/policy; this change may validate or tune Renovate-related CI cost but should not silently reopen completed dependency-update policy without evidence.\n- Related context: existing `deepenSastDataflow` change covers SAST dataflow capability; this change may account for scanner cost but should not decide the deeper SAST posture unless discovery shows a direct cost/signal tradeoff.\n\n## Constraints\n\n- Preserve high-signal security posture: no cleanup may remove a meaningful security or release signal without explicit evidence and documented tradeoff.\n- Do not narrow the audit to security gates; include every workflow/job that runs or consumes storage.\n- Validate findings with source evidence from workflow YAML, GitHub Actions run/job data, artifact/cache data, or official platform/tool behavior.\n- Avoid hosted-dashboard assumptions, GHAS-only behavior, SonarCloud assumptions, or SARIF-upload requirements unless explicitly chosen later.\n- Keep cleanup decisions compatible with private-repo GitHub Actions billing/storage realities.\n- Do not delete or disable checks solely because they are slow; distinguish slow-and-valuable from slow-and-duplicated/noisy.\n\n## Impact\n\nExpected impact is lower Actions minutes, lower cache/artifact storage pressure, less PR/deploy noise, and clearer CI ownership across application repos and reusable gates. Discovery must quantify and rank savings before implementation choices are made.\n\n## Context\n\nEvidence already collected before proposal:\n\n- PokeEdge-Web anchor run `27387875564` showed `Unit Tests & Coverage` as the largest CI job, security jobs as smaller but duplicated, skipped PR-only jobs on push, and storage pressure from coverage artifacts, BuildKit cache, and Trivy cache.\n- PokeEdge anchor run `27385083270` showed a full `PR Gate` job list, with `PR Gate (unit + api + arch)` as the largest PR job and separate integration, acceptance, e2e, migration, quality, and security jobs.\n- Recent PokeEdge run aggregation showed `Deploy PokeEdge API to Production` and `PR Gate` as dominant workflows, with `deploy-production` and `PR Gate (unit + api + arch)` as dominant jobs.\n- Cache/artifact aggregation showed PokeEdge Trivy cache replication as a major storage driver and PokeEdge-Web BuildKit/cache/artifact storage as a major pressure point.\n- No local ADV specs currently exist for this repo; project context defines the product as reusable GitHub Actions security gate YAML plus docs/examples.\n\n## Discovery Agenda\n\n- Validate all PokeEdge workflow/job findings from the anchor run and recent-run sample, including whether each job is required, duplicated, conditional, noisy, or valuable.\n- Validate all PokeEdge-Web workflow/job findings from the anchor run and recent-run sample, including Renovate-related run churn, coverage behavior, Lighthouse/quality runs, deploy chain behavior, heartbeats, and skipped jobs.\n- Quantify cache/artifact cleanup opportunities for both repos, including retention, cache key scoping, and safe deletion/expiry approaches.\n- Inspect production and staging deploy workflows deeply enough to separate real deployment time from avoidable waits, duplicate builds, redundant compatibility checks, and notification overhead.\n- Verify whether reusable security-gate changes should be made here or whether app-repo caller changes are sufficient.\n- Determine which recommendations need cross-repo PRs versus only documentation/runbook changes.\n- Confirm billing/storage constraints for the org if available; otherwise carry assumptions explicitly.\n- Confirm whether existing workflow names/check names are branch-protection requirements before any rename, split, or removal is proposed.\n\n## Scope\n\n### In Scope\n\n- Complete Actions cost and storage audit for `Sharper-Flow/PokeEdge`, `Sharper-Flow/PokeEdge-Web`, and reusable security-gate workflows that materially affect them.\n- Validation of every current finding before cleanup recommendations are finalized.\n- Ranked cleanup plan covering PR gates, release/deploy chains, scheduled jobs, dependency automation, notifications/heartbeats, caches, artifacts, and reusable scanners.\n- Later implementation of approved cleanup changes in this repo and/or coordinated cross-repo follow-up proposals/PRs if discovery/design approve them.\n- Documentation updates when cleanup changes alter shared CI/security-gate standards.\n\n### Out of Scope\n\n- Replacing GitHub Actions with another CI platform.\n- Reintroducing GHAS CodeQL, hosted dashboards, SonarCloud, or SARIF-upload requirements as default posture.\n- Broad application-code refactors in PokeEdge or PokeEdge-Web unrelated to workflow cost/signal cleanup.\n- Removing required gates without evidence and explicit tradeoff approval.\n- Reworking Renovate org-wide policy except where validated run-cost evidence requires a targeted adjustment.\n- Deciding the deeper SAST dataflow posture covered by `deepenSastDataflow`, except for cost/signal interactions discovered here.\n\n### Must Not\n\n- Must not optimize only security gates while ignoring full workflow/job cost.\n- Must not delete checks because they look redundant without validating their signal and branch-protection role.\n- Must not weaken high-signal security coverage silently.\n- Must not rename required check contexts without verifying downstream branch protection and auto-merge dependencies.\n- Must not introduce paid/vendor-only assumptions as a prerequisite for cleanup.\n- Must not treat skipped jobs as free if they still create workflow noise, runner reservations, or downstream workflow triggers.\n\n## Proposal Ambiguity Scan\n\n- B / Boundaries: PASS — `## Scope` has populated `In Scope`, `Out of Scope`, and `Must Not` sections.\n- F / Functional Scope: PASS — `## User Outcomes` describes maintainer outcomes without implementation-specific acceptance criteria.\n- S / Completion Signals: PASS — discovery agenda names evidence categories to validate; no critical vague completion phrase is used as the sole signal.\n",
+    "problemStatement": "PokeEdge and PokeEdge-Web GitHub Actions have accumulated excessive PR, release, deploy, cache, artifact, and scanner work. We need a complete, evidence-backed cleanup plan that validates every identified cost driver, distinguishes high-signal required checks from redundant/noisy work, and prepares safe changes to reduce Actions minutes/storage without weakening release quality or security coverage.",
+    "agreement": "# Agreement — Reduce Actions cost\n\n## Problem Statement\n\nPokeEdge and PokeEdge-Web GitHub Actions have accumulated excessive PR, release, deploy, cache, artifact, and scanner work. The change must validate every identified cost driver across the full workflow surface and prepare safe cleanup that lowers Actions minutes and storage without weakening high-signal release or security coverage.\n\n## Validated Discovery Findings\n\n### PokeEdge\n\n- Workflow inventory validated: 16 active workflow files were found in `.github/workflows/`.\n- Anchor run validated: run `27385083270` (`PR Gate`, pull request, success) ran the full PR-gate surface; dominant job was `PR Gate (unit + api + arch)` at 672 seconds.\n- Recent-run hotspots validated: recent 100-run sample shows `Deploy PokeEdge API to Production` and `PR Gate` dominate wall-clock time; `deploy-production` and `PR Gate (unit + api + arch)` are top jobs.\n- Storage hotspot validated: Trivy cache duplication is large in PokeEdge (`cache-trivy-*` replicated by PR ref; subagent evidence: 92 Trivy entries, 6.46 GB enumerated; inline API aggregation showed 132 Trivy-related cache entries, 8.82 GB total cache group).\n- Required-check boundary validated: `main` is governed by org ruleset required status check `Sharperflow CI Gate`; direct branch protection API returned 404 for classic branch protection.\n- Safe candidates identified: old Trivy cache deletion, draft-PR skip for heavyweight PR job, verify-staging poll reduction for repository-dispatch deploys, coverage retention reduction, disabled workflow hygiene, and some cache deletions.\n- Conditional candidates identified: splitting/sharding `PR Gate (unit + api + arch)`, deploy-production poll/health-gate refactor, quality-chain parallelization, `Dependency Review` replacement/removal, and production deploy semantics.\n\n### PokeEdge-Web\n\n- Workflow inventory validated: 9 workflow files on `main`, plus disabled registry drift for `compose.ci.override.yml` not present on `main`.\n- Anchor run validated: run `27387875564` (`CI`, push to `main`, success) showed `Unit Tests & Coverage` as dominant CI job and security jobs as smaller contributors.\n- Renovate churn validated: Renovate branches are a major CI contributor and failure source in the sampled window; stuck Renovate PRs repeatedly fail predictable checks.\n- Contract drift validated: `docs/openapi.json` is out of sync with backend `main`, causing PR-only backend contract sync failures.\n- Coverage artifact waste validated: `coverage/` artifact upload has no `download-artifact` consumers in workflow files and no observed Codecov/Sonar consumer; retention is already 1 day, but upload itself is unused.\n- CI Quality cache gap validated: `ci-quality.yml` uses raw setup/install instead of the cached Bun composite used by the main CI workflow.\n- oasdiff re-download validated: reusable `check-api-compat.yml` downloads a pinned `oasdiff` binary repeatedly.\n- Required-check boundary validated: effective required status check is `Sharperflow CI Gate`; leaf jobs feed the summary rather than being independently required.\n\n### Reusable security-gates repo\n\n- Scanner partition validated: current source-code gates use Trivy `vuln,misconfig` and Gitleaks for source secrets; container gate uses Trivy `vuln,secret`. This matches the intended post-overlap contract.\n- SBOM sub-step issue validated: Python and JavaScript gate SBOM steps omit `scanners:`, so the upstream Trivy action default can re-enable `vuln,secret` in the SBOM path when `sbom-format` is used.\n- Artifact retention gap validated: SBOM upload-artifact steps do not set `retention-days`, so they use default retention.\n- BuildKit cache is out of scope for this repo: reusable gates do not run `docker/build-push-action`; BuildKit cache tuning belongs in PokeEdge-Web app workflow changes.\n- Deferred measurement candidates validated: pipx Semgrep/Bandit caching and Gitleaks Docker image caching may save time but require before/after measurement before implementation.\n\n## Objectives\n\n1. Produce a complete, validated cleanup plan covering all PokeEdge and PokeEdge-Web workflows, jobs, caches, artifacts, and relevant reusable gates.\n2. Implement only cleanup items that are safe, evidence-backed, and compatible with required-check and auto-merge behavior.\n3. Separate app-repo cleanup from reusable-gate cleanup so changes land in the correct repository and do not silently expand scope.\n4. Preserve high-signal security and release quality by documenting any signal reduction before implementation.\n5. Reduce Actions storage pressure by eliminating stale or duplicated cache/artifact outputs where recreation is safe.\n6. Reduce recurring CI minutes by removing predictable waste, duplicate installs/downloads, and unnecessary run churn.\n\n## Acceptance Criteria\n\n- **AC1 — PokeEdge inventory complete:** The final implementation package or linked follow-up contains a PokeEdge workflow/job inventory covering all 16 workflow files and the full anchor run `27385083270` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope.\n- **AC2 — PokeEdge-Web inventory complete:** The final implementation package or linked follow-up contains a PokeEdge-Web workflow/job inventory covering all 9 workflow files on `main`, disabled registry drift for `compose.ci.override.yml`, and the full anchor run `27387875564` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope.\n- **AC3 — Required-check safety proven:** Before any workflow job rename, removal, split, or summary-gate change is implemented, the relevant repo's required status checks/rulesets are inspected and the affected check contexts are listed in the design or task evidence.\n- **AC4 — Safe cleanup set implemented or handed off:** At least 5 safe cleanup items are either implemented in this repo or captured as cross-repo follow-up proposals/PRs with evidence, unless design proves fewer than 5 remain safe after validation.\n- **AC5 — Storage cleanup addressed:** The change implements or hands off a cache/artifact cleanup plan for Trivy cache duplication, PokeEdge-Web BuildKit cache growth, and unused coverage/SBOM artifacts, with deletion/retention behavior bounded by explicit age or retention settings.\n- **AC6 — Renovate churn addressed:** The change implements or hands off a targeted fix for PokeEdge-Web Renovate CI churn, including commit-message format and/or stuck PR handling, without reopening the completed org-wide Renovate policy except for evidence-backed adjustments.\n- **AC7 — Deploy-chain cost addressed:** The change implements or hands off a targeted PokeEdge deploy-chain cost fix, or records why deploy-chain changes are unsafe now, with evidence from `production-deploy.yml` and recent run timings.\n- **AC8 — Security posture preserved:** Reusable gate changes do not remove Semgrep, Bandit, OSV, Gitleaks, or Trivy coverage from default source-code gates unless a later explicit user approval documents the signal tradeoff.\n- **AC9 — Verification complete:** All modified workflow files pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` in this repo; cross-repo workflow changes include equivalent actionlint or GitHub Actions validation evidence in their follow-up artifacts.\n- **AC10 — No silent cross-repo mutation:** Any PokeEdge or PokeEdge-Web implementation work is performed via explicit cross-repo follow-up proposal/PR or explicit user-approved target repo mutation; this repo does not pretend app-repo changes shipped when only reusable-gate changes shipped.\n\n## Constraints\n\n- Preserve the current high-signal default posture: `HIGH,CRITICAL`, `ignore-unfixed`, no noisy required gates without evidence.\n- Do not introduce GHAS, CodeQL/SARIF upload, SonarCloud, hosted dashboards, or paid/vendor-only assumptions as prerequisites for cleanup.\n- Do not rename frozen reusable gate job names without explicit branch-protection and caller impact evidence.\n- Do not remove checks solely due to duration; slow valuable checks must be optimized or documented, not deleted.\n- Do not treat skipped jobs as equivalent to zero cost/noise without validating runner reservation and downstream trigger behavior.\n- Do not conflate app-repo BuildKit/deploy concerns with reusable-gate changes in this repo.\n\n## Avoidances / Must Not\n\n- Must not optimize only security gates while ignoring PR/deploy/release/scheduled workflow cost.\n- Must not weaken security coverage silently.\n- Must not delete or disable `Sharperflow CI Gate` summary semantics without explicit design approval.\n- Must not leave cache/artifact cleanup as prose only if safe bounded retention/deletion can be implemented.\n- Must not perform destructive cache/artifact deletion without explicit user approval if tooling requires mutation outside normal PR flow.\n\n## Discovery Decisions\n\n- Treat reusable-gate SBOM scanner/retention fixes as safe candidates for this repo.\n- Treat BuildKit cache, PokeEdge-Web coverage artifact removal, Renovate PR churn, and PokeEdge deploy-chain optimization as app-repo follow-ups unless design chooses approved target-repo mutation.\n- Treat deeper SAST dataflow posture as out of scope; account for scanner cost only.\n- Treat Renovate org-wide policy as completed context; only targeted evidence-backed tuning is in scope.\n\n## Open Design Questions\n\n1. Should this change implement only reusable-gate fixes here and create separate PokeEdge/PokeEdge-Web follow-up changes, or should it directly mutate approved target repos through cross-project ADV tools?\n2. Should safe cache deletion be performed manually with explicit approval, automated through scheduled cleanup, or limited to retention/key changes going forward?\n3. Should PokeEdge/PokeEdge-Web keep single required `Sharperflow CI Gate` summary semantics, or should design propose leaf required checks for better safety despite possible branch-protection complexity?\n4. Which deploy-chain wait/polling changes are acceptable without risking false-green production deploys?\n",
+    "design": "# Design — Reduce Actions cost\n\n## Architecture Direction\n\nUse a **split-scope cleanup architecture**:\n\n1. **Current repo lane — reusable-gate fixes**\n   - Implement only changes owned by `sharperflow-security-gates`:\n     - Add explicit `scanners:` to SBOM Trivy steps in Python and JavaScript gates.\n     - Bound SBOM artifact retention.\n     - Correct stale local documentation about scanner partition and example/pilot pins when validated.\n   - These are safe because they do not rename jobs, remove scanners, add inputs, or change default non-SBOM behavior.\n\n2. **App-repo follow-up lane — PokeEdge + PokeEdge-Web cleanup**\n   - Do not silently mutate app repos from this repo.\n   - Create cross-project follow-up proposals/PR packets for app-owned workflow changes unless the user explicitly approves target-repo mutation.\n   - Follow-up packets must be concrete enough to implement directly and must include evidence, affected workflow files, required-check context, and safe/conditional classifications.\n\n3. **Evidence ledger lane — keep validation durable**\n   - Preserve inventories, anchor run IDs, cache/artifact counts, and safe/conditional classifications in agreement/design/task evidence.\n   - Implementation tasks must cite the relevant finding ID and evidence source.\n\n## Design Decisions\n\n### D1 — Reusable-gate fixes stay local and minimal\n\nImplement in this repo:\n\n- `python-security-gate.yml`: SBOM step gets explicit `scanners: vuln,misconfig`.\n- `javascript-security-gate.yml`: SBOM step gets explicit `scanners: vuln,misconfig`.\n- `python-security-gate.yml`, `javascript-security-gate.yml`, `container-security-gate.yml`: SBOM `upload-artifact` steps get bounded `retention-days`.\n- `ROADMAP.md`: stale Trivy source-scan partition text is corrected.\n- Example/pilot docs: stale pinned references are refreshed only after verifying the current intended tag/SHA.\n\nRationale: these are current-repo-owned, high-confidence, low-risk, and validated by source evidence. They preserve scanner partition and avoid job-name/API changes.\n\n### D2 — App-repo workflow changes are follow-ups unless target mutation is explicitly approved\n\nDo not edit PokeEdge or PokeEdge-Web workflows from this repo by default. Instead, create cross-project follow-up proposals or PR handoff packets with validated findings and recommended diffs. Direct target-repo mutation requires explicit target path approval in the execution gate.\n\nRationale: current project owns reusable gates, not app workflow source. This avoids false claims that app changes shipped from the standard repo and satisfies AC10.\n\n### D3 — Branch-protection/ruleset checks are blocking design evidence for app workflow changes\n\nBefore implementing any app-repo check rename/removal/split/summary change, record:\n\n- current required status checks/rulesets,\n- affected context names,\n- whether `Sharperflow CI Gate` summary semantics remain unchanged,\n- auto-merge/Renovate dependency on that status.\n\nRationale: both app repos currently rely on summary-gate semantics. Cost cleanup must not break merge protection or create false-green merges.\n\n### D4 — Cache deletion is a separate approved operation, not hidden in code changes\n\nCache/artifact deletion outside PR flow is destructive enough to require explicit user approval at execution time. Code changes can set retention/key behavior going forward; manual deletion requires a named cache class, age bound, dry-run evidence, and approval.\n\nRationale: cleanup is safe when bounded, but deletion uses mutation APIs outside normal review.\n\n### D5 — Conditional optimizations require measurement tasks\n\nDo not implement these until measured or app-repo follow-up validates them:\n\n- splitting/sharding PokeEdge `PR Gate (unit + api + arch)`,\n- PokeEdge deploy-chain poll/stabilization refactor,\n- PokeEdge quality-chain parallelization,\n- reusable-gate pipx/Gitleaks caching,\n- PokeEdge-Web unit-test sharding,\n- heartbeat removal,\n- leaf required-check expansion.\n\nRationale: each may change signal, workflow ergonomics, or reliability. They are not safe cleanup without deeper evidence.\n\n## Follow-Up Packet Design\n\n### PokeEdge packet\n\nRequired contents:\n\n- Workflow inventory: all 16 workflow files.\n- Anchor run: `27385083270`, full job list and durations.\n- Required-check evidence: org ruleset required context `Sharperflow CI Gate`; classic branch protection API result noted.\n- Safe candidates:\n  - Delete old `cache-trivy-*` entries with explicit age bound and dry-run approval.\n  - Add draft-PR guard to heavyweight `PR Gate (unit + api + arch)` job if ruleset evidence remains compatible.\n  - Reduce/skip `verify-staging` poll when repository-dispatch payload already proves staging completion.\n  - Reduce coverage artifact retention.\n  - Clean disabled workflow files only if repo owners confirm no historical need.\n- Conditional candidates:\n  - Split/shard unit/api/arch lanes after lane timing is measured.\n  - Refactor deploy-production waits only after step timing proves safe.\n  - Change `Dependency Review` only after GHAS/signal role is decided.\n\n### PokeEdge-Web packet\n\nRequired contents:\n\n- Workflow inventory: 9 files on `main` + disabled `compose.ci.override.yml` registry drift.\n- Anchor run: `27387875564`, full job list and durations.\n- Required-check evidence: effective required context `Sharperflow CI Gate`.\n- Safe candidates:\n  - Sync `docs/openapi.json` from backend `main`.\n  - Remove unused `coverage/` upload after confirming no `download-artifact`/Codecov/Sonar consumer.\n  - Switch `ci-quality.yml` to cached Bun composite.\n  - Cache pinned `oasdiff` binary.\n  - Clean disabled workflow registry entry.\n- Targeted policy candidate:\n  - Fix Renovate commit message/churn without reopening whole org Renovate policy.\n- Conditional candidates:\n  - BuildKit `mode=max` → `mode=min` after app workflow review.\n  - Unit-test sharding after test profile evidence.\n  - Integration E2E/heartbeat/leaf-required-check changes only after owner decision.\n\n## Implementation Strategy\n\n### Phase A — Local reusable-gate cleanup\n\n- Patch SBOM Trivy scanner inputs in Python/JS gates.\n- Patch SBOM artifact retention in all three reusable gates.\n- Patch stale docs.\n- Verify with `actionlint` exactly as repo instructions specify.\n\n### Phase B — Cross-repo follow-up packets\n\n- Create concrete follow-up material for PokeEdge and PokeEdge-Web using validated evidence.\n- If user approves direct target mutation during execution, route through target-path ADV tools/worktrees and record confirmation evidence.\n- Otherwise, stop at follow-up proposal/PR handoff and do not claim app-repo cleanup shipped.\n\n### Phase C — Acceptance evidence\n\nAcceptance must prove:\n\n- local reusable-gate changes are actionlint-clean,\n- no reusable job names changed,\n- scanner partition remains Semgrep/Bandit/OSV/Gitleaks/Trivy as documented,\n- app-repo work is either explicitly handed off or target-approved before mutation,\n- every agreement AC has pass/respected evidence in the contract review matrix.\n\n## Validation Plan\n\n- Run `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` after local workflow edits.\n- Inspect diffs to confirm only intended workflow/docs lines changed.\n- For any app-repo follow-up creation, include GitHub API evidence used during discovery rather than recomputing from memory.\n- For any destructive cache/artifact deletion proposal, run dry-run/list first and require explicit approval before delete.\n\n## Risks and Mitigations\n\n| Risk | Mitigation |\n|---|---|\n| Weakening security coverage | Do not remove scanners; SBOM scanner patch only restores explicit partition. |\n| Breaking required checks | No job rename/removal in local gate fixes; app-repo check changes require ruleset evidence. |\n| False app-repo completion claims | Cross-repo work is represented as follow-up proposals/PRs unless target mutation is approved. |\n| Cache deletion surprise | Deletion requires dry-run evidence + explicit approval. |\n| Over-optimizing slow but valuable jobs | Conditional candidates require measurement before implementation. |\n| Reopening unrelated SAST/Renovate policy | Only targeted cost/signal fixes allowed; broader policy remains out of scope. |\n\n## Contract Mapping\n\n- AC1, AC2: satisfied by follow-up packets/inventories.\n- AC3: enforced before app-repo workflow mutation.\n- AC4: local fixes + app follow-up packets count as implemented/handed off safe cleanup set.\n- AC5: handled through retention/key/follow-up cleanup plan.\n- AC6: handled in PokeEdge-Web follow-up packet.\n- AC7: handled in PokeEdge follow-up packet and conditional measurement list.\n- AC8: local patches preserve default scanner coverage.\n- AC9: local actionlint verification required.\n- AC10: enforced by split-scope architecture.\n\n## Independent Validator Result\n\nVerdict: VALIDATED.\n\nEvidence cited by validator:\n\n- Python and JavaScript SBOM steps omit `scanners:` and Trivy action default is `vuln,secret`; explicit `scanners: vuln,misconfig` restores source-gate partition.\n- SBOM upload-artifact steps omit `retention-days`; upload-artifact default retention is 90 days.\n- App-repo work belongs in follow-up packets unless explicit target mutation is approved; this matches agreement AC10 and constraints.\n- Cache/artifact deletion requiring REST mutation should follow dry-run + explicit approval style.\n- Conditional optimization list correctly requires measurement first.\n\nValidator blockers: None.\n\nValidator recommendations incorporated:\n\n- Follow-up packets are now concrete per target repo.\n- SBOM scanner override uses the main source scan value `vuln,misconfig`.\n- Destructive cache deletion requires dry-run artifact + explicit approval.\n- Stale local docs/examples may be refreshed when tag/SHA target is verified.\n",
+    "executiveSummary": "# Executive Summary — Reduce Actions cost\n\n## Outcome\n\nThe GitHub Actions cost cleanup moved from audit to validated implementation across the reusable gates repo plus explicitly approved direct PokeEdge and PokeEdge-Web target worktrees.\n\n## What Changed\n\n### sharperflow-security-gates\n\n- Reusable Python and JavaScript SBOM Trivy steps now explicitly use `scanners: vuln,misconfig` so SBOM generation does not fall back to Trivy's `vuln,secret` default.\n- All reusable SBOM artifact uploads now set `retention-days: 14`.\n- Documentation/examples now reflect current scanner partition and verified `v0.3.2` pin.\n- `docs/actions-cost-cleanup-dry-run.md` records cache cleanup candidates and destructive deletion boundaries.\n\n### PokeEdge\n\n- Draft PRs skip the heavyweight `PR Gate (unit + api + arch)` job.\n- `coverage-fast` artifact retention is reduced to 7 days.\n- Auto-triggered production deploys skip redundant `verify-staging` polling while manual deploy safety remains.\n\n### PokeEdge-Web\n\n- Unused coverage artifact upload removed.\n- `ci-quality` now uses the cached Bun composite.\n- Pinned `oasdiff` binary is cached.\n- BuildKit cache export mode changed from `max` to `min` in staging/production deploy workflows.\n- Renovate semantic-commit config added to reduce commit-lint churn.\n\n## Verification\n\n- Local exact `actionlint` passed.\n- PokeEdge structural `actionlint` passed and `git diff --check` passed.\n- PokeEdge-Web structural `actionlint` passed, `git diff --check` passed, and `renovate.json` syntax validation passed.\n- Contract matrix has 16/16 pass/respected rows and 0 failing rows.\n- Independent review verdict: READY.\n\n## Remaining Boundaries\n\n- No cache/artifact deletion was performed; deletion remains approval-gated after dry-run evidence.\n- PokeEdge and PokeEdge-Web changes are local branch commits and still need push/PR/release integration.\n- Target repos still have pre-existing shellcheck style/info noise in full actionlint; changed workflow files passed structural validation.\n",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-12T05:16:08.275Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| AC1 | acceptance_criterion | **AC1 — PokeEdge inventory complete:** The final implementation package or linked follow-up contains a PokeEdge workflow/job inventory covering all 16 workflow files and the full anchor run `27385083270` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope. | pass | PokeEdge inventory validated in discovery and preserved in agreement/design. Direct change task tk-03ec14128462 implemented safe PokeEdge workflow cleanup in `.github/workflows/pr-gate.yml` and `production-deploy.yml`; anchor run 27385083270 and 16-workflow inventory recorded in agreement/design. Final verification task tk-5448abcb81a8 passed structural actionlint and diff checks. |\n| AC2 | acceptance_criterion | **AC2 — PokeEdge-Web inventory complete:** The final implementation package or linked follow-up contains a PokeEdge-Web workflow/job inventory covering all 9 workflow files on `main`, disabled registry drift for `compose.ci.override.yml`, and the full anchor run `27387875564` job list, with each job classified as required, advisory, conditional, skipped, disabled, or out of scope. | pass | PokeEdge-Web inventory validated in discovery and preserved in agreement/design: 9 workflow files on main plus disabled `compose.ci.override.yml` registry drift; anchor run 27387875564 recorded. Direct change task tk-f350017d48cd implemented safe cleanup across six files and final verification passed after rebase. |\n| AC3 | acceptance_criterion | **AC3 — Required-check safety proven:** Before any workflow job rename, removal, split, or summary-gate change is implemented, the relevant repo's required status checks/rulesets are inspected and the affected check contexts are listed in the design or task evidence. | pass | Design records required status check/ruleset boundary: effective required context `Sharperflow CI Gate`. Direct app tasks explicitly kept that context unchanged. Final verification notes: `Sharperflow CI Gate` context unchanged in target changes. |\n| AC4 | acceptance_criterion | **AC4 — Safe cleanup set implemented or handed off:** At least 5 safe cleanup items are either implemented in this repo or captured as cross-repo follow-up proposals/PRs with evidence, unless design proves fewer than 5 remain safe after validation. | pass | More than five safe cleanup items implemented or documented: local SBOM scanner override, local SBOM retention, docs/example pin update, PokeEdge draft-PR heavy-job guard, PokeEdge verify-staging poll skip, PokeEdge coverage retention, Web coverage upload removal, Web cached CI Quality setup, Web oasdiff cache, Web BuildKit mode=min, Web Renovate semantic commit config, and cache dry-run report. |\n| AC5 | acceptance_criterion | **AC5 — Storage cleanup addressed:** The change implements or hands off a cache/artifact cleanup plan for Trivy cache duplication, PokeEdge-Web BuildKit cache growth, and unused coverage/SBOM artifacts, with deletion/retention behavior bounded by explicit age or retention settings. | pass | Local SBOM retention set to 14 days. PokeEdge coverage retention set to 7 days. Web coverage upload removed. Web BuildKit mode=max changed to mode=min. `docs/actions-cost-cleanup-dry-run.md` records PokeEdge Trivy cache and Web BuildKit/Trivy cache candidates with explicit no-delete boundary. |\n| AC6 | acceptance_criterion | **AC6 — Renovate churn addressed:** The change implements or hands off a targeted fix for PokeEdge-Web Renovate CI churn, including commit-message format and/or stuck PR handling, without reopening the completed org-wide Renovate policy except for evidence-backed adjustments. | pass | PokeEdge-Web `renovate.json` updated by tk-f350017d48cd with explicit semantic-commit config; JSON syntax verified. Broader org Renovate policy not reopened. |\n| AC7 | acceptance_criterion | **AC7 — Deploy-chain cost addressed:** The change implements or hands off a targeted PokeEdge deploy-chain cost fix, or records why deploy-chain changes are unsafe now, with evidence from `production-deploy.yml` and recent run timings. | pass | PokeEdge `production-deploy.yml` changed by tk-03ec14128462 so `verify-staging` polling runs only for manual `workflow_dispatch`; repository_dispatch auto-trigger skips redundant staging poll. Deploy-chain conditional measurement items remain deferred. |\n| AC8 | acceptance_criterion | **AC8 — Security posture preserved:** Reusable gate changes do not remove Semgrep, Bandit, OSV, Gitleaks, or Trivy coverage from default source-code gates unless a later explicit user approval documents the signal tradeoff. | pass | Reusable gate changes only added explicit SBOM scanners and retention. Semgrep, Bandit, OSV, Gitleaks, and Trivy default source-code gate coverage remain present; no scanner removed. |\n| AC9 | acceptance_criterion | **AC9 — Verification complete:** All modified workflow files pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` in this repo; cross-repo workflow changes include equivalent actionlint or GitHub Actions validation evidence in their follow-up artifacts. | pass | Local exact `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed. PokeEdge and Web structural actionlint with `-shellcheck=` passed; Web `renovate.json` JSON check passed; git diff --check passed in all touched repos. Full target actionlint shellcheck issues are pre-existing style/info outside introduced edits. |\n| AC10 | acceptance_criterion | **AC10 — No silent cross-repo mutation:** Any PokeEdge or PokeEdge-Web implementation work is performed via explicit cross-repo follow-up proposal/PR or explicit user-approved target repo mutation; this repo does not pretend app-repo changes shipped when only reusable-gate changes shipped. | pass | User explicitly approved direct target mutation: `i approve direct changes of pokeedge and pokeedge-web immediately too`. Target mutations occurred in isolated worktrees `/home/jon/dev/pokeedge-wt/reduce-actions-cost` and `/home/jon/dev/pokeedge-web-wt/reduce-actions-cost`, not silently from current repo. |\n| C1 | constraint | Preserve the current high-signal default posture: `HIGH,CRITICAL`, `ignore-unfixed`, no noisy required gates without evidence. | respected | No severity/default posture weakening: local changes preserve `HIGH,CRITICAL`, `ignore-unfixed`, and scanner set. Target changes do not remove checks solely due duration. |\n| C2 | constraint | Do not introduce GHAS, CodeQL/SARIF upload, SonarCloud, hosted dashboards, or paid/vendor-only assumptions as prerequisites for cleanup. | respected | No GHAS, CodeQL/SARIF upload, SonarCloud, hosted dashboard, or paid/vendor-only requirement introduced in local or target diffs. |\n| C3 | constraint | Do not rename frozen reusable gate job names without explicit branch-protection and caller impact evidence. | respected | No frozen reusable gate job names renamed. Local workflow diffs add SBOM keys only; actionlint passed. |\n| C4 | constraint | Do not remove checks solely due to duration; slow valuable checks must be optimized or documented, not deleted. | respected | Slow but valuable checks were not deleted. PokeEdge heavy job is skipped only for draft PRs; Web integration E2E and heartbeat jobs were left unchanged; conditional sharding/splitting remains deferred. |\n| C5 | constraint | Do not treat skipped jobs as equivalent to zero cost/noise without validating runner reservation and downstream trigger behavior. | respected | Skipped jobs were not treated as free without validation. Design and dry-run report explicitly separate cost/noise and require approval for deletion; target changes preserve summary semantics. |\n| C6 | constraint | Do not conflate app-repo BuildKit/deploy concerns with reusable-gate changes in this repo. | respected | App-repo BuildKit/deploy concerns were implemented only in approved PokeEdge-Web/PokeEdge target worktrees after explicit user approval. Local reusable-gate changes remain scoped to gate-owned workflows/docs. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/proposal.md",
+      "updatedAt": "2026-06-12T04:22:58.200Z",
+      "contentHash": "ac6646af08d496837324cff5961d9f1f808547db2c6faf8dc4bfd06b789e03b9"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-12T04:22:58.200Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/agreement.md",
+      "updatedAt": "2026-06-12T04:42:52.785Z",
+      "contentHash": "e6e91d06e213cc64b588c612fea38ff8d2b6fee01c404b204c9733df8a4a4b8a"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/design.md",
+      "updatedAt": "2026-06-12T04:50:37.542Z",
+      "contentHash": "f2d6562ba09720601e0ca6b5411fd596bd91f82b1d7033906150a162af0501f4"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/reduceActionsCost/executive-summary.md",
+      "updatedAt": "2026-06-12T05:20:31.570Z",
+      "contentHash": "af09a6c0a872a59e0bb051ae2e90de6cd59f1b9dfe12fe1cbbcf7e6de45e2856"
+    }
+  },
+  "lastSignalAt": "2026-06-12T19:48:21.410Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d"
+}
