@@ -219,6 +219,7 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
+          scanners: vuln,misconfig
           format: ${{ inputs.sbom-format }}
           output: sbom-${{ inputs.sbom-format }}.json
           hide-progress: true
@@ -229,4 +230,5 @@ jobs:
         with:
           name: sbom-${{ inputs.sbom-format }}
           path: sbom-${{ inputs.sbom-format }}.json
+          retention-days: 14
           if-no-files-found: error

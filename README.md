@@ -38,7 +38,7 @@ updater — Renovate or Dependabot, one per ecosystem per repo (see
 ```yaml
 jobs:
   security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
     permissions:
       contents: read
     with:
@@ -54,7 +54,7 @@ permissions: {}
 
 jobs:
   security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/javascript-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
     permissions:
       contents: read
     with:
@@ -67,7 +67,7 @@ Container image gate (deploy-time):
 ```yaml
 jobs:
   image-security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
     with:
       image-ref: "ghcr.io/OWNER/IMAGE:${{ github.sha }}"
 ```
@@ -77,7 +77,7 @@ jobs:
 Setup is defined once and consumed cross-repo (never copy-pasted):
 
 ```yaml
-- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@e21e07a7faa2396662875fac9679f08b6b4efc9d  # v0.3.1
+- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
   with:
     python-version: "3.13"
     sync-args: "--all-groups"

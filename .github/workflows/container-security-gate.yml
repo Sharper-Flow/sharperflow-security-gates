@@ -74,4 +74,5 @@ jobs:
         with:
           name: sbom-${{ inputs.sbom-format }}
           path: sbom-${{ inputs.sbom-format }}.json
+          retention-days: 14
           if-no-files-found: error

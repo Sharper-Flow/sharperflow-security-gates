@@ -24,8 +24,8 @@ Update this file when executable behavior changes.
   `uv.lock`, Semgrep `p/python p/fastapi`, Semgrep excludes
   `tests scripts migrations`, Bandit high severity + high confidence, Trivy
   `HIGH,CRITICAL`, and `ignore-unfixed`.
-- Python filesystem Trivy scans `vuln,secret,misconfig`; container image Trivy
-  scans `vuln,secret` only.
+- Python and JavaScript filesystem Trivy scans run `vuln,misconfig`; Gitleaks
+  owns source-secret scanning. Container image Trivy scans `vuln,secret` only.
 - OSV warns and skips when the configured lockfile is missing.
 - Gitleaks runs the pinned container image directly with
   `detect --source=/repo --redact --exit-code=1`; the reusable workflow does
@@ -59,7 +59,7 @@ Update this file when executable behavior changes.
 - [x] Provide container image reusable workflow that scans a supplied image ref;
   it does not build or publish images.
 - [x] Add self-test workflow for actionlint and required docs/config presence.
-- [x] Tag stable release refs (latest `v0.3.1`); callers pin by SHA + version
+- [x] Tag stable release refs (latest `v0.3.2`); callers pin by SHA + version
   comment instead of `@main`.
 - [ ] Document expected caller-owned suppressions and config paths as findings
   accumulate.
