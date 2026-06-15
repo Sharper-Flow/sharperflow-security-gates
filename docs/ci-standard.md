@@ -838,5 +838,68 @@ These run as ordinary jobs under the app's `Sharperflow CI Gate` summary.
 - [ ] Local branch hygiene: trunk/main checkout stays on the default branch; every
       PR is created and pushed from a git worktree, never by switching the shared
       trunk checkout (see [Local branch hygiene](#local-branch-hygiene-worktree-first-prs)).
+- [ ] Local fast-guard parity: repo provides a single discoverable local
+      command (e.g. `bin/oc-fast-check`) that mirrors CI fast-checks (format,
+      lint, types, drift) and is wired as a pre-push hook. Pre-push MUST be
+      fast-only — no unit tests, E2E, or coverage (CI's job). See
+      [Local fast-guard parity](#local-fast-guard-parity).
 - [ ] Release is tag-only (semantic-release tags but pushes no commit to `main`)
       — verify a release lands the tag and the staging promote stamps the version.
+
+---
+
+## Local fast-guard parity
+
+Every CI fast-check (format, lint, types, drift) MUST have a local equivalent
+that runs before `git push`. This catches the most common PR failures
+(formatting, lint violations, type errors, API drift) in seconds locally
+instead of after a CI round-trip.
+
+### Contract
+
+The conformance item specifies **what**, not **how**:
+
+- **Single discoverable command** — `bin/oc-fast-check` or equivalent. MUST be
+  documented in `AGENTS.md` or `CONTRIBUTING.md`.
+- **Pre-push wiring** — the command MUST be wired as a git pre-push hook
+  (pre-commit framework, Husky, lefthook, or plain `.git/hooks/pre-push`).
+- **Fast-only scope** — format, lint, types, drift. No unit tests, E2E, or
+  coverage. Those serialize multi-agent sessions behind `oc-test-gate` and
+  belong to CI.
+- **Under 60 seconds** on a warm cache for incremental changes.
+
+### Two-tier pattern
+
+The recommended pattern splits checks across two git hook stages:
+
+| Stage | What runs | Typical speed |
+|-------|-----------|---------------|
+| `pre-commit` | Format, lint (staged files only) | < 2s |
+| `pre-push` | Types, import architecture, API drift, complexity | 5–30s |
+
+This prevents taxing every commit with whole-tree scans while still catching
+failures before push.repos that already have a working pre-push setup (e.g.
+PokeEdge Web's Husky `fast` guard) satisfy this item by audit, not by
+re-implementation.
+
+### Tool choice is app-owned
+
+The standard does not mandate a specific hook framework:
+
+- **Python repos**: [pre-commit](https://pre-commit.com) framework is the
+  ecosystem standard with environment isolation and reusable hook definitions.
+- **JS/TS repos**: [Husky](https://typicode.github.io/husky/) + lint-staged is
+  the ecosystem standard with transparent shell hooks.
+- **Polyglot repos**: [lefthook](https://github.com/evilmartians/lefthook) or
+  pre-commit (cross-language) are both valid.
+
+Choose the tool that matches the repo's package manager and existing ecosystem.
+The standard requires the contract (fast-check parity + pre-push wiring), not
+the mechanism.
+
+### Hard requirement
+
+This is a hard conformance item:
+
+- **New repos** MUST comply before their first PR.
+- **Existing repos** get a tracked follow-up to adopt.
