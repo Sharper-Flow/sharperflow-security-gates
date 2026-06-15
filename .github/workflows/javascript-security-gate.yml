@@ -129,13 +129,29 @@ jobs:
             echo "::warning::Lockfile ${LOCKFILE_PATH} not found; skipping OSV scan."
           fi
 
+      - name: OSV remediation help
+        if: steps.lockfile.outputs.exists == 'true'
+        env:
+          LOCKFILE_PATH: ${{ inputs.lockfile-path }}
+        run: |
+          {
+            echo "## OSV dependency scan"
+            echo ""
+            echo "The OSV scanner output below is the source of truth for advisory IDs/URLs, affected packages, installed versions, and fixed versions when available."
+            echo ""
+            echo "Local reproduction:"
+            echo '```bash'
+            echo "osv-scanner --lockfile=${LOCKFILE_PATH} --format=table"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: OSV Scanner
         if: steps.lockfile.outputs.exists == 'true'
         uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2 # v2.3.8
         with:
           scan-args: |
             --lockfile=${{ inputs.lockfile-path }}
-            --format=table
+            --format=markdown
 
   secrets:
     name: Gitleaks secret scan
