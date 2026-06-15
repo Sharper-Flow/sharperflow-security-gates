@@ -20,8 +20,7 @@
   },
   "vulnerabilityAlerts": {
     "enabled": true,
-    "labels": ["security"],
-    "minimumReleaseAge": "0 days"
+    "labels": ["security"]
   },
   "packageRules": [
     {
