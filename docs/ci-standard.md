@@ -282,6 +282,69 @@ rebase churn.
 - **Install.** Renovate is the Mend GitHub App (org-admin install); one onboarding
   PR per repo.
 
+#### Renovate security remediation
+
+Renovate security fixes are expected to move on the **next Renovate run**, not the
+weekly normal-update schedule. The shared preset keeps the stable GitHub alert
+path enabled:
+
+```json
+"vulnerabilityAlerts": {
+  "enabled": true,
+  "labels": ["security"]
+}
+```
+
+This path is active only when the caller repo has the required GitHub-side signal:
+
+- Dependency graph enabled.
+- Dependabot alerts enabled.
+- Renovate GitHub App permission to read Dependabot alerts.
+- This repo's shared Renovate preset extended from `renovate.json`.
+
+If any prerequisite is missing, do **not** wait for weekly Renovate. Enable the
+missing repository setting or use the OSV reproduction command below to prepare a
+manual parent/resolver bump. Security remediation PRs should carry the `security`
+label; normal dependency PRs carry `dependencies`.
+
+The experimental Renovate `osvVulnerabilityAlerts` option is intentionally **not**
+enabled by the shared preset. It was evaluated and deferred because Renovate marks
+it experimental, documents it as direct-dependency scoped, and has open churn risk
+around indirect-dependency PR creation. Repos that explicitly want OSV-native
+direct-dependency alerts may opt in locally after weighing that blast radius.
+
+#### OSV dependency-gate remediation
+
+The reusable Python and JavaScript security gates run OSV Scanner against the
+caller lockfile when `lockfile-path` exists. Missing lockfiles remain a warning and
+skip the OSV dependency scan; lockfiles with known high/critical vulnerabilities
+remain blocking unless the finding is fixed or intentionally ignored by caller
+policy.
+
+On failure, use the OSV scanner output for the advisory ID/URL, package, installed
+version, and fixed version when available. Local reproduction commands:
+
+```bash
+# Python / uv callers, e.g. PokeEdge
+osv-scanner --lockfile=uv.lock --format=table
+
+# JavaScript / Bun callers, e.g. PokeEdge-Web
+osv-scanner --lockfile=bun.lock --format=table
+```
+
+Direct dependencies with fixed versions should get a Renovate security path when
+the GitHub alert prerequisites are met. Transitive lockfile-only vulnerabilities
+may require updating a parent dependency, relaxing a resolver constraint, or adding
+a temporary direct constraint; do not assume Renovate can always raise a safe PR for
+the vulnerable transitive package itself.
+
+Current rapid-development consumers:
+
+| Repo | Lockfile / gate | Renovate signal | Follow-up if OSV blocks a PR |
+|---|---|---|---|
+| `Sharper-Flow/PokeEdge` | Python 3.13 + `uv.lock`; `python-security-gate.yml` | Vulnerability alerts enabled (`204 No Content` from `/vulnerability-alerts`) | Expect Renovate security PRs for supported direct dependencies; transitive failures may need parent/resolver action. |
+| `Sharper-Flow/PokeEdge-Web` | Bun + Node 24 + `bun.lock`; `javascript-security-gate.yml` | Vulnerability alerts disabled (`404 "Vulnerability alerts are disabled."`) | Enable Dependabot alerts/Dependency graph, merge the security-gates pin update PR, then expect Renovate security PRs for supported direct dependencies. Respect local caps such as `undici <8`. |
+
 ### Dependabot path
 
 - **Config.** `.github/dependabot.yml` with one `package-ecosystem` entry per
