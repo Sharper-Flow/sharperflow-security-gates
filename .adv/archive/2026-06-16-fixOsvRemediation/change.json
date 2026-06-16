@@ -1,0 +1,1263 @@
+{
+  "id": "fixOsvRemediation",
+  "title": "Fix OSV remediation",
+  "status": "archived",
+  "created_at": "2026-06-15T21:16:00.562Z",
+  "tasks": [
+    {
+      "id": "tk-1c369c0c01bc",
+      "title": "Evaluate stable Renovate vulnerability-alert baseline in default.json",
+      "type": "code",
+      "section": "Renovate config",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-15T23:33:45.429Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "inline",
+        "delegation_hint": "delegate_allowed",
+        "frontend": "false",
+        "touched_files": "default.json"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC1",
+          "AC5"
+        ],
+        "verifies": [
+          "AC1",
+          "AC5",
+          "AC6"
+        ],
+        "respects": [
+          "C1",
+          "C4",
+          "DONT1",
+          "DONT2",
+          "DONT4"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-15T23:40:21.119Z",
+      "verification": "Renovate config validator passed: bunx --package renovate renovate-config-validator default.json renovate.json",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Updated `default.json` to keep stable GitHub `vulnerabilityAlerts` baseline while removing redundant per-alert `minimumReleaseAge`. Verified config with Renovate validator.",
+      "filesTouched": [
+        "default.json"
+      ],
+      "touched_files": [
+        "default.json"
+      ],
+      "checkpointSha": "5b2661ac777eaef9fb7e38c9cfcbd697e6306d27",
+      "completedAt": "2026-06-15T23:40:46.330Z",
+      "completed_at": "2026-06-15T23:40:46.330Z",
+      "notes": "Removed redundant `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"`; stable `vulnerabilityAlerts.enabled` + `security` label retained; `osvVulnerabilityAlerts` remains default-off. Renovate validation passed.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-15T23:40:56.220Z"
+    },
+    {
+      "id": "tk-6c5a7a980538",
+      "title": "Improve OSV scanner failure visibility in reusable gates",
+      "type": "code",
+      "section": "Reusable workflows",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-15T23:33:58.674Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "inline",
+        "delegation_hint": "delegate_allowed",
+        "frontend": "false",
+        "touched_files": ".github/workflows/python-security-gate.yml,.github/workflows/javascript-security-gate.yml"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2",
+          "AC3"
+        ],
+        "verifies": [
+          "AC2",
+          "AC3",
+          "AC6"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C5",
+          "DONT1"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-15T23:41:05.022Z",
+      "verification": "Actionlint passed: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Updated Python and JavaScript reusable security gates to write `$GITHUB_STEP_SUMMARY` guidance with local reproduction command while keeping OSV scanner output as terminal-friendly `--format=table`. Kept OSV action fail semantics and missing-lockfile warning/skip behavior unchanged; added `set -euo pipefail` in help steps.",
+      "filesTouched": [
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/python-security-gate.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/python-security-gate.yml"
+      ],
+      "checkpointSha": "40c92b66b8e73ebf8056b0d59e97b83d36944470",
+      "completedAt": "2026-06-15T23:41:54.454Z",
+      "completed_at": "2026-06-15T23:41:54.454Z",
+      "notes": "Added OSV remediation help step to both reusable gates. After review remediation, helper text points to OSV Scanner step log, scanner output remains `--format=table`, shell strict mode added, and actionlint passed.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-16T00:07:51.771Z"
+    },
+    {
+      "id": "tk-c2eeaed7dd87",
+      "title": "Verify PokeEdge and PokeEdge-Web remediation prerequisites and follow-ups",
+      "type": "code",
+      "section": "Consumer readiness",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-15T23:34:16.539Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable",
+        "delegation_hint": "inline_required",
+        "frontend": "false",
+        "target_repo": "Sharper-Flow/PokeEdge,Sharper-Flow/PokeEdge-Web",
+        "target_path": "PokeEdge via GitHub API (no local checkout discovered); PokeEdge-Web /home/jon/dev/pokeedge-web",
+        "external_dependency": "GitHub repo settings / Renovate app state",
+        "touched_files": "docs/ci-standard.md (evidence feeds docs task)"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC7"
+        ],
+        "verifies": [
+          "SC5",
+          "AC1",
+          "AC7"
+        ],
+        "respects": [
+          "C2",
+          "C6",
+          "DONT3",
+          "DONT5"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-15T23:42:11.204Z",
+      "verification": "Consumer verification run: PokeEdge vulnerability-alerts HTTP 204 and 4 unrelated Renovate PRs; PokeEdge-Web vulnerability-alerts HTTP 404 and open Renovate PR #109 updates security-gates action to v0.3.2.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Ran GitHub API/PR checks for PokeEdge and PokeEdge-Web. No repo files changed. Confirmed PokeEdge-Web has a functional prerequisite gap (alerts disabled) and stale gate pin update pending; PokeEdge has alerts enabled but no relevant security remediation PR open.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "40c92b66b8e73ebf8056b0d59e97b83d36944470",
+      "completedAt": "2026-06-15T23:42:40.171Z",
+      "completed_at": "2026-06-15T23:42:40.171Z",
+      "notes": "Verified consumer state: PokeEdge alerts enabled (HTTP 204), open Renovate PRs are unrelated Azure/Bicep; PokeEdge-Web alerts disabled (HTTP 404), open PR #109 updates security-gates action to v0.3.2. These feed docs/follow-up requirements.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-15T23:43:03.644Z"
+    },
+    {
+      "id": "tk-a454ae410fb8",
+      "title": "Document Renovate security-remediation behavior and rapid-dev consumer paths",
+      "type": "code",
+      "section": "Docs",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-15T23:34:33.663Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1c369c0c01bc"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-6c5a7a980538"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-c2eeaed7dd87"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable",
+        "delegation_hint": "delegate_allowed",
+        "frontend": "false",
+        "touched_files": "docs/ci-standard.md,README.md (optional)"
+      },
+      "contract_refs": {
+        "implements": [
+          "SC1",
+          "SC3",
+          "SC4",
+          "SC5",
+          "AC1",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC7"
+        ],
+        "verifies": [
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC7"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C5",
+          "C6",
+          "DONT1",
+          "DONT2",
+          "DONT3",
+          "DONT4",
+          "DONT5",
+          "OOS1",
+          "OOS2",
+          "OOS3",
+          "OOS4"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-15T23:43:28.954Z",
+      "verification": "Docs reviewed in docs/ci-standard.md lines 285-346: Renovate prerequisites, next-run timing, OSV reproduction commands, direct/transitive guidance, PokeEdge/PokeEdge-Web rapid-dev paths.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Added `Renovate security remediation` and `OSV dependency-gate remediation` sections to `docs/ci-standard.md`, including caller prerequisites, `security` label expectation, default-off `osvVulnerabilityAlerts` rationale, local OSV reproduction commands for `uv.lock` and `bun.lock`, direct/transitive fallback guidance, and consumer-specific PokeEdge/PokeEdge-Web matrix.",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "8d98529ea93c61634644e3bcde3dc62e77aeb549",
+      "completedAt": "2026-06-15T23:44:09.166Z",
+      "completed_at": "2026-06-15T23:44:09.166Z",
+      "notes": "Documented next-Renovate-run security remediation, GitHub alert prerequisites, deferred `osvVulnerabilityAlerts`, OSV local reproduction, direct/transitive limits, and PokeEdge/PokeEdge-Web rapid-dev states/follow-ups.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-15T23:44:19.252Z"
+    },
+    {
+      "id": "tk-1fdb1f88bb10",
+      "title": "Run full verification for Renovate config, workflows, and contract coverage",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-15T23:34:51.322Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1c369c0c01bc"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-6c5a7a980538"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-c2eeaed7dd87"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-a454ae410fb8"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification",
+        "delegation_hint": "inline_required",
+        "frontend": "false",
+        "touched_files": "default.json,.github/workflows/python-security-gate.yml,.github/workflows/javascript-security-gate.yml,docs/ci-standard.md,README.md (optional)"
+      },
+      "contract_refs": {
+        "implements": [],
+        "verifies": [
+          "SC1",
+          "SC2",
+          "SC3",
+          "SC4",
+          "SC5",
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC6",
+          "AC7"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "DONT1",
+          "DONT2",
+          "DONT3",
+          "DONT4",
+          "DONT5",
+          "OOS1",
+          "OOS2",
+          "OOS3",
+          "OOS4"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-15T23:44:43.351Z",
+      "verification": "Post-review remediation verified: Renovate config validator and actionlint passed after rewording OSV summary help, restoring table log output, adding shell strict mode, and expanding docs for cooldown rationale + PokeEdge/PokeEdge-Web gate/auto-merge details.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Final verification plus review remediation. Updated workflow help text and docs to address review issues; committed checkpoint 9f1eef36. Validators passed after remediation.",
+      "filesTouched": [
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/python-security-gate.yml",
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        ".github/workflows/javascript-security-gate.yml",
+        ".github/workflows/python-security-gate.yml",
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "9f1eef36b1b8e1b092aa961181680a81046906d4",
+      "completedAt": "2026-06-16T00:07:10.055Z",
+      "completed_at": "2026-06-16T00:07:10.055Z",
+      "notes": "Post-review remediation applied and verified: OSV summary text now points to step log, scanner format restored to table for log readability, helper steps use `set -euo pipefail`, docs include cooldown omission rationale and PokeEdge/PokeEdge-Web gate/auto-merge details. Renovate validator and actionlint passed.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-16T00:07:23.358Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "fixOsvRemediation",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:discovery-opportunity-scout"
+      },
+      "agent": "adv-researcher",
+      "topic": "Discovery opportunity scout — Renovate OSV remediation latency/visibility",
+      "sources": [
+        {
+          "label": "Renovate docs — vulnerabilityAlerts",
+          "locator": "https://github.com/renovatebot/renovate/blob/main/docs/usage/configuration-options.md",
+          "summary": "vulnerabilityAlerts bypass standard rate limits AND scheduling — always attempt to create a PR. REQUIRES GitHub Dependency graph + Dependabot alerts enabled in the caller repo (read perms in app mode). So schedule/minimumReleaseAge are NOT the blocker; the missing prerequisite is enabled GitHub alerts."
+        },
+        {
+          "label": "Renovate docs — minimum-release-age key concept",
+          "locator": "https://github.com/renovatebot/renovate/blob/main/docs/usage/key-concepts/minimum-release-age.md",
+          "summary": "Security updates are an exception to minimumReleaseAge: raised immediately, bypassing age checks. Confirms current vulnerabilityAlerts.minimumReleaseAge:'0 days' in default.json is redundant (no-op) but harmless."
+        },
+        {
+          "label": "Renovate docs — osvVulnerabilityAlerts",
+          "locator": "https://github.com/renovatebot/renovate/blob/main/docs/usage/configuration-options.md",
+          "summary": "osvVulnerabilityAlerts integrates OSV.dev offline DB, creates fix PRs for DIRECT dependencies only, datasources include pypi and npm. Independent of GitHub Dependabot alerts. dependencyDashboardOSVVulnerabilitySummary lists OSV CVEs in dashboard (direct deps only)."
+        },
+        {
+          "label": "Renovate docs — upgrade-best-practices",
+          "locator": "https://github.com/renovatebot/renovate/blob/main/docs/usage/upgrade-best-practices.md",
+          "summary": "Recommends reading GitHub Vulnerability Alerts OR enabling experimental osvVulnerabilityAlerts for direct deps to prioritize critical CVEs."
+        },
+        {
+          "label": "OSV-Scanner / OSV.dev schema",
+          "locator": "https://github.com/google/osv.dev/blob/master/docs/api/post-v1-querybatch.md",
+          "summary": "OSV advisory schema carries id, fixed version (affected.ranges.events.fixed), references/URL. osv-scanner supports table (default human-readable) and markdown output formats; markdown suits GitHub Actions step summary."
+        },
+        {
+          "label": "Local: default.json",
+          "locator": "/home/jon/dev/sharperflow-security-gates/default.json:11-25",
+          "summary": "schedule 'before 6am monday', minimumReleaseAge '7 days', vulnerabilityAlerts enabled with minimumReleaseAge '0 days' and security label. No osvVulnerabilityAlerts set."
+        },
+        {
+          "label": "Local: python-security-gate.yml",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/workflows/python-security-gate.yml:153-159",
+          "summary": "OSV Scanner runs with --lockfile and --format=table only; no markdown/step-summary output, no GITHUB_STEP_SUMMARY surfacing."
+        }
+      ],
+      "architecture_assessment": "Root-cause for PR #465 'no Renovate remediation PR existed' is most likely a missing prerequisite, not a scheduling bug. Renovate vulnerabilityAlerts already bypass schedule + minimumReleaseAge and attempt PRs immediately — BUT only when GitHub Dependency graph + Dependabot alerts are enabled in the CALLER repo (PokeEdge). Renovate preset config alone cannot force this; it is a per-repo GitHub setting. The transitive starlette case is a second, separate gap: osvVulnerabilityAlerts (and GitHub alerts) primarily cover DIRECT dependencies, so a transitive-only vuln may never produce a fix PR even with everything enabled. Current default.json minimumReleaseAge:'0 days' under vulnerabilityAlerts is a redundant no-op. The OSV scan output (--format=table) is fine for logs but is not surfaced to the GitHub Actions step summary, reducing actionability.",
+      "validation": {
+        "status": "caution",
+        "blockers": [],
+        "notes": "No security-gate-weakening or scope-violating candidate surfaced. Two items (caller-repo Dependabot-alerts prerequisite; transitive-dep coverage gap) involve user-value/coordination tradeoffs and caller-repo settings outside this preset, so they are surface-to-user, not auto-adopt. osvVulnerabilityAlerts is experimental — flag for orchestrator before adopting as default-on."
+      },
+      "recommendation": "ScoutCandidates (sorted by payoff/risk):\n\n1) candidate: Document the caller-repo prerequisite — Renovate vulnerabilityAlerts only raise fix PRs when GitHub Dependency graph + Dependabot alerts are enabled (and, in app mode, the app has Dependabot-alert read perms). | evidence: Renovate configuration-options.md vulnerabilityAlerts section | payoff: HIGH | risk: LOW | contract_tie: User Outcome 'Repos consuming the org preset understand expected vulnerability-alert timing and behavior' + Discovery integration unknown | prior_consideration: new | fate: surface_to_user | rationale: This is the most likely root cause of 'no Renovate PR existed' in PR #465; it is a caller-repo setting, not preset config, so it needs user decision on how to enforce/document.\n\n2) candidate: Set osvVulnerabilityAlerts: true in default.json to proactively raise OSV-sourced fix PRs for direct pypi/npm deps independent of GitHub Dependabot enablement. | evidence: Renovate osvVulnerabilityAlerts + upgrade-best-practices docs | payoff: HIGH | risk: MEDIUM | contract_tie: 'Caller-repo maintainers get a timely security-remediation PR' | prior_consideration: new | fate: surface_to_user | rationale: Directly addresses timeliness and reduces dependence on per-repo GitHub settings, but it is experimental and direct-deps-only — orchestrator should confirm before default-on across all consumers.\n\n3) candidate: Acknowledge/document the transitive-dependency gap — osvVulnerabilityAlerts and GitHub alerts primarily cover direct deps, so the OSV gate can fail on a transitive vuln (e.g. starlette in PR #465) that Renovate never auto-fixes. | evidence: Renovate osvVulnerabilityAlerts (direct deps only) + dependencyDashboardOSVVulnerabilitySummary | payoff: MEDIUM | risk: LOW | contract_tie: Discovery domain unknown 'remediation visibility' + Out-of-Scope guard against pretending full coverage | prior_consideration: new | fate: surface_to_user | rationale: Without documenting this gap the change would overpromise; user must decide remediation path for transitive-only vulns (manual bump guidance vs constraint-relax-direct-dep).\n\n4) candidate: Emit OSV results to GitHub Actions step summary via --format=markdown into $GITHUB_STEP_SUMMARY in python- and javascript-security-gate.yml. | evidence: OSV.dev schema (id/fixed/references) + workflow line 153-159 currently --format=table only | payoff: MEDIUM | risk: LOW | contract_tie: User Outcome 'CI failure output ... show enough information to act: advisory URL, package, current version, fixed version' | prior_consideration: new | fate: adopt_now | rationale: Contract-tied, low risk, no user-value tradeoff, no gate-behavior change — pure output/visibility improvement on both reusable gates.\n\n5) candidate: Remove redundant vulnerabilityAlerts.minimumReleaseAge:'0 days' from default.json (security updates already bypass minimumReleaseAge). | evidence: Renovate minimum-release-age key concept | payoff: LOW | risk: LOW | contract_tie: untied (clarity/correctness only) | prior_consideration: new | fate: follow_up | rationale: Harmless no-op today; clean-up clarifies intent but is not blocking and is untied, so record as follow-up/campsite rather than auto-adopt.",
+      "follow_ups": [
+        "Orchestrator: verify in PokeEdge whether starlette was a direct or transitive dependency in PR #465 (gh / lockfile inspection) — determines whether osvVulnerabilityAlerts would have caught it.",
+        "Orchestrator: confirm whether PokeEdge (and other consumers) have GitHub Dependency graph + Dependabot alerts enabled; this is the likely silent prerequisite failure.",
+        "Orchestrator: confirm osv-scanner v2.3.8 supports --format=markdown before wiring step-summary output (verify against pinned action version).",
+        "Scout note: prior_consideration values defaulted to 'new' — orchestrator did not supply conflict-scan/archive prior-consideration data in the packet."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixOsvRemediation",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:design-validator"
+      },
+      "agent": "adv-researcher",
+      "topic": "Validate Renovate/OSV remediation design across security-gates, PokeEdge, PokeEdge-Web",
+      "sources": [
+        {
+          "label": "Renovate config options — osvVulnerabilityAlerts",
+          "locator": "https://docs.renovatebot.com/configuration-options/",
+          "summary": "osvVulnerabilityAlerts default false, experimental flag, direct-dependencies only, supports crate/go/hackage/hex/maven/npm/nuget/packagist/pypi/rubygems; OSV db queried offline."
+        },
+        {
+          "label": "Renovate config options — vulnerabilityAlerts prerequisites",
+          "locator": "https://docs.renovatebot.com/configuration-options/",
+          "summary": "GitHub vulnerabilityAlerts requires Dependency graph + Dependabot alerts enabled in repo security settings; app mode needs read permission for Dependabot alerts."
+        },
+        {
+          "label": "Renovate PR #20226 (OSV feature-flag origin) + source index.ts",
+          "locator": "https://github.com/renovatebot/renovate/pull/20226",
+          "summary": "osvVulnerabilityAlerts is the experimental:true feature flag; vulnerabilityAlerts controls GitHub-only alerts; the two are independent flags."
+        },
+        {
+          "label": "Renovate issue #30873 — OSV indirect-dependency PRs",
+          "locator": "https://github.com/renovatebot/renovate/issues/30873",
+          "summary": "Known defect: despite 'direct deps only' docs, osvVulnerabilityAlerts has created updates for indirect deps (go), risking unexpected/breaking PR churn."
+        },
+        {
+          "label": "Renovate Bun manager docs",
+          "locator": "https://docs.renovatebot.com/modules/manager/bun/",
+          "summary": "Bun manager (bun.lock/bun.lockb) extracts datasources github-tags + npm. npm is an OSV-supported datasource, so osvVulnerabilityAlerts CAN apply to PokeEdge-Web Bun deps — deferral is a choice, not a capability gap."
+        },
+        {
+          "label": "osv-scanner-action reusable workflow + GitHub Action docs",
+          "locator": "https://google.github.io/osv-scanner/github-action/",
+          "summary": "fail-on-vuln defaults true; action fails workflow on vuln. Gate uses the osv-scanner-action composite with --format=table (not the reusable SARIF workflow), so failure is strict and visibility is log-only."
+        },
+        {
+          "label": "osv-scanner-action issue #71 + CHANGELOG exit codes",
+          "locator": "https://github.com/google/osv-scanner-action/issues/71",
+          "summary": "Exit codes: 0 none, 1 findings, 127 config/usage error, 128 no packages. Config errors historically passed; fixed v2.0.3. Gate pins v2.3.8 (post-fix)."
+        },
+        {
+          "label": "Repo gate workflows (read in-tree)",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/workflows/{javascript,python}-security-gate.yml",
+          "summary": "Both gates: lockfile-existence check (missing -> ::warning:: + skip, not failure), then osv-scanner-action@v2.3.8 with --lockfile + --format=table. JS default bun.lock, Python default uv.lock."
+        }
+      ],
+      "architecture_assessment": "Design is sound and aligns with official docs/source. (1) Keeping vulnerabilityAlerts baseline and deferring osvVulnerabilityAlerts is defensible: it IS experimental (experimental:true flag, PR #20226) and direct-dep scoped per docs, and issue #30873 shows a real indirect-dep PR-churn defect — strong reason to defer given the preset's automerge+platformAutomerge posture. NUANCE: it is supported for npm datasource (covers Bun via the bun manager) and pypi (covers uv/Python), so document it as 'evaluated and deferred due to experimental status + indirect-dep churn risk under automerge', NOT 'unsupported for our stack'. (2) GitHub vulnerabilityAlerts prerequisite (Dependency graph + Dependabot alerts + app read permission) is exactly per docs; PokeEdge alerts-enabled (204) vs PokeEdge-Web disabled (404) follow-up is correct and material — without enablement, the existing baseline vulnerabilityAlerts in default.json silently does nothing for PokeEdge-Web. (3) OSV gate strict-fail preservation matches osv-scanner-action defaults (fail-on-vuln true); improving visibility via docs/local-repro without touching exit semantics is consistent with current --format=table log-only design. (4) Stack specifics verified against in-tree gate defaults (bun.lock/javascript gate, uv.lock/python gate) and Renovate Bun(npm datasource)/PyPI support. (5) Validation commands are appropriate (renovate-config-validator + actionlint Docker mirrors repo AGENTS.md verify steps).",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "No blocking contradictions. Two design-language corrections recommended (non-blocking): (a) Reframe osvVulnerabilityAlerts deferral rationale from capability/scope to experimental-status + indirect-dep-churn-under-automerge (cite issue #30873), since npm+pypi datasources DO cover the stack. (b) Make explicit that baseline vulnerabilityAlerts is INERT on PokeEdge-Web until Dependency graph + Dependabot alerts are enabled (404), so operator enablement is a functional prerequisite, not just hygiene. Minor: OSV gate skips (not fails) on missing lockfile (::warning::) — ensure 'preserve strict failure' wording does not imply missing-lockfile is a failure."
+      },
+      "recommendation": "Proceed (READY with non-blocking refinements). Document osvVulnerabilityAlerts as evaluated/deferred citing experimental flag + indirect-dependency PR-churn risk (#30873) under the preset's automerge posture, explicitly noting npm/pypi datasources would otherwise cover Bun/uv. Treat PokeEdge-Web Dependabot-alerts enablement as a functional prerequisite for the already-present baseline vulnerabilityAlerts to do anything, not optional follow-up. Keep OSV gate exit semantics unchanged; add visibility via docs/local-repro only. If future automerge-safe OSV remediation is wanted, pair osvVulnerabilityAlerts with vulnerabilityAlerts.dependencyDashboardApproval-style gating or disable automerge for isVulnerabilityAlert PRs to bound #30873 churn — defer to a separate change.",
+      "follow_ups": [
+        "Confirm PokeEdge-Web operator enables Dependency graph + Dependabot alerts (currently 404) before relying on baseline vulnerabilityAlerts.",
+        "If osvVulnerabilityAlerts is later adopted, scope a follow-up change to mitigate indirect-dep PR churn (Renovate issue #30873) given automerge=true preset posture.",
+        "Verify the pending PokeEdge-Web gate pin update (javascript-security-gate v0.2.1 -> target) does not change osv-scanner-action version away from the post-2.0.3 exit-code fix (current in-tree is v2.3.8)."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixOsvRemediation",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/fixOsvRemediation",
+      "scope": {
+        "kind": "change",
+        "scope_key": "scanner-bundle:review"
+      },
+      "agent": "adv-scanner-bundle",
+      "phase": "review",
+      "scanner_count": 3,
+      "dimensions": [
+        "contract-traceability",
+        "correctness-edge-cases",
+        "security",
+        "tests-tdd-evidence",
+        "scope-conformance",
+        "documentation-quality",
+        "workflow-correctness"
+      ],
+      "summary": "Review scanners found no unresolved blockers after remediation. Initial issues were resolved: misleading OSV summary wording fixed, workflow output kept table/log-oriented, docs expanded with minimumReleaseAge rationale and per-consumer gate/auto-merge details. Validators passed after remediation.",
+      "findings": [
+        {
+          "scanner": "contract-traceability-scope",
+          "severity": "info",
+          "summary": "All contract items traced after remediation; AC7 consumer table now includes gate version and auto-merge path.",
+          "evidence": [
+            {
+              "label": "docs consumer table",
+              "locator": "docs/ci-standard.md:346",
+              "summary": "PokeEdge/PokeEdge-Web matrix includes lockfile/gate version, Renovate signal, auto-merge path, and follow-up."
+            }
+          ]
+        },
+        {
+          "scanner": "workflow-security-correctness",
+          "severity": "info",
+          "summary": "OSV blocking semantics preserved; help step wording now points to OSV Scanner step log and scanner remains table-formatted.",
+          "evidence": [
+            {
+              "label": "python gate",
+              "locator": ".github/workflows/python-security-gate.yml:153",
+              "summary": "Help step writes reproduction guidance, uses strict shell, and OSV scanner still runs with lockfile and table format."
+            },
+            {
+              "label": "javascript gate",
+              "locator": ".github/workflows/javascript-security-gate.yml:132",
+              "summary": "Same pattern as Python gate."
+            }
+          ]
+        },
+        {
+          "scanner": "documentation-tests-quality",
+          "severity": "info",
+          "summary": "Renovate validator and actionlint passed; docs include prerequisite/timing/direct-transitive/PokeEdge-Web follow-up guidance.",
+          "evidence": [
+            {
+              "label": "verification",
+              "locator": "adv_run_test evidence tk-1fdb1f88bb10",
+              "summary": "Renovate config validator and actionlint passed after review remediation."
+            }
+          ]
+        }
+      ],
+      "follow_ups": [
+        "PokeEdge-Web must enable Dependabot alerts/Dependency graph and merge its security-gates pin update PR before baseline Renovate vulnerabilityAlerts are active there."
+      ],
+      "consumer_warnings": []
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "fixOsvRemediation",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/fixOsvRemediation",
+      "scope": {
+        "kind": "change",
+        "scope_key": "harden:release"
+      },
+      "agent": "adv-reviewer",
+      "phase": "harden",
+      "verdict": "READY",
+      "blocking_findings": [],
+      "nonblocking_findings": [],
+      "changes_made": [],
+      "wisdom_candidates": [
+        {
+          "type": "success",
+          "content": "Release harden pattern for config/workflow/docs changes: pair Renovate config validation, actionlint, branch-protection invariant script, scoped committed diff review, and clean worktree check before archive sign-off."
+        }
+      ],
+      "verification": {
+        "tests_run": [
+          "npx --yes --package renovate renovate-config-validator default.json renovate.json",
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "python branch-protection invariant check against rulesets/sharperflow-app-protection.json",
+          "git status --short && git diff --name-only && git diff --stat origin/main...HEAD"
+        ],
+        "results": "pass",
+        "evidence": "Renovate validator passed for default.json and renovate.json. actionlint returned exit 0 with no diagnostics. Branch-protection invariant check passed: target branch, enforcement active, no bypass actors, exact required context Sharperflow CI Gate, strict off, squash-only-compatible. git status --short and git diff --name-only had no output; committed range is limited to default.json, Python/JS security gate workflows, and docs/ci-standard.md."
+      },
+      "scope_drift": null,
+      "risks": [
+        "PokeEdge-Web remediation remains dependent on external repo prerequisites documented in docs/ci-standard.md: enable Dependency graph/Dependabot alerts and merge security-gates pin update PR #109.",
+        "Read-only ADV snapshot exposed persisted acceptance matrix/executive summary and 27/27 passing rows, but also showed acceptance/release gates as pending in disk snapshot; orchestrator should confirm current workflow gate state before archive."
+      ],
+      "required_main_agent_actions": [
+        "Proceed with release/archive sign-off if current ADV gate state agrees with persisted acceptance evidence and this harden READY report.",
+        "Do not revisit default.json, Python/JS security gate OSV help steps, or docs/ci-standard.md PokeEdge/PokeEdge-Web caveat unless new external evidence invalidates the documented prerequisites."
+      ],
+      "required_follow_ups": [],
+      "consumer_warnings": []
+    }
+  ],
+  "deltas": {},
+  "wisdom": [
+    {
+      "id": "ws-bKbRTs",
+      "type": "gotcha",
+      "content": "For Renovate `vulnerabilityAlerts`, shared preset consumption is not enough: caller repo GitHub vulnerability alerts must be enabled. `gh api -i /repos/{owner}/{repo}/vulnerability-alerts` returns HTTP 204 when enabled and 404 with `Vulnerability alerts are disabled.` when not. Treat disabled alerts as a functional remediation gap, not hygiene.",
+      "source_task": "tk-c2eeaed7dd87",
+      "recorded_at": "2026-06-15T23:43:15.242Z"
+    },
+    {
+      "id": "ws-nWUxGD",
+      "type": "pattern",
+      "content": "For reusable security-gate docs, pair Renovate remediation timing with OSV local reproduction commands by ecosystem (`uv.lock`, `bun.lock`) and a direct-vs-transitive limitation note. This prevents callers from interpreting a strict OSV failure as a weakened gate or as a guaranteed automatic Renovate PR for every lockfile-only transitive vulnerability.",
+      "source_task": "tk-a454ae410fb8",
+      "recorded_at": "2026-06-15T23:44:28.611Z"
+    }
+  ],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-15T21:17:31.506Z",
+      "completed_by": "agent",
+      "approval_evidence": "User invoked exact shown continuation `/adv-discover fixOsvRemediation` while proposal approval was pending; command-as-approval Tier A applies. Proposal includes confirmed problem statement, user outcomes, scope, and discovery agenda.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/proposal.md",
+        "content_hash": "40f9fe9cdee42e8aac54d931e1c905a2749f31118ac66fd3aa1e2ccc9ad9c356",
+        "non_whitespace_chars": 6107,
+        "checked_at": "2026-06-15T21:16:00.866Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-15T23:19:39.624Z",
+      "completed_by": "agent",
+      "approval_evidence": "Discovery findings persisted; agreement approved by user. Contract minted with 27 items (SC1-SC5, AC1-AC7, C1-C6, DONT1-DONT5, OOS1-OOS4). Includes explicit PokeEdge and PokeEdge-Web rapid-dev investigation/coverage requirements.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/agreement.md",
+        "content_hash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "non_whitespace_chars": 6406,
+        "checked_at": "2026-06-15T21:16:00.867Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-15T23:23:04.279Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design persisted. Independent adv-researcher validator returned READY. Adopted validator refinements: defer osvVulnerabilityAlerts due experimental/indirect-churn risk, treat PokeEdge-Web disabled vulnerability alerts as functional prerequisite, preserve missing-lockfile warning/skip behavior. No CONFLICT or contract-compromise risk.",
+      "artifact_evidence": {
+        "kind": "design",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/design.md",
+        "content_hash": "e64c02f495631290f2ce914e6e88a679592ec53a96c2cc891605da12fb7521d6",
+        "non_whitespace_chars": 7446,
+        "checked_at": "2026-06-15T21:16:00.868Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-15T23:39:31.584Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved prep plan via inline Tier A reply `approve`. Task graph contains 5 contract-traced tasks with TDD intent and dependencies; validation passed with only NO_DELTAS warning because project has no specs."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-15T23:45:54.981Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 5 tasks completed with checkpoints. Verification passed: Renovate config validator, actionlint, consumer prerequisite checks, git status clean. Remaining NO_DELTAS warning is acceptable because project has no specs."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-16T00:22:21.583Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved acceptance via inline Tier A reply `approve`. Review verdict APPROVED after remediation; contract review matrix persisted with 27 rows and 0 failing/violated/unknown; executive summary persisted and verified; preview URL not_applicable.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/executive-summary.md",
+        "content_hash": "dd13d3fb4ea557ca0dbfe05279d65e9a922ed2197a1203955e51c8adaf7c0acd",
+        "non_whitespace_chars": 1728,
+        "checked_at": "2026-06-15T21:16:00.869Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "adhoc"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+      "approvedAt": "2026-06-15T23:19:31.753Z"
+    },
+    "items": [
+      {
+        "id": "SC1",
+        "kind": "success_criterion",
+        "text": "**SC1** Caller-repo maintainers get a visible remediation path by the next Renovate run for supported direct dependency vulnerabilities with fixed versions.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC2",
+        "kind": "success_criterion",
+        "text": "**SC2** Security gate remains strict: high/critical OSV dependency findings still block until fixed or explicitly ignored by policy.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC3",
+        "kind": "success_criterion",
+        "text": "**SC3** Maintainers can diagnose OSV failures without ad-hoc research: advisory, package, current version, fixed version when available, and local reproduction path are visible in output or docs.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC4",
+        "kind": "success_criterion",
+        "text": "**SC4** Docs set correct expectations for Renovate security-remediation prerequisites, timing, and direct/transitive coverage limits.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC5",
+        "kind": "success_criterion",
+        "text": "**SC5** PokeEdge and PokeEdge-Web have repo-specific remediation paths documented for their rapid-dev pipelines, including any required follow-up that cannot be shipped solely from this repo.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** Given a supported direct dependency vulnerability with a fixed version, when Renovate next processes vulnerability remediation, then it can create or update a security-labelled remediation PR outside the normal weekly schedule, or the docs identify the unmet prerequisite that prevents that behavior.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** Given a high/critical OSV finding in a caller lockfile, when the reusable security gate runs, then the dependency scan job fails unless the finding is fixed or explicitly ignored by caller policy.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** Given an OSV failure in GitHub Actions, when a maintainer reads the job output, step summary, or linked docs, then they can identify advisory URL/ID, package, current version, fixed version when available, and a local reproduction command.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** Given a repo consumes the org Renovate preset, when maintainers read `docs/ci-standard.md`, then they see vulnerability-remediation prerequisites, expected timing of “next Renovate run”, and direct-vs-transitive fallback guidance.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5** Given the design evaluates Renovate’s experimental OSV-native alert option, when design completes, then it records whether to enable or defer it with evidence for stability, support scope, and blast radius.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC6",
+        "kind": "acceptance_criterion",
+        "text": "**AC6** Given Renovate or reusable workflow config changes, when verification runs, then Renovate config validation passes and actionlint proves the reusable workflow still runs OSV against configured caller lockfiles.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC7",
+        "kind": "acceptance_criterion",
+        "text": "**AC7** Given PokeEdge and PokeEdge-Web are primary rapid-dev consumers, when design completes, then it documents how remediation works for each repo’s dependency manager, lockfile, reusable security-gate version, GitHub vulnerability-alert setting, auto-merge path, and any required follow-up.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "**C1** The reusable security gate must keep high/critical OSV dependency findings blocking by default.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "**C2** The exact required branch-protection context `Sharperflow CI Gate` must not be renamed or bypassed.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "**C3** Workflows that emit `Sharperflow CI Gate` must not add workflow-level `paths:` filters.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "**C4** Renovate behavior must be valid Renovate config, not prose-only policy.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C5",
+        "kind": "constraint",
+        "text": "**C5** Caller-facing remediation guidance must be actionable in GitHub Actions output or `docs/ci-standard.md`.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C6",
+        "kind": "constraint",
+        "text": "**C6** Design must account for PokeEdge’s Python/uv flow and PokeEdge-Web’s Bun/Node flow before selecting the final remediation shape.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "**DONT1** Do not weaken OSV failures into non-blocking warnings by default.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "**DONT2** Do not hide security remediation behind the weekly normal-update schedule.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "**DONT3** Do not rely on ad-hoc feature/archive PR dependency bumps as the primary remediation path.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "**DONT4** Do not run two dependency updaters for the same ecosystem in one caller repo.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT5",
+        "kind": "avoidance",
+        "text": "**DONT5** Do not ship a generic preset-only answer that leaves PokeEdge-Web’s disabled vulnerability alerts or stale security-gates pin unaccounted for.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "OOS1",
+        "kind": "out_of_scope",
+        "text": "**OOS1** Replacing Renovate with another dependency updater.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS2",
+        "kind": "out_of_scope",
+        "text": "**OOS2** Broad dependency-update policy redesign beyond vulnerability remediation latency and visibility.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS3",
+        "kind": "out_of_scope",
+        "text": "**OOS3** Manual dependency bumps in PokeEdge or other caller repos as the main fix.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS4",
+        "kind": "out_of_scope",
+        "text": "**OOS4** Changing branch-protection posture or the `Sharperflow CI Gate` check name.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-16T00:08:49.705Z",
+      "rows": [
+        {
+          "contractId": "SC1",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "`default.json` keeps `vulnerabilityAlerts.enabled` + `labels:[\"security\"]`; docs state next Renovate run timing and prerequisites; PokeEdge-Web missing alerts documented as prerequisite gap.",
+          "notes": "Supported direct-dependency path covered; unmet prerequisite path documented."
+        },
+        {
+          "contractId": "SC2",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "OSV Scanner action retained in both reusable gates; only help text added; missing lockfile skip unchanged; docs state findings remain blocking unless fixed/ignored.",
+          "notes": "No gate weakening."
+        },
+        {
+          "contractId": "SC3",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "Workflow help steps add local reproduction command; docs specify OSV Scanner step log + advisory/package/version/fixed-version target; table output remains terminal-readable.",
+          "notes": "Actionable diagnosis via job log + summary help + docs."
+        },
+        {
+          "contractId": "SC4",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "`docs/ci-standard.md` documents Dependency graph/Dependabot alerts/Renovate permission prerequisites, next-run timing, and direct-vs-transitive limitations.",
+          "notes": "Prerequisites and limits visible to consumers."
+        },
+        {
+          "contractId": "SC5",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge/PokeEdge-Web matrix documents lockfile/gate version, alert setting, auto-merge path, and follow-up; PokeEdge-Web alert gap and PR #109 noted.",
+          "notes": "Repo-specific rapid-dev paths covered."
+        },
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Renovate config validator passed. `default.json` retains stable `vulnerabilityAlerts` baseline; docs identify GitHub alert prerequisites and next-run behavior.",
+          "notes": "PokeEdge-Web unmet prerequisite documented."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Actionlint passed; both reusable gates still invoke `google/osv-scanner-action/...# v2.3.8` gated on lockfile existence with no failure suppression.",
+          "notes": "Strict OSV behavior preserved."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Both gates write `$GITHUB_STEP_SUMMARY` remediation help with local `osv-scanner --lockfile=... --format=table`; docs direct maintainers to OSV Scanner step log for advisory/package/version/fixed-version.",
+          "notes": "Review issue about misleading summary wording fixed."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "`docs/ci-standard.md` lines around Renovate security remediation include prerequisites, “next Renovate run”, and direct/transitive fallback guidance.",
+          "notes": "Docs satisfy consumer guidance."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Design and docs record `osvVulnerabilityAlerts` evaluated and deferred due experimental/direct-dep scope and indirect-churn risk.",
+          "notes": "Default-on not selected."
+        },
+        {
+          "contractId": "AC6",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "`bunx --package renovate renovate-config-validator default.json renovate.json` passed; `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed after review remediation.",
+          "notes": "Workflow still runs OSV when lockfile exists."
+        },
+        {
+          "contractId": "AC7",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Consumer verification: PokeEdge alerts HTTP 204; PokeEdge-Web alerts HTTP 404; docs table includes PokeEdge `python-security-gate.yml@v0.3.2`, PokeEdge-Web `javascript-security-gate.yml@v0.2.1` + PR #109, auto-merge path, follow-up.",
+          "notes": "Rapid-dev consumer paths documented."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "OSV scanner action retained; docs state lockfile vulnerabilities remain blocking unless fixed or intentionally ignored.",
+          "notes": "No warning-only conversion."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Diff does not rename `Sharperflow CI Gate`; actionlint passed.",
+          "notes": "Required context preserved."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No workflow-level `paths:` filters added; review diff limited to reusable gate job steps and docs/config.",
+          "notes": "Path-filter rule preserved."
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Renovate config change validated by `renovate-config-validator`; behavior not prose-only.",
+          "notes": "Config remains valid."
+        },
+        {
+          "contractId": "C5",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Workflow summary help and docs provide actionable GitHub Actions/job-log remediation path. Preview URL proof: not_applicable; agreement `visual_surface:false`, touched files are config/workflows/docs only, no browser-visible output.",
+          "notes": "Caller-facing guidance present; preview N/A."
+        },
+        {
+          "contractId": "C6",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Docs and review evidence cover PokeEdge Python/uv and PokeEdge-Web Bun/Node flows separately.",
+          "notes": "Both flows accounted for."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "OSV failures remain blocking; no conversion to warnings or continue-on-error.",
+          "notes": "Avoidance honored."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Docs say security fixes move on next Renovate run, not weekly normal-update schedule; `vulnerabilityAlerts` retained.",
+          "notes": "Security remediation not hidden behind weekly schedule."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Docs identify Renovate/security PR path and manual fallback; not ad-hoc feature/archive PR bumps as primary path.",
+          "notes": "Avoidance honored."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Docs retain one-updater-per-ecosystem rule; no Dependabot config added.",
+          "notes": "Avoidance honored."
+        },
+        {
+          "contractId": "DONT5",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge-Web disabled vulnerability alerts and stale gate pin PR #109 are explicitly documented in consumer table and follow-up.",
+          "notes": "Generic preset-only answer avoided."
+        },
+        {
+          "contractId": "OOS1",
+          "kind": "out_of_scope",
+          "status": "not_applicable",
+          "evidencePolicy": "not_applicable",
+          "evidence": "No dependency updater replacement; Renovate remains baseline.",
+          "notes": "Boundary respected."
+        },
+        {
+          "contractId": "OOS2",
+          "kind": "out_of_scope",
+          "status": "not_applicable",
+          "evidencePolicy": "not_applicable",
+          "evidence": "No broad dependency policy redesign; changes target vulnerability remediation visibility/timing only.",
+          "notes": "Boundary respected."
+        },
+        {
+          "contractId": "OOS3",
+          "kind": "out_of_scope",
+          "status": "not_applicable",
+          "evidencePolicy": "not_applicable",
+          "evidence": "No manual dependency bumps in caller repos performed.",
+          "notes": "Boundary respected."
+        },
+        {
+          "contractId": "OOS4",
+          "kind": "out_of_scope",
+          "status": "not_applicable",
+          "evidencePolicy": "not_applicable",
+          "evidence": "No branch-protection/check-name posture changes; `Sharperflow CI Gate` preserved. Preview URL not_applicable because no visual surface changed.",
+          "notes": "Boundary respected."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** Given a supported direct dependency vulnerability with a fixed version, when Renovate next processes vulnerability remediation, then it can create or update a security-labelled remediation PR outside the normal weekly schedule, or the docs identify the unmet prerequisite that prevents that behavior.",
+    "**AC2** Given a high/critical OSV finding in a caller lockfile, when the reusable security gate runs, then the dependency scan job fails unless the finding is fixed or explicitly ignored by caller policy.",
+    "**AC3** Given an OSV failure in GitHub Actions, when a maintainer reads the job output, step summary, or linked docs, then they can identify advisory URL/ID, package, current version, fixed version when available, and a local reproduction command.",
+    "**AC4** Given a repo consumes the org Renovate preset, when maintainers read `docs/ci-standard.md`, then they see vulnerability-remediation prerequisites, expected timing of “next Renovate run”, and direct-vs-transitive fallback guidance.",
+    "**AC5** Given the design evaluates Renovate’s experimental OSV-native alert option, when design completes, then it records whether to enable or defer it with evidence for stability, support scope, and blast radius.",
+    "**AC6** Given Renovate or reusable workflow config changes, when verification runs, then Renovate config validation passes and actionlint proves the reusable workflow still runs OSV against configured caller lockfiles.",
+    "**AC7** Given PokeEdge and PokeEdge-Web are primary rapid-dev consumers, when design completes, then it documents how remediation works for each repo’s dependency manager, lockfile, reusable security-gate version, GitHub vulnerability-alert setting, auto-merge path, and any required follow-up."
+  ],
+  "documents": {
+    "proposal": "# Fix OSV remediation\n\n## Why\n\nSharper Flow's reusable security gate correctly fails caller-repo PRs on high/critical OSV dependency vulnerabilities, but Renovate does not reliably create timely remediation PRs outside the normal weekly update cadence. This leaves unrelated active PRs blocked by vulnerable lockfile entries and forces ad-hoc dependency bumps into feature/archive PRs to unblock merge.\n\nDesired outcome: keep security gate enforcement strict, while making vulnerability remediation timely, visible, and predictable through Renovate behavior plus clearer OSV failure output/docs.\n\n## What Changes\n\nThis change will define and implement the org-level behavior needed so OSV-discovered dependency vulnerabilities have a predictable remediation path in caller repos.\n\nLikely touched surfaces, subject to discovery:\n\n- Shared Renovate preset behavior in `default.json`.\n- Repo-local Renovate consumption guidance in `renovate.json` / docs.\n- Reusable OSV dependency scan workflow output in `.github/workflows/python-security-gate.yml` and `.github/workflows/javascript-security-gate.yml`.\n- Documentation in `docs/ci-standard.md` and adjacent user-facing setup guidance.\n\n## User Outcomes\n\n- Caller-repo maintainers get a timely security-remediation PR when a vulnerable lockfile dependency has a fixed version.\n- Active feature/archive PRs are not forced to carry unrelated ad-hoc dependency bumps solely to unblock the security gate.\n- Security posture stays strict: real high/critical dependency vulnerabilities continue to fail the reusable gate unless fixed or explicitly ignored by policy.\n- CI failure output or documented reproduction steps show enough information to act: advisory URL, package, current version, fixed version, and local reproduction command.\n- Repos consuming the org preset understand expected vulnerability-alert timing and behavior.\n\n## Scope\n\n### In Scope\n\n- Renovate preset/config behavior for vulnerability remediation outside normal weekly updates.\n- Documentation of Renovate vulnerability-alert behavior, expected timing, and caller expectations.\n- OSV dependency scan output or documentation improvements for actionable remediation details.\n- Validation that Renovate preset syntax remains valid.\n- Validation that reusable workflows still run OSV against configured caller lockfiles.\n- Explicit current-state/design investigation for PokeEdge and PokeEdge-Web because they are rapid-dev primary consumers with distinct Python/uv and Bun/Node pipelines.\n\n### Out of Scope\n\n- Weakening or bypassing OSV/security-gate failure behavior for real high/critical vulnerabilities.\n- Broad dependency-update policy redesign beyond vulnerability remediation latency/visibility.\n- Replacing Renovate with another dependency updater.\n- Manual dependency bumps in PokeEdge or other caller repos as the primary fix.\n- Changing the required `Sharperflow CI Gate` check name or branch-protection posture.\n\n### Must Not\n\n- Must not make security findings non-blocking by default.\n- Must not hide OSV failures behind weekly scheduling or dashboard-only visibility.\n- Must not introduce workflow-level path filters on workflows that emit `Sharperflow CI Gate`.\n- Must not rename `Sharperflow CI Gate`.\n- Must not rely on undocumented ad-hoc repo maintenance as the remediation path.\n\n## Affected Code\n\nQuick checks found these likely affected files:\n\n- `default.json` — shared Renovate preset currently has weekly schedule, `minimumReleaseAge: \"7 days\"`, and `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"`.\n- `renovate.json` — this repo consumes the local shared preset.\n- `.github/workflows/python-security-gate.yml` — OSV Scanner runs when `inputs.lockfile-path` exists, with `--lockfile=${{ inputs.lockfile-path }}` and `--format=table`.\n- `.github/workflows/javascript-security-gate.yml` — parallel JS/TS OSV dependency scan surface.\n- `docs/ci-standard.md` — Renovate path documents shared preset, cooldown, security-fix exemption, automerge, and install behavior.\n\n## Related Repositories\n\n- Primary repo: `Sharper-Flow/sharperflow-security-gates`.\n- Caller evidence repo: `Sharper-Flow/PokeEdge`, especially PR #465.\n- Required consumer investigation repos: `Sharper-Flow/PokeEdge` and `Sharper-Flow/PokeEdge-Web`.\n- Likely consumers: any Sharper Flow app repo extending `github>Sharper-Flow/sharperflow-security-gates`.\n\n## Constraints\n\n- Preserve the security gate as a blocking control for real high/critical dependency vulnerabilities unless fixed or explicitly ignored by policy.\n- Preserve branch-protection contract: one exact required check context, `Sharperflow CI Gate`.\n- Preserve no workflow-level `paths:` filters on workflows that emit `Sharperflow CI Gate`.\n- Renovate behavior must be valid Renovate config, not prose-only policy.\n- OSV remediation guidance must be actionable for GitHub Actions failures and local reproduction.\n\n## Impact\n\n- Reduces blocked unrelated caller PRs caused by known vulnerable lockfile entries lacking a timely remediation PR.\n- Makes the remediation owner/path visible instead of forcing feature PR authors to improvise dependency fixes.\n- Keeps security enforcement strict while improving operational response.\n\n## Context\n\nObserved in PokeEdge PR #465:\n\n- OSV failed on `cryptography 48.0.0` → `GHSA-537c-gmf6-5ccf`, fixed in `48.0.1`.\n- After bumping `cryptography`, local OSV exposed `starlette 1.2.1` → `GHSA-82w8-qh3p-5jfq` / `GHSA-jp82-jpqv-5vv3`, fixed in `1.3.1` / `1.3.0`.\n- No open Renovate PR existed for `cryptography` or `starlette`; only unrelated Azure/Bicep Renovate PRs were open.\n- Feature/archive PR had to carry ad-hoc dependency bumps to unblock auto-merge.\n\nIssue reference: https://github.com/Sharper-Flow/sharperflow-security-gates/issues/19\n\n## Discovery Findings\n\n### Discovery Checklist\n\n| Step | Result | Reason |\n|---|---|---|\n| Skill Discovery | PASS | Considered ADV skills; opportunity-scout skill used by researcher. |\n| Prior Research Extension | PASS | Extended archived `adoptRenovateOrgWide` plus issue #19; added current Renovate/OSV findings. |\n| Conflict & Related-Work Scan | PASS | `deepenSastDataflow` active but unrelated; archived `adoptRenovateOrgWide` related; validation warnings expected pre-prep; no agenda conflict. |\n| Edge Case Investigation | PASS | Edge cases recorded for Renovate signal source, direct/transitive coverage, rapid-dev repo differences, OSV output, and validation. |\n| Design Question Depth | PASS | Open questions include trust model, blast radius, and alternatives. |\n| Draft Spec Delta Shapes | PASS | Draft `rq-*` deltas recorded below. |\n| Related Pattern Scan | PASS | Found identical OSV table-only pattern in Python and JavaScript gates. |\n| LBP Check | PASS | Best path is Renovate remediation plus explicit prerequisites and OSV summary visibility; no security weakening. |\n\n### Skills Considered\n\n- `adv-ci-release`: partial match for CI/release automation; not core.\n- `adv-improve`: relevant for broad external landscape; no existing research pack found, external check run inline.\n- `adv-opportunity-scout`: used by `adv-researcher`; surfaced 5 candidates.\n- `lgrep`: local-code exploration policy applied.\n- Skill gap: no dedicated Renovate/OSV remediation skill found. Not created; evidence scope is bounded and captured here.\n\n### Extends\n\n- Archived change `adoptRenovateOrgWide`: established shared `default.json`, per-repo `renovate.json`, `minimumReleaseAge: \"7 days\"`, `vulnerabilityAlerts`, top-level automerge on green, and `renovate-config-validator` verification.\n  - New finding: Renovate docs say `vulnerabilityAlerts` requires GitHub Dependency graph + Dependabot alerts enabled in caller repo settings, and app mode needs read permission for Dependabot alerts.\n  - New finding: Renovate docs say vulnerability-alert PRs bypass schedule/rate limits and security updates bypass `minimumReleaseAge`; current `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"` is redundant, not the core timing mechanism.\n  - New finding: Renovate `osvVulnerabilityAlerts` can create OSV-sourced fix PRs for direct dependencies in supported datasources including `pypi` and `npm`, but it is experimental/direct-dep scoped.\n- Issue #19: preserves observed PokeEdge failure and desired behavior.\n- No `temp/*.md` or `docs/*-prep.md` research packs found.\n\n### Conflict Scan\n\n- Active change `deepenSastDataflow`: unrelated SAST/dataflow decision.\n- Relevant archived change `adoptRenovateOrgWide`: related and constraining; this change refines its vulnerability-remediation path.\n- `adv_change_validate fixOsvRemediation`: passed; warnings `NO_TASKS` and `NO_DELTAS` expected before prep/spec deltas.\n- Agenda: no overlapping OSV/Renovate agenda item.\n\n### Current State\n\nSecurity-gates:\n\n- `default.json` currently sets weekly schedule, `minimumReleaseAge: \"7 days\"`, `internalChecksFilter: \"strict\"`, top-level `automerge`, and `vulnerabilityAlerts` with `enabled: true`, `labels: [\"security\"]`, `minimumReleaseAge: \"0 days\"`.\n- Python gate and JavaScript gate both run OSV Scanner v2.3.8 only when caller `lockfile-path` exists, using `--lockfile=...` and `--format=table`.\n- `docs/ci-standard.md` documents security fixes as cooldown-exempt, but does not document caller prerequisites for Renovate vulnerability fix PRs or expected timing beyond the exemption.\n- `bunx --package renovate renovate-config-validator default.json renovate.json` validates successfully against 2 files.\n\nPokeEdge:\n\n- Private repo, default branch `main`.\n- `renovate.json` extends `github>Sharper-Flow/sharperflow-security-gates` with no repo-specific overrides.\n- `pyproject.toml` uses Python `>=3.13,<3.14`, uv-managed dependencies, and now includes direct constraints for `starlette>=1.3.1` and `cryptography>=48.0.1` from the observed remediation.\n- PR gate uses reusable `python-security-gate.yml@v0.3.2` SHA, `lockfile-path: \"uv.lock\"`, `python-version: \"3.13\"`, and includes the `security` job in both `fast-gate` and final `Sharperflow CI Gate` needs.\n- `gh api /repos/Sharper-Flow/PokeEdge/vulnerability-alerts` returned `HTTP/2.0 204 No Content`, so Dependabot alerts are enabled now.\n- Open Renovate PRs remain unrelated Azure/Bicep updates; no `cryptography`/`starlette` remediation PR open at discovery time.\n- Rapid-dev implication: PokeEdge has a heavy multi-lane PR gate and auto-merge path; security remediation must produce a normal PR that goes through the existing `Sharperflow CI Gate` rather than requiring feature/archive PR authors to patch lockfiles opportunistically.\n\nPokeEdge-Web:\n\n- Private repo, default branch `main`.\n- Local repo present at `/home/jon/dev/pokeedge-web`.\n- `renovate.json` extends the shared preset, uses Bun `packageManager: \"bun@1.3.13\"`, Node `>=24.0.0`, and has an `undici` allowed-version cap due to jsdom compatibility.\n- CI uses reusable `javascript-security-gate.yml@v0.2.1` SHA with `lockfile-path: 'bun.lock'` and includes `security` in required `Sharperflow CI Gate` needs.\n- Open Renovate PR #109 updates the security-gates action to `v0.3.2`; until merged, this repo will not receive newer reusable-gate behavior.\n- `gh api /repos/Sharper-Flow/PokeEdge-Web/vulnerability-alerts` returned `404` with `\"Vulnerability alerts are disabled.\"`\n- Open Renovate PRs include dev dependency group, `prettier-plugin-svelte`, `@supabase/ssr`, and security-gates action update; no security-labelled vulnerability remediation PR observed.\n- Rapid-dev implication: PokeEdge-Web has frequent frontend dependency movement, generated API sync, Bun/Node version constraints, and backend-coupled integration checks. Security remediation must respect local caps such as `undici <8`, avoid destabilizing generated API/build workflows, and ensure the repo actually has vulnerability-alert prerequisites enabled.\n\n### Edge Cases\n\n1. Renovate vulnerability signal source\n   - GitHub alerts enabled but Renovate cannot map a transitive vulnerable package to a safe lockfile remediation PR.\n   - GitHub alerts disabled in a consumer repo, so `vulnerabilityAlerts` never triggers despite preset config.\n2. OSV remediation coverage\n   - `osvVulnerabilityAlerts` catches a direct `pypi`/`npm` dependency but misses a transitive lockfile-only package.\n   - Fixed version exists but requires parent-dependency/resolver movement, not direct package update.\n3. Rapid-dev repo differences\n   - PokeEdge can be correctly configured for GitHub alerts yet still not receive a PR for transitive or resolver-limited vulnerabilities.\n   - PokeEdge-Web can consume the preset yet receive no GitHub-alert-driven PRs because vulnerability alerts are disabled, and may lag reusable-gate fixes until Renovate updates the SHA-pinned workflow reference.\n4. CI failure visibility\n   - Table output lacks enough fixed-version/advisory context in visible GitHub log to avoid manual lookup.\n   - Markdown/summary output improves visibility but must preserve non-zero exit behavior.\n5. Validation\n   - Renovate schema validates while caller GitHub settings still prevent vulnerability fix PRs.\n   - Workflow syntax validates while scanner output format changes need pinned-action compatibility verification.\n\n### Open Design Questions\n\n1. Enable Renovate `osvVulnerabilityAlerts`?\n   - Trust model: joint. Agent validates docs; user deferred final choice to design.\n   - Blast radius: org preset affects all Renovate consumers.\n   - Alternatives: keep only GitHub `vulnerabilityAlerts`; enable `osvVulnerabilityAlerts`; document future option.\n2. Define consumer-specific behavior for PokeEdge and PokeEdge-Web.\n   - Trust model: agent-resolved with evidence, because it depends on repo configs/settings.\n   - Blast radius: affects docs, validation, and possible cross-repo follow-ups.\n   - Alternatives: repo-only generic docs; explicit PokeEdge/Web sections; create caller follow-up changes for missing settings/action bump if needed.\n3. How explicit should transitive vulnerability limits be?\n   - Trust model: joint; user deferred final best-practice/stability wording to design.\n   - Blast radius: overpromising could make the fix look broken when a transitive vulnerability needs parent/resolver movement.\n   - Alternatives: document direct vs transitive limits; add fallback manual reproduction; pursue broader resolver automation later.\n4. OSV output format change.\n   - Trust model: agent-resolved LBP.\n   - Blast radius: GitHub log readability only if exit code preserved.\n   - Alternatives: keep table; add Markdown to `$GITHUB_STEP_SUMMARY`; add JSON post-processing in design if markdown lacks fields.\n\n### Draft Spec Deltas\n\n- `rq-osvRemediation01` — Given a caller repo has a direct OSV/GitHub-alerted dependency vulnerability with a fixed version available, when Renovate processes vulnerability remediation, then a security-labelled remediation PR is created or updated outside the normal weekly update schedule or unmet prerequisites are documented.\n- `rq-osvRemediation02` — Given a caller lockfile contains a high/critical OSV finding, when the reusable security gate runs, then the dependency scan job fails unless the vulnerability is fixed or explicitly ignored by caller policy.\n- `rq-osvRemediation03` — Given OSV fails in GitHub Actions, when a maintainer opens job output or summary/docs, then they can identify advisory URL/ID, package, current version, fixed version when available, and a local reproduction command.\n- `rq-renovateSecurityDocs01` — Given a repo consumes the org Renovate preset, when maintainers read the CI standard, then they see vulnerability-alert prerequisites, expected timing, direct/transitive limits, and fallback remediation path.\n- `rq-consumerRapidDev01` — Given PokeEdge and PokeEdge-Web consume the shared gates/preset, when design completes, then it documents how the remediation path works for Python/uv and Bun/Node rapid-dev pipelines, including repo prerequisites and follow-ups.\n- `rq-osvValidation01` — Given this repo changes Renovate or OSV workflow config, when verification runs, then Renovate config validation and actionlint pass.\n\n### Related Pattern Scan\n\n- `.github/workflows/python-security-gate.yml:153-159`: OSV uses `--format=table` only.\n- `.github/workflows/javascript-security-gate.yml:132-138`: same table-only OSV output pattern.\n- `docs/ci-standard.md:276-283`: security-fix exemption is documented, but not prerequisites/timing details.\n- `default.json:21-25`: vulnerabilityAlerts enabled; no `osvVulnerabilityAlerts` currently.\n- PokeEdge PR gate uses Python gate with `uv.lock`; PokeEdge-Web CI uses JavaScript gate with `bun.lock`.\n\n### LBP Check\n\nLikely best-practice path:\n\n1. Preserve the strict OSV gate and keep failures blocking.\n2. Document and validate Renovate `vulnerabilityAlerts` prerequisites and timing: GitHub Dependency graph + Dependabot alerts, app permission, and skip-the-line behavior.\n3. Add explicit consumer guidance for PokeEdge and PokeEdge-Web because the current evidence differs: PokeEdge alerts enabled, PokeEdge-Web alerts disabled, PokeEdge-Web reusable-gate SHA update pending.\n4. Improve OSV failure visibility via Markdown/summary output or equivalent documented command.\n5. Consider `osvVulnerabilityAlerts` as a design-time policy choice because it is experimental and direct-dependency scoped.\n\n### Discovery Opportunity Scout\n\n- Trigger: run — strategic ecosystem/config change with external Renovate/OSV behavior.\n- Candidates considered: 5.\n- Auto-adopted: OSV markdown/summary visibility should be in agreement criteria.\n- Surfaced to user: GitHub-alert prerequisites in docs; `osvVulnerabilityAlerts`; direct/transitive coverage limits.\n- Inconclusive/follow-up: remove redundant `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"` as optional cleanup.\n\n### Recommended Objectives\n\n1. Preserve strict OSV dependency-scan blocking behavior.\n2. Make Renovate vulnerability-remediation timing and prerequisites explicit in config/docs.\n3. Improve OSV failure output/docs so maintainers can remediate without ad-hoc investigation.\n4. Validate Renovate config and reusable workflow syntax after changes.\n5. Make direct-vs-transitive remediation limits explicit so caller repos know when manual resolver action is required.\n6. Fully investigate and document how the remediation path applies to PokeEdge and PokeEdge-Web under rapid development.\n\n### AMBIGUITY ANALYSIS\n\nNo blocking ambiguity findings after user clarified timing as “next Renovate run” and deferred `osvVulnerabilityAlerts` / transitive fallback decisions to design.\n\nCoverage: B:C F:C S:C M:C\n",
+    "problemStatement": "Sharper Flow's reusable security gate correctly fails caller-repo PRs on high/critical OSV dependency vulnerabilities, but Renovate does not reliably create timely remediation PRs outside the normal weekly update cadence. This leaves unrelated active PRs blocked by vulnerable lockfile entries and forces ad-hoc dependency bumps into feature/archive PRs to unblock merge.\n\nDesired outcome: keep security gate enforcement strict, while making vulnerability remediation timely, visible, and predictable through Renovate behavior plus clearer OSV failure output/docs.",
+    "agreement": "# Agreement — fixOsvRemediation\n\n## Objectives\n\n1. Preserve strict OSV dependency-scan enforcement for real high/critical vulnerabilities.\n2. Make Renovate vulnerability-remediation timing and prerequisites explicit for caller repos.\n3. Improve OSV failure visibility so maintainers can identify the advisory, package, current version, fixed version when available, and local reproduction path.\n4. Document direct-vs-transitive remediation limits without overpromising automatic fixes for every lockfile-only vulnerability.\n5. Validate Renovate config and reusable workflow syntax after changes.\n6. Fully investigate and document how the remediation path works for PokeEdge and PokeEdge-Web under rapid development.\n\n## Success Criteria\n\n- **SC1** Caller-repo maintainers get a visible remediation path by the next Renovate run for supported direct dependency vulnerabilities with fixed versions.\n- **SC2** Security gate remains strict: high/critical OSV dependency findings still block until fixed or explicitly ignored by policy.\n- **SC3** Maintainers can diagnose OSV failures without ad-hoc research: advisory, package, current version, fixed version when available, and local reproduction path are visible in output or docs.\n- **SC4** Docs set correct expectations for Renovate security-remediation prerequisites, timing, and direct/transitive coverage limits.\n- **SC5** PokeEdge and PokeEdge-Web have repo-specific remediation paths documented for their rapid-dev pipelines, including any required follow-up that cannot be shipped solely from this repo.\n\n## Acceptance Criteria\n\n- **AC1** Given a supported direct dependency vulnerability with a fixed version, when Renovate next processes vulnerability remediation, then it can create or update a security-labelled remediation PR outside the normal weekly schedule, or the docs identify the unmet prerequisite that prevents that behavior.\n- **AC2** Given a high/critical OSV finding in a caller lockfile, when the reusable security gate runs, then the dependency scan job fails unless the finding is fixed or explicitly ignored by caller policy.\n- **AC3** Given an OSV failure in GitHub Actions, when a maintainer reads the job output, step summary, or linked docs, then they can identify advisory URL/ID, package, current version, fixed version when available, and a local reproduction command.\n- **AC4** Given a repo consumes the org Renovate preset, when maintainers read `docs/ci-standard.md`, then they see vulnerability-remediation prerequisites, expected timing of “next Renovate run”, and direct-vs-transitive fallback guidance.\n- **AC5** Given the design evaluates Renovate’s experimental OSV-native alert option, when design completes, then it records whether to enable or defer it with evidence for stability, support scope, and blast radius.\n- **AC6** Given Renovate or reusable workflow config changes, when verification runs, then Renovate config validation passes and actionlint proves the reusable workflow still runs OSV against configured caller lockfiles.\n- **AC7** Given PokeEdge and PokeEdge-Web are primary rapid-dev consumers, when design completes, then it documents how remediation works for each repo’s dependency manager, lockfile, reusable security-gate version, GitHub vulnerability-alert setting, auto-merge path, and any required follow-up.\n\n## Constraints\n\n- **C1** The reusable security gate must keep high/critical OSV dependency findings blocking by default.\n- **C2** The exact required branch-protection context `Sharperflow CI Gate` must not be renamed or bypassed.\n- **C3** Workflows that emit `Sharperflow CI Gate` must not add workflow-level `paths:` filters.\n- **C4** Renovate behavior must be valid Renovate config, not prose-only policy.\n- **C5** Caller-facing remediation guidance must be actionable in GitHub Actions output or `docs/ci-standard.md`.\n- **C6** Design must account for PokeEdge’s Python/uv flow and PokeEdge-Web’s Bun/Node flow before selecting the final remediation shape.\n\n## Avoidances\n\n- **DONT1** Do not weaken OSV failures into non-blocking warnings by default.\n- **DONT2** Do not hide security remediation behind the weekly normal-update schedule.\n- **DONT3** Do not rely on ad-hoc feature/archive PR dependency bumps as the primary remediation path.\n- **DONT4** Do not run two dependency updaters for the same ecosystem in one caller repo.\n- **DONT5** Do not ship a generic preset-only answer that leaves PokeEdge-Web’s disabled vulnerability alerts or stale security-gates pin unaccounted for.\n\n## Out of Scope\n\n- **OOS1** Replacing Renovate with another dependency updater.\n- **OOS2** Broad dependency-update policy redesign beyond vulnerability remediation latency and visibility.\n- **OOS3** Manual dependency bumps in PokeEdge or other caller repos as the main fix.\n- **OOS4** Changing branch-protection posture or the `Sharperflow CI Gate` check name.\n\n## Preview Applicability\n\n- `visual_surface: false`\n- Rationale: change affects Renovate config, GitHub Actions workflow output, repository settings/docs, and follow-up guidance. No frontend, browser-visible UI, or visual product output is in scope.\n\n## Decisions\n\n### User Decisions\n\n- Timing target: “timely” means remediation path by the next Renovate run.\n- Renovate `osvVulnerabilityAlerts`: defer decision to design.\n- Transitive lockfile vulnerabilities: defer final best-practice/stability treatment to design, with docs expected to avoid overpromising automatic PRs.\n- PokeEdge and PokeEdge-Web rapid-dev requirements: fully investigate and document both repos’ unique requirements before selecting final design.\n\n### Agent Decisions (LBP)\n\n- Renovate `vulnerabilityAlerts` should remain the baseline security-remediation mechanism; docs must state GitHub Dependency graph + Dependabot alerts/app permission prerequisites.\n- `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"` is redundant because Renovate security updates bypass minimum-release-age checks; design may keep or remove it based on clarity.\n- OSV gate behavior must stay blocking; visibility improvements should use summary/docs/output changes without changing exit semantics.\n- `bunx --package renovate renovate-config-validator default.json renovate.json` is the validated Renovate config check for this repo.\n- Workflow validation should use the repo-standard `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7`.\n- PokeEdge currently has vulnerability alerts enabled and uses `python-security-gate.yml@v0.3.2` against `uv.lock`.\n- PokeEdge-Web currently has vulnerability alerts disabled, uses `javascript-security-gate.yml@v0.2.1` against `bun.lock`, and has a pending Renovate PR to update the security-gates action to `v0.3.2`.\n\n## Deferred Questions\n\n- Whether to enable Renovate `osvVulnerabilityAlerts` in the shared preset. Deferred by user to design for best-practice/stability evaluation.\n- Exact direct-vs-transitive fallback wording/behavior. Deferred by user to design for best-practice/stability evaluation.\n- Whether PokeEdge-Web vulnerability-alert enablement and stale security-gates pin should be handled as cross-repo follow-ups or documented operator prerequisites. Deferred to design based on evidence and repo access.\n\n## Sign-Off\n\nCriteria approved by user: `approve` at discovery acceptance-criteria checkpoint, then revised `approve` after adding repo-specific PokeEdge/PokeEdge-Web rapid-dev coverage.\n",
+    "design": "# Design — fixOsvRemediation\n\n## Decision Summary\n\nUse a stable two-plane remediation model:\n\n1. **Renovate remediation plane** — keep `vulnerabilityAlerts` as the stable baseline for automatic security PRs, document its caller-repo prerequisites, and do not enable `osvVulnerabilityAlerts` by default in this change.\n2. **OSV gate visibility plane** — preserve strict OSV Scanner failure semantics, while improving maintainer-facing failure visibility through OSV output/docs and local reproduction guidance.\n\nThis intentionally avoids weakening the security gate and avoids relying on an experimental Renovate feature as the default org-wide policy.\n\n## Evidence\n\n### Renovate\n\n- Renovate docs: `vulnerabilityAlerts` can raise vulnerability-fix PRs, but requires GitHub Dependency graph + Dependabot alerts enabled in the repository; app mode needs read permission for Dependabot alerts.\n- Renovate docs: vulnerability-alert PRs bypass standard scheduling/rate limits and attempt PR creation outside the weekly update cadence.\n- Renovate docs: security updates bypass `minimumReleaseAge`; therefore `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"` is redundant.\n- Renovate docs: `osvVulnerabilityAlerts` is experimental, default `false`, direct-dependency scoped, and supports datasources including `npm` and `pypi`.\n- Independent validator found an open Renovate issue where OSV alerts created indirect-dependency PRs despite docs, creating churn risk under automerge.\n\n### OSV Scanner\n\n- Current reusable gates pin `google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2 # v2.3.8`.\n- Current Python and JavaScript gates run OSV only when caller lockfile exists, with `--format=table`.\n- OSV Scanner action remains failing by default on vulnerabilities; missing lockfile path is intentionally warning/skip per current workflow behavior.\n- OSV Scanner docs include markdown output and return code semantics: `1` for vulnerabilities, `0` for none.\n\n## Architecture\n\n### 1. Stable Renovate baseline\n\nKeep `default.json` on the stable GitHub-alert path:\n\n- `vulnerabilityAlerts.enabled: true`\n- `labels: [\"security\"]`\n- no weekly-schedule dependency for vulnerability remediation\n\nDesign note: remove or document `vulnerabilityAlerts.minimumReleaseAge: \"0 days\"` as redundant during implementation. If removed, behavior should remain unchanged because Renovate already exempts security updates from minimum-release-age checks.\n\n### 2. Defer `osvVulnerabilityAlerts` as default-on\n\nDo **not** enable `osvVulnerabilityAlerts` by default in this change.\n\nRationale:\n\n- It is marked experimental in Renovate docs.\n- It is direct-dependency scoped by documentation.\n- Validator found real-world indirect-dependency churn risk under automerge.\n- PokeEdge/PokeEdge-Web rapid-dev policy values stable automatic PR behavior more than experimental breadth.\n\nDocumentation should say it was evaluated and deferred, not ignored. Future opt-in can be reconsidered after stability improves or if a repo explicitly wants OSV-native direct-dependency alerts.\n\n### 3. Caller prerequisites become explicit contract\n\nDocs must state that Renovate security PRs require:\n\n- GitHub Dependency graph enabled.\n- Dependabot alerts enabled.\n- Renovate GitHub App permission to read Dependabot alerts.\n- Existing shared Renovate preset consumed by the repo.\n\nIf a repo lacks these prerequisites, the expected remediation path is not “wait for weekly Renovate”; it is “enable missing prerequisites or use documented manual reproduction/fallback”.\n\n### 4. OSV visibility without weakening gate\n\nImplementation should improve actionability without changing blocking semantics:\n\n- Keep OSV Scanner vulnerability findings failing the job.\n- Improve output by using OSV markdown-capable output when practical, or by adding docs/local reproduction commands if the action cannot write directly to `$GITHUB_STEP_SUMMARY`.\n- Required information target: advisory URL/ID, package, current version, fixed version when available, and local reproduction command.\n\nCandidate local reproduction command patterns:\n\n- Python/uv caller: `osv-scanner --lockfile=uv.lock --format=table`\n- JavaScript/Bun caller: `osv-scanner --lockfile=bun.lock --format=table`\n\n### 5. PokeEdge rapid-dev path\n\nCurrent evidence:\n\n- Private repo, default branch `main`.\n- `renovate.json` extends `github>Sharper-Flow/sharperflow-security-gates`.\n- Python `pyproject.toml` + `uv.lock`; Python `>=3.13,<3.14`.\n- PR gate uses `python-security-gate.yml@v0.3.2` with `lockfile-path: \"uv.lock\"`.\n- `security` job feeds both fast gate and final `Sharperflow CI Gate`.\n- GitHub vulnerability alerts currently enabled (`204 No Content`).\n- Open Renovate PRs at discovery time were unrelated Azure/Bicep updates.\n\nDesign outcome for PokeEdge:\n\n- Renovate security PRs should work for supported direct dependencies once GitHub alerts exist.\n- Transitive lockfile-only findings may still require parent dependency/resolver action; docs must state this.\n- PokeEdge should not need a same-change cross-repo config update unless design/implementation finds a missing permission or pinned gate issue beyond current evidence.\n- The PR #465 case is now partly remediated in `pyproject.toml` (`starlette>=1.3.1`, `cryptography>=48.0.1`), but docs should explain why the feature/archive PR had to patch it and how future cases should flow.\n\n### 6. PokeEdge-Web rapid-dev path\n\nCurrent evidence:\n\n- Private repo, default branch `main`.\n- Local repo at `/home/jon/dev/pokeedge-web`.\n- `renovate.json` extends the shared preset.\n- Bun `packageManager: \"bun@1.3.13\"`; Node `>=24.0.0`; lockfile `bun.lock`.\n- CI uses `javascript-security-gate.yml@v0.2.1` with `lockfile-path: 'bun.lock'`.\n- Security job feeds required `Sharperflow CI Gate`.\n- GitHub vulnerability alerts currently disabled (`404 \"Vulnerability alerts are disabled.\"`).\n- Open Renovate PR #109 updates the security-gates action to `v0.3.2`.\n- Local `undici <8` cap exists due jsdom compatibility.\n\nDesign outcome for PokeEdge-Web:\n\n- Treat disabled Dependabot alerts as a **functional prerequisite gap**, not hygiene.\n- Implementation should update security-gates docs to call out this prerequisite explicitly.\n- Prep should include either:\n  - a cross-repo/operator follow-up to enable vulnerability alerts for PokeEdge-Web, or\n  - a documented manual setting checklist if repo settings cannot be changed from code.\n- Prep should include a follow-up/check for PR #109 or equivalent so PokeEdge-Web consumes the newer reusable security gate behavior.\n- Any OSV remediation docs must respect Bun/Node lockfile and local compatibility caps such as `undici <8`; automatic security updates must still pass `Sharperflow CI Gate`.\n\n## Implementation Strategy\n\n1. Update `docs/ci-standard.md` dependency-update/security section:\n   - define “next Renovate run” timing;\n   - document prerequisites;\n   - document direct vs transitive limits;\n   - document PokeEdge and PokeEdge-Web current-state examples;\n   - document local OSV reproduction commands.\n2. Update reusable OSV gate output behavior for both Python and JavaScript gates if feasible without changing exit semantics.\n3. Update `default.json` only for clarity if validation confirms no behavior regression.\n   - Recommended: keep `vulnerabilityAlerts.enabled` and labels;\n   - consider removing redundant `minimumReleaseAge: \"0 days\"` or documenting why it is present.\n4. Add validation evidence:\n   - `bunx --package renovate renovate-config-validator default.json renovate.json`\n   - `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7`\n5. Capture PokeEdge-Web prerequisite gap as a task/follow-up during prep.\n\n## Rejected Approaches\n\n- Do not weaken OSV findings to warnings.\n- Do not enable experimental `osvVulnerabilityAlerts` by default across the org in this change.\n- Do not claim Renovate will fix all transitive lockfile-only vulnerabilities automatically.\n- Do not treat weekly normal-update schedule as the remediation path for security findings.\n- Do not ignore PokeEdge-Web because it consumes the preset; its disabled vulnerability alerts mean the baseline mechanism is inert there.\n\n## Validator Result\n\nIndependent `adv-researcher` validator verdict: READY.\n\nNon-blocking refinements adopted:\n\n- Deferral of `osvVulnerabilityAlerts` is justified by experimental status and indirect-churn risk, not lack of stack support.\n- PokeEdge-Web Dependabot alerts are a functional prerequisite gap.\n- Missing lockfile remains warning/skip; design does not change that behavior.\n\nNo validator `CONFLICT`; no contract-compromise risk identified.\n",
+    "executiveSummary": "# Executive Summary\n\n## Outcome\n\nDelivered a stable OSV remediation path for reusable security gates without weakening enforcement. Renovate remains on the stable GitHub `vulnerabilityAlerts` baseline, OSV gate failures remain blocking, and consumer docs now explain prerequisites, direct/transitive limits, and PokeEdge/PokeEdge-Web rapid-dev follow-ups.\n\n## Verdict\n\nAPPROVED\n\n## What Was Built\n\n1. Updated `default.json` to keep `vulnerabilityAlerts.enabled` + `security` label while removing redundant per-alert `minimumReleaseAge`; `osvVulnerabilityAlerts` remains default-off.\n2. Updated Python and JavaScript reusable security gates with `$GITHUB_STEP_SUMMARY` remediation help and local reproduction command, while keeping OSV Scanner output table-formatted and failure semantics unchanged.\n3. Verified PokeEdge and PokeEdge-Web consumer state: PokeEdge alerts enabled; PokeEdge-Web alerts disabled and PR #109 pending to update the security-gates pin.\n4. Added `docs/ci-standard.md` guidance for Renovate security remediation, OSV local reproduction, direct/transitive fallback, cooldown rationale, and PokeEdge/PokeEdge-Web rapid-dev paths.\n5. Ran full verification and post-review remediation: misleading summary wording fixed, docs expanded with gate version/auto-merge path, validators rerun.\n\n## What Was Verified\n\n- Verdict: APPROVED with review findings remediated; no unresolved blockers/issues.\n- Tests: Renovate config validator passed; actionlint passed; ADV validation passed with only `NO_DELTAS` warning because this project has no specs.\n- Preview URL: not_applicable — agreement `visual_surface:false`; touched files are config, workflows, and docs; no frontend/browser-visible output.\n- Contract matrix: 27 rows persisted; 0 failing/violated/unknown rows.\n\n## Remaining Concerns\n\n- PokeEdge-Web must enable Dependency graph/Dependabot alerts and merge its security-gates pin update PR before baseline Renovate `vulnerabilityAlerts` are active there.\n",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-16T00:08:49.705Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| SC1 | success_criterion | **SC1** Caller-repo maintainers get a visible remediation path by the next Renovate run for supported direct dependency vulnerabilities with fixed versions. | pass | `default.json` keeps `vulnerabilityAlerts.enabled` + `labels:[\"security\"]`; docs state next Renovate run timing and prerequisites; PokeEdge-Web missing alerts documented as prerequisite gap. |\n| SC2 | success_criterion | **SC2** Security gate remains strict: high/critical OSV dependency findings still block until fixed or explicitly ignored by policy. | pass | OSV Scanner action retained in both reusable gates; only help text added; missing lockfile skip unchanged; docs state findings remain blocking unless fixed/ignored. |\n| SC3 | success_criterion | **SC3** Maintainers can diagnose OSV failures without ad-hoc research: advisory, package, current version, fixed version when available, and local reproduction path are visible in output or docs. | pass | Workflow help steps add local reproduction command; docs specify OSV Scanner step log + advisory/package/version/fixed-version target; table output remains terminal-readable. |\n| SC4 | success_criterion | **SC4** Docs set correct expectations for Renovate security-remediation prerequisites, timing, and direct/transitive coverage limits. | pass | `docs/ci-standard.md` documents Dependency graph/Dependabot alerts/Renovate permission prerequisites, next-run timing, and direct-vs-transitive limitations. |\n| SC5 | success_criterion | **SC5** PokeEdge and PokeEdge-Web have repo-specific remediation paths documented for their rapid-dev pipelines, including any required follow-up that cannot be shipped solely from this repo. | pass | PokeEdge/PokeEdge-Web matrix documents lockfile/gate version, alert setting, auto-merge path, and follow-up; PokeEdge-Web alert gap and PR #109 noted. |\n| AC1 | acceptance_criterion | **AC1** Given a supported direct dependency vulnerability with a fixed version, when Renovate next processes vulnerability remediation, then it can create or update a security-labelled remediation PR outside the normal weekly schedule, or the docs identify the unmet prerequisite that prevents that behavior. | pass | Renovate config validator passed. `default.json` retains stable `vulnerabilityAlerts` baseline; docs identify GitHub alert prerequisites and next-run behavior. |\n| AC2 | acceptance_criterion | **AC2** Given a high/critical OSV finding in a caller lockfile, when the reusable security gate runs, then the dependency scan job fails unless the finding is fixed or explicitly ignored by caller policy. | pass | Actionlint passed; both reusable gates still invoke `google/osv-scanner-action/...# v2.3.8` gated on lockfile existence with no failure suppression. |\n| AC3 | acceptance_criterion | **AC3** Given an OSV failure in GitHub Actions, when a maintainer reads the job output, step summary, or linked docs, then they can identify advisory URL/ID, package, current version, fixed version when available, and a local reproduction command. | pass | Both gates write `$GITHUB_STEP_SUMMARY` remediation help with local `osv-scanner --lockfile=... --format=table`; docs direct maintainers to OSV Scanner step log for advisory/package/version/fixed-version. |\n| AC4 | acceptance_criterion | **AC4** Given a repo consumes the org Renovate preset, when maintainers read `docs/ci-standard.md`, then they see vulnerability-remediation prerequisites, expected timing of “next Renovate run”, and direct-vs-transitive fallback guidance. | pass | `docs/ci-standard.md` lines around Renovate security remediation include prerequisites, “next Renovate run”, and direct/transitive fallback guidance. |\n| AC5 | acceptance_criterion | **AC5** Given the design evaluates Renovate’s experimental OSV-native alert option, when design completes, then it records whether to enable or defer it with evidence for stability, support scope, and blast radius. | pass | Design and docs record `osvVulnerabilityAlerts` evaluated and deferred due experimental/direct-dep scope and indirect-churn risk. |\n| AC6 | acceptance_criterion | **AC6** Given Renovate or reusable workflow config changes, when verification runs, then Renovate config validation passes and actionlint proves the reusable workflow still runs OSV against configured caller lockfiles. | pass | `bunx --package renovate renovate-config-validator default.json renovate.json` passed; `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed after review remediation. |\n| AC7 | acceptance_criterion | **AC7** Given PokeEdge and PokeEdge-Web are primary rapid-dev consumers, when design completes, then it documents how remediation works for each repo’s dependency manager, lockfile, reusable security-gate version, GitHub vulnerability-alert setting, auto-merge path, and any required follow-up. | pass | Consumer verification: PokeEdge alerts HTTP 204; PokeEdge-Web alerts HTTP 404; docs table includes PokeEdge `python-security-gate.yml@v0.3.2`, PokeEdge-Web `javascript-security-gate.yml@v0.2.1` + PR #109, auto-merge path, follow-up. |\n| C1 | constraint | **C1** The reusable security gate must keep high/critical OSV dependency findings blocking by default. | respected | OSV scanner action retained; docs state lockfile vulnerabilities remain blocking unless fixed or intentionally ignored. |\n| C2 | constraint | **C2** The exact required branch-protection context `Sharperflow CI Gate` must not be renamed or bypassed. | respected | Diff does not rename `Sharperflow CI Gate`; actionlint passed. |\n| C3 | constraint | **C3** Workflows that emit `Sharperflow CI Gate` must not add workflow-level `paths:` filters. | respected | No workflow-level `paths:` filters added; review diff limited to reusable gate job steps and docs/config. |\n| C4 | constraint | **C4** Renovate behavior must be valid Renovate config, not prose-only policy. | respected | Renovate config change validated by `renovate-config-validator`; behavior not prose-only. |\n| C5 | constraint | **C5** Caller-facing remediation guidance must be actionable in GitHub Actions output or `docs/ci-standard.md`. | respected | Workflow summary help and docs provide actionable GitHub Actions/job-log remediation path. Preview URL proof: not_applicable; agreement `visual_surface:false`, touched files are config/workflows/docs only, no browser-visible output. |\n| C6 | constraint | **C6** Design must account for PokeEdge’s Python/uv flow and PokeEdge-Web’s Bun/Node flow before selecting the final remediation shape. | respected | Docs and review evidence cover PokeEdge Python/uv and PokeEdge-Web Bun/Node flows separately. |\n| DONT1 | avoidance | **DONT1** Do not weaken OSV failures into non-blocking warnings by default. | respected | OSV failures remain blocking; no conversion to warnings or continue-on-error. |\n| DONT2 | avoidance | **DONT2** Do not hide security remediation behind the weekly normal-update schedule. | respected | Docs say security fixes move on next Renovate run, not weekly normal-update schedule; `vulnerabilityAlerts` retained. |\n| DONT3 | avoidance | **DONT3** Do not rely on ad-hoc feature/archive PR dependency bumps as the primary remediation path. | respected | Docs identify Renovate/security PR path and manual fallback; not ad-hoc feature/archive PR bumps as primary path. |\n| DONT4 | avoidance | **DONT4** Do not run two dependency updaters for the same ecosystem in one caller repo. | respected | Docs retain one-updater-per-ecosystem rule; no Dependabot config added. |\n| DONT5 | avoidance | **DONT5** Do not ship a generic preset-only answer that leaves PokeEdge-Web’s disabled vulnerability alerts or stale security-gates pin unaccounted for. | respected | PokeEdge-Web disabled vulnerability alerts and stale gate pin PR #109 are explicitly documented in consumer table and follow-up. |\n| OOS1 | out_of_scope | **OOS1** Replacing Renovate with another dependency updater. | not_applicable | No dependency updater replacement; Renovate remains baseline. |\n| OOS2 | out_of_scope | **OOS2** Broad dependency-update policy redesign beyond vulnerability remediation latency and visibility. | not_applicable | No broad dependency policy redesign; changes target vulnerability remediation visibility/timing only. |\n| OOS3 | out_of_scope | **OOS3** Manual dependency bumps in PokeEdge or other caller repos as the main fix. | not_applicable | No manual dependency bumps in caller repos performed. |\n| OOS4 | out_of_scope | **OOS4** Changing branch-protection posture or the `Sharperflow CI Gate` check name. | not_applicable | No branch-protection/check-name posture changes; `Sharperflow CI Gate` preserved. Preview URL not_applicable because no visual surface changed. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/proposal.md",
+      "updatedAt": "2026-06-15T21:32:17.425Z",
+      "contentHash": "91e0d66f09ea3e8c1187afecc460ebcaafaa2de521bdad1c3b29534e71591f52"
+    },
+    "problemStatement": {
+      "path": "",
+      "updatedAt": "2026-06-15T21:16:01.018Z"
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/agreement.md",
+      "updatedAt": "2026-06-15T23:19:26.356Z",
+      "contentHash": "5a90d062c401fc8b7a0d1efc42b7d8017e15763c0a718eb903e9e748f7968460"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/design.md",
+      "updatedAt": "2026-06-15T23:22:56.699Z",
+      "contentHash": "e64c02f495631290f2ce914e6e88a679592ec53a96c2cc891605da12fb7521d6"
+    },
+    "executiveSummary": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/fixOsvRemediation/executive-summary.md",
+      "updatedAt": "2026-06-16T00:09:14.041Z",
+      "contentHash": "dd13d3fb4ea557ca0dbfe05279d65e9a922ed2197a1203955e51c8adaf7c0acd"
+    }
+  },
+  "lastSignalAt": "2026-06-16T00:25:33.904Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_ASSUMPTION_HEAVY",
+      "severity": "warning",
+      "message": "Proposal references authentication/authorization without specifying the model. What auth mechanism will be used?",
+      "recorded_at": "2026-06-15T21:30:44.760Z"
+    }
+  ],
+  "worktree_auto_managed": true
+}

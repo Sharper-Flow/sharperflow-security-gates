@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "id": "ws-bKbRTs",
+      "type": "gotcha",
+      "content": "For Renovate `vulnerabilityAlerts`, shared preset consumption is not enough: caller repo GitHub vulnerability alerts must be enabled. `gh api -i /repos/{owner}/{repo}/vulnerability-alerts` returns HTTP 204 when enabled and 404 with `Vulnerability alerts are disabled.` when not. Treat disabled alerts as a functional remediation gap, not hygiene.",
+      "source_task": "tk-c2eeaed7dd87",
+      "recorded_at": "2026-06-15T23:43:15.242Z"
+    },
+    {
+      "id": "ws-nWUxGD",
+      "type": "pattern",
+      "content": "For reusable security-gate docs, pair Renovate remediation timing with OSV local reproduction commands by ecosystem (`uv.lock`, `bun.lock`) and a direct-vs-transitive limitation note. This prevents callers from interpreting a strict OSV failure as a weakened gate or as a guaranteed automatic Renovate PR for every lockfile-only transitive vulnerability.",
+      "source_task": "tk-a454ae410fb8",
+      "recorded_at": "2026-06-15T23:44:28.611Z"
+    }
+  ],
+  "count": 2
+}
