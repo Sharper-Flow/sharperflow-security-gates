@@ -295,6 +295,9 @@ path enabled:
 }
 ```
 
+`minimumReleaseAge` is intentionally omitted from `vulnerabilityAlerts`: Renovate
+security updates bypass release-age cooldowns, so a per-alert override is a no-op.
+
 This path is active only when the caller repo has the required GitHub-side signal:
 
 - Dependency graph enabled.
@@ -313,7 +316,7 @@ it experimental, documents it as direct-dependency scoped, and has open churn ri
 around indirect-dependency PR creation. Repos that explicitly want OSV-native
 direct-dependency alerts may opt in locally after weighing that blast radius.
 
-#### OSV dependency-gate remediation
+### OSV dependency-gate remediation
 
 The reusable Python and JavaScript security gates run OSV Scanner against the
 caller lockfile when `lockfile-path` exists. Missing lockfiles remain a warning and
@@ -321,8 +324,8 @@ skip the OSV dependency scan; lockfiles with known high/critical vulnerabilities
 remain blocking unless the finding is fixed or intentionally ignored by caller
 policy.
 
-On failure, use the OSV scanner output for the advisory ID/URL, package, installed
-version, and fixed version when available. Local reproduction commands:
+On failure, use the `OSV Scanner` step log for the advisory ID/URL, package,
+installed version, and fixed version when available. Local reproduction commands:
 
 ```bash
 # Python / uv callers, e.g. PokeEdge
@@ -340,10 +343,10 @@ the vulnerable transitive package itself.
 
 Current rapid-development consumers:
 
-| Repo | Lockfile / gate | Renovate signal | Follow-up if OSV blocks a PR |
-|---|---|---|---|
-| `Sharper-Flow/PokeEdge` | Python 3.13 + `uv.lock`; `python-security-gate.yml` | Vulnerability alerts enabled (`204 No Content` from `/vulnerability-alerts`) | Expect Renovate security PRs for supported direct dependencies; transitive failures may need parent/resolver action. |
-| `Sharper-Flow/PokeEdge-Web` | Bun + Node 24 + `bun.lock`; `javascript-security-gate.yml` | Vulnerability alerts disabled (`404 "Vulnerability alerts are disabled."`) | Enable Dependabot alerts/Dependency graph, merge the security-gates pin update PR, then expect Renovate security PRs for supported direct dependencies. Respect local caps such as `undici <8`. |
+| Repo | Lockfile / gate | Renovate signal | Auto-merge path | Follow-up if OSV blocks a PR |
+|---|---|---|---|---|
+| `Sharper-Flow/PokeEdge` | Python 3.13 + `uv.lock`; `python-security-gate.yml@v0.3.2` | Vulnerability alerts enabled (`204 No Content` from `/vulnerability-alerts`) | Renovate native auto-merge after `Sharperflow CI Gate` is green | Expect Renovate security PRs for supported direct dependencies; transitive failures may need parent/resolver action. |
+| `Sharper-Flow/PokeEdge-Web` | Bun + Node 24 + `bun.lock`; `javascript-security-gate.yml@v0.2.1` with PR #109 open to `v0.3.2` | Vulnerability alerts disabled (`404 "Vulnerability alerts are disabled."`) | Renovate native auto-merge after `Sharperflow CI Gate` is green | Enable Dependabot alerts/Dependency graph, merge the security-gates pin update PR, then expect Renovate security PRs for supported direct dependencies. Respect local caps such as `undici <8`. |
 
 ### Dependabot path
 

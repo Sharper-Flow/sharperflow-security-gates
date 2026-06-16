@@ -155,10 +155,11 @@ jobs:
         env:
           LOCKFILE_PATH: ${{ inputs.lockfile-path }}
         run: |
+          set -euo pipefail
           {
             echo "## OSV dependency scan"
             echo ""
-            echo "The OSV scanner output below is the source of truth for advisory IDs/URLs, affected packages, installed versions, and fixed versions when available."
+            echo "If this job fails, see the OSV Scanner step log below for advisory IDs/URLs, affected packages, installed versions, and fixed versions when available."
             echo ""
             echo "Local reproduction:"
             echo '```bash'
@@ -172,7 +173,7 @@ jobs:
         with:
           scan-args: |
             --lockfile=${{ inputs.lockfile-path }}
-            --format=markdown
+            --format=table
 
   secrets:
     name: Gitleaks secret scan
