@@ -212,7 +212,7 @@ inside the composites themselves — pins a **full commit SHA with a trailing
 version comment**:
 
 ```yaml
-uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
+uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@<sha>  # v0.4.0
 ```
 
 - The **SHA** is immutable — supply-chain safe, not movable by a re-tagged release.
@@ -225,6 +225,29 @@ uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-
   [Dependency updates](#dependency-updates-renovate-or-dependabot)).
 - **No floating tags or branches** (`@v0`, `@main`) in app workflows or in this
   repo's examples.
+
+### Release line & versioning (this repo)
+
+`sharperflow-security-gates` auto-releases on every merge to `main` (Auto Release
+workflow, conventional-commit driven): it computes the next semver, creates the
+tag + GitHub Release, regenerates the CHANGELOG, and rolls the floating major tag
+(`v0`).
+
+- **Base-version selection is the highest-semver tag that is an ancestor of
+  `main`** — not the nearest-ancestor tag. Nearest-ancestor selection once let the
+  version *number* regress (the `v0.3.x` tags stranded on older commits while the
+  maintained line kept shipping `v0.2.x`). Because Renovate orders by **semver**,
+  it then chased the stranded — and broken — `v0.3.2`. Ancestor-restricted
+  highest-semver selection keeps the maintained line monotonic and immune to
+  stranded higher tags.
+- **Version-line realignment (2026-06-16):** rather than delete the stranded
+  releases, the maintained line was **jumped forward to `v0.4.0`** (cut from fixed
+  `main`), so the highest semver again points at working code. The `v0.3.0`–`v0.3.2`
+  releases are intentionally **left installable** but are no longer the highest
+  semver, so the default Renovate path no longer proposes them.
+- **Consumers** SHA-pin with a `# vX.Y.Z` comment and let Renovate retarget to the
+  highest semver (now the `v0.4.x` line). Deleting/yanking a stranded tag is **not**
+  required — SHA pins resolve regardless of tag refs.
 
 ---
 
@@ -345,8 +368,8 @@ Current rapid-development consumers:
 
 | Repo | Lockfile / gate | Renovate signal | Auto-merge path | Follow-up if OSV blocks a PR |
 |---|---|---|---|---|
-| `Sharper-Flow/PokeEdge` | Python 3.13 + `uv.lock`; `python-security-gate.yml@v0.3.2` | Vulnerability alerts enabled (`204 No Content` from `/vulnerability-alerts`) | Renovate native auto-merge after `Sharperflow CI Gate` is green | Expect Renovate security PRs for supported direct dependencies; transitive failures may need parent/resolver action. |
-| `Sharper-Flow/PokeEdge-Web` | Bun + Node 24 + `bun.lock`; `javascript-security-gate.yml@v0.2.1` with PR #109 open to `v0.3.2` | Vulnerability alerts disabled (`404 "Vulnerability alerts are disabled."`) | Renovate native auto-merge after `Sharperflow CI Gate` is green | Enable Dependabot alerts/Dependency graph, merge the security-gates pin update PR, then expect Renovate security PRs for supported direct dependencies. Respect local caps such as `undici <8`. |
+| `Sharper-Flow/PokeEdge` | Python 3.13 + `uv.lock`; `python-security-gate.yml` (SHA-pinned) | Vulnerability alerts enabled (`204 No Content` from `/vulnerability-alerts`) | Renovate native auto-merge after `Sharperflow CI Gate` is green | Expect Renovate security PRs for supported direct dependencies; transitive failures may need parent/resolver action. Renovate retargets the gate pin to the `v0.4.x` line. |
+| `Sharper-Flow/PokeEdge-Web` | Bun + Node 24 + `bun.lock`; `javascript-security-gate.yml` (SHA-pinned) | Vulnerability alerts enabled (`204 No Content` from `/vulnerability-alerts`) | Renovate native auto-merge after `Sharperflow CI Gate` is green | Enable Dependabot alerts/Dependency graph (done 2026-06-16), then expect Renovate security PRs for supported direct dependencies. Renovate retargets the gate pin to the `v0.4.x` line (the earlier `v0.3.2` bump PR was closed as a stranded/broken release). Respect local caps such as `undici <8`. |
 
 ### Dependabot path
 
