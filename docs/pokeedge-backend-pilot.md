@@ -26,7 +26,7 @@ is required. Pin by SHA + version comment.
 ```yaml
 jobs:
   security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
     permissions:
       contents: read
     with:
@@ -64,7 +64,7 @@ After the PokeEdge deploy workflow builds an image, call the container gate:
 ```yaml
 jobs:
   image-security:
-    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@5afaf289aafeebc18466ca19621ad4d7e9289139  # v0.3.2
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/container-security-gate.yml@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
     with:
       image-ref: "ghcr.io/Sharper-Flow/pokeedge-api:${{ github.sha }}"
 ```

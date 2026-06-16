@@ -43,7 +43,7 @@ jobs:
           # line). Nearest-ancestor `git describe` silently regressed the version line
           # once already (v0.3.x stranded above v0.2.x); ancestor-restricted highest
           # semver is immune to stranded higher tags on non-ancestor commits.
-          ALL_TAGS="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*')"
+          ALL_TAGS="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' || true)"
           BEST=""
           while IFS= read -r candidate; do
             [ -z "$candidate" ] && continue
@@ -61,6 +61,7 @@ jobs:
       - name: Determine version bump
         id: bump
         run: |
+          set -euo pipefail
           LAST_TAG="${{ steps.last_tag.outputs.tag }}"
           COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%s" 2>/dev/null || git log --pretty=format:"%s")
 

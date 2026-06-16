@@ -59,7 +59,7 @@ Update this file when executable behavior changes.
 - [x] Provide container image reusable workflow that scans a supplied image ref;
   it does not build or publish images.
 - [x] Add self-test workflow for actionlint and required docs/config presence.
-- [x] Tag stable release refs (latest `v0.3.2`); callers pin by SHA + version
+- [x] Tag stable release refs (latest `v0.4.0`); callers pin by SHA + version
   comment instead of `@main`.
 - [ ] Document expected caller-owned suppressions and config paths as findings
   accumulate.
