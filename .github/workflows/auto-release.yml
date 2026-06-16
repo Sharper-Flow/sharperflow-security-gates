@@ -213,7 +213,7 @@ jobs:
             ---
 
             Floating major-version tag `${{ steps.bump.outputs.major_tag }}` now points at this release.
-            Consumers can pin `uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/<gate>.yml@${{ steps.bump.outputs.major_tag }}` for "latest non-breaking", or pin `@${{ steps.bump.outputs.new_tag }}` for full immutability.
+            Consumers should pin `uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/<gate>.yml@<full-sha> # ${{ steps.bump.outputs.new_tag }}` for immutability plus readable version context.
 
       - name: Summary
         if: steps.bump.outputs.skip != 'true'

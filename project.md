@@ -21,8 +21,8 @@ Reusable GitHub Actions security gate workflows for the Sharper-Flow org.
 |---|---|
 | Default branch | `main` |
 | Release model | Conventional commits → auto-release (`feat:` minor, `fix:` patch, `feat(scope)!:` major) |
-| Tag scheme | `vX.Y.Z` immutable + `vX` floating major tag (auto-rolled) |
-| Caller pinning | Recommend `@v0` (floating major); allow `@v0.Y.Z` (immutable) or `@<sha>` |
+| Tag scheme | `vX.Y.Z` immutable + `vX` floating major tag (auto-rolled for legacy/floating consumers) |
+| Caller pinning | Recommend full `@<sha>` pins with a trailing `# vX.Y.Z` comment; avoid floating `@v0` in app workflows and examples |
 | Branch protection | `main` requires Self Test (actionlint + docs/config checks) |
 | Workflow validation | actionlint must pass; reusable-workflow callers may NOT add `continue-on-error: true` (invalid syntax, silently breaks pilots) |
 | Non-blocking pilot semantics | Driven by NOT being in branch protection's required checks, never by a YAML flag |
@@ -47,7 +47,7 @@ Container gate accepts `sbom-format` for image SBOMs.
 
 - **Trivy and ARM templates**: Trivy cannot statically evaluate ARM `format()` functions. Misconfigs derived from `format()` parameters (e.g. AZU-0013 on Azure Key Vault networkAcls) report as FPs. Suppress via caller's `.trivyignore.yaml` + the `trivy-ignorefile` input.
 - **Private repo callers and `GITHUB_TOKEN` scope**: GitHub's default `GITHUB_TOKEN` cannot resolve a reusable workflow from a private repo unless the org has Enterprise (Internal visibility) or the consumer adds a PAT secret. This repo is **public** to avoid that friction.
-- **pokeedge-web action-reference-policy test**: that repo's `tests/workflows/action-reference-policy.test.ts` blocks `@main`, `@master`, `@latest` refs across all workflows. Always pin to `@v0` or newer in examples and PR templates.
+- **pokeedge-web action-reference-policy test**: that repo's `tests/workflows/action-reference-policy.test.ts` blocks `@main`, `@master`, `@latest` refs across all workflows. Always pin org security gates by full commit SHA plus trailing version comment in examples and PR templates.
 
 ## Design posture to preserve
 
