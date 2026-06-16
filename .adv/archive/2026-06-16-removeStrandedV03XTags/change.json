@@ -1,0 +1,1254 @@
+{
+  "id": "removeStrandedV03XTags",
+  "title": "Remove stranded v0.3.x tags",
+  "status": "archived",
+  "created_at": "2026-06-16T00:47:51.963Z",
+  "tasks": [
+    {
+      "id": "tk-c196c0c113fa",
+      "title": "Harden auto-release.yml base-version selection + idempotency",
+      "type": "code",
+      "section": "Auto-release hardening",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-16T01:32:16.975Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable",
+        "delegation_hint": "delegate_allowed",
+        "frontend": "false",
+        "touched_files": ".github/workflows/auto-release.yml"
+      },
+      "contract_refs": {
+        "implements": [
+          "SC3",
+          "AC4"
+        ],
+        "verifies": [
+          "AC4",
+          "AC5"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C4",
+          "DONT2"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-16T01:49:18.270Z",
+      "verification": "actionlint passed (exit 0; embeds shellcheck). Logic test: highest-semver-ancestor selection returns v0.3.2 at current HEAD, will return v0.4.0 after seeding. Idempotency guard added.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Replaced `git describe --tags --abbrev=0` base selection in `.github/workflows/auto-release.yml` with an ancestor-restricted highest-semver scan (loop over `git tag` filtered by `git merge-base --is-ancestor`, max via `sort -V`). Added an idempotency guard before tagging that sets skip=true if the computed NEW_TAG already exists. Verified with actionlint and a local logic test.",
+      "filesTouched": [
+        ".github/workflows/auto-release.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/auto-release.yml"
+      ],
+      "checkpointSha": "d1ae33a3754ba3b8c7784abc138ecf5424a6e19b",
+      "completedAt": "2026-06-16T01:51:03.979Z",
+      "completed_at": "2026-06-16T01:51:03.979Z",
+      "notes": "Hardened auto-release base selection to highest-semver ancestor (here-string, no /tmp/process-substitution) + idempotency guard that skips when computed tag exists. Actionlint passed; logic test returns v0.3.2 now / v0.4.0 post-seed.",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-16T01:51:13.502Z"
+    },
+    {
+      "id": "tk-9962df2728db",
+      "title": "Document version-line jump + auto-release behavior",
+      "type": "code",
+      "section": "Docs",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-16T01:32:29.956Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable",
+        "delegation_hint": "delegate_allowed",
+        "frontend": "false",
+        "touched_files": "docs/ci-standard.md,README.md (optional),docs/adr/0001-version-line-jump-to-v0.4.0.md (optional)"
+      },
+      "contract_refs": {
+        "implements": [
+          "SC4",
+          "AC6"
+        ],
+        "verifies": [
+          "AC6"
+        ],
+        "respects": [
+          "C1",
+          "OOS2"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-16T01:51:34.676Z",
+      "verification": "Added 'Release line & versioning (this repo)' subsection documenting highest-semver-ancestor selection + v0.4.0 jump + leave-v0.3.x-installable + consumer SHA-pin/Renovate-retarget guidance. Updated stale v0.3.2 pin example and consumer matrix (PR #109 closed, alerts now enabled). Markdown reviewed.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Added 'Release line & versioning (this repo)' subsection to docs/ci-standard.md (Pin policy section): auto-release on merge, highest-semver-ancestor base selection, v0.3.x stranding cause, v0.4.0 forward jump (leave v0.3.x installable), consumer SHA-pin + Renovate retarget guidance. Fixed the stale `@5afaf289 # v0.3.2` pin example to `# v0.4.0` and corrected the PokeEdge/PokeEdge-Web consumer matrix (PR #109 closed, alerts enabled, retarget to v0.4.x).",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "5edc890c5dd47818219cf74943ee1db7650e0497",
+      "completedAt": "2026-06-16T01:53:16.023Z",
+      "completed_at": "2026-06-16T01:53:16.023Z",
+      "notes": "Documented version-line jump + hardened auto-release behavior in docs/ci-standard.md; updated stale v0.3.2 example and consumer matrix. ADR file skipped (optional/advisory; avoids new docs/adr convention).",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-16T01:53:27.070Z"
+    },
+    {
+      "id": "tk-f81352e285bf",
+      "title": "Seed v0.4.0 release from fixed main + roll floating v0 (operator release op)",
+      "type": "code",
+      "section": "Release op",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-16T01:32:46.390Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable",
+        "delegation_hint": "inline_required",
+        "frontend": "false",
+        "target_repo": "Sharper-Flow/sharperflow-security-gates",
+        "touched_files": "release-state (no files)"
+      },
+      "contract_refs": {
+        "implements": [
+          "SC1",
+          "AC1"
+        ],
+        "verifies": [
+          "AC1"
+        ],
+        "respects": [
+          "C2",
+          "C3",
+          "C5",
+          "DONT4",
+          "OOS1"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-16T01:54:03.806Z",
+      "verification": "v0.4.0 release created (id 339871391) targeting fixed main 4606d05 (quoted setup-bun-node); highest semver now v0.4.0; floating v0 rolled to 4606d05. Prior v0 f365a1b recorded for reversibility.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Created GitHub release v0.4.0 via `gh release create --target 4606d05` (fixed main HEAD, quoted composite), making it the highest semver tag superseding the stranded broken v0.3.2. Rolled floating v0 ref to 4606d05 via `gh api PATCH .../git/refs/tags/v0`. Recorded release id 339871391 and prior v0 sha f365a1b for reversibility. v0.3.x left installable per OOS1.",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "5edc890c5dd47818219cf74943ee1db7650e0497",
+      "completedAt": "2026-06-16T01:55:02.745Z",
+      "completed_at": "2026-06-16T01:55:02.745Z",
+      "notes": "Seeded v0.4.0 (release id 339871391) from fixed main 4606d05; highest semver now v0.4.0 pointing at quoted setup-bun-node. Floating v0 rolled to 4606d05. Prior v0 (f365a1b) recorded for reversibility. No workflow triggered (tag creation does not fire auto-release).",
+      "error_recovery": {
+        "last_error": "",
+        "retry_count": 0,
+        "max_retries": 3,
+        "error_class": "TRANSIENT",
+        "next_strategy": "",
+        "attempts": []
+      },
+      "updatedAt": "2026-06-16T01:55:13.385Z"
+    },
+    {
+      "id": "tk-0f33b56269c4",
+      "title": "Verify version-line jump, hardening, and consumer retarget",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-16T01:33:04.065Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-c196c0c113fa"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-9962df2728db"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-f81352e285bf"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification",
+        "delegation_hint": "inline_required",
+        "frontend": "false",
+        "target_repo": "Sharper-Flow/sharperflow-security-gates,Sharper-Flow/PokeEdge,Sharper-Flow/PokeEdge-Web",
+        "touched_files": ".github/workflows/auto-release.yml,docs/ci-standard.md,release-state"
+      },
+      "contract_refs": {
+        "implements": [],
+        "verifies": [
+          "SC1",
+          "SC2",
+          "SC3",
+          "SC4",
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "AC6"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "DONT1",
+          "DONT2",
+          "DONT3",
+          "DONT4",
+          "OOS1",
+          "OOS2",
+          "OOS3",
+          "OOS4"
+        ],
+        "not_applicable_reason": ""
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-16T01:55:33.966Z",
+      "verification": "Harden remediation: aligned project.md and auto-release release notes with SHA-pin-first policy; actionlint passed after edits; searches for old @v0 recommendation/release-note phrasing returned no matches.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Acceptance + harden verification/remediation: refreshed all live docs/examples/ROADMAP pins to `4606d0547f41ea7edacfd40ff90c7b71d3449e3f # v0.4.0`; tightened auto-release stable semver filtering and strict shell mode; aligned `project.md` and auto-release release notes with SHA-pin-first policy. Verification passed: actionlint, ruleset invariant, file presence invariant, stale-pin exact search, and policy-phrase searches. Latest checkpoint `690048ec0c3256c380ecbca141ec6b1f0ac23c29`. AC2 remains async, tracked by `ag-kuscC15R`.",
+      "filesTouched": [
+        ".github/workflows/auto-release.yml",
+        "project.md"
+      ],
+      "touched_files": [
+        ".github/workflows/auto-release.yml",
+        "project.md"
+      ],
+      "checkpointSha": "690048ec0c3256c380ecbca141ec6b1f0ac23c29",
+      "completedAt": "2026-06-16T02:37:07.749Z",
+      "completed_at": "2026-06-16T02:37:07.749Z",
+      "notes": "Harden remediation completed. Aligned project.md and auto-release release notes with SHA-pin-first policy; actionlint passed. Checkpoint 690048ec0c3256c380ecbca141ec6b1f0ac23c29. Remaining external caveat: AC2 Renovate observation tracked by ag-kuscC15R.",
+      "error_recovery": {
+        "last_error": "Syntax-only failure in an initial Python exact-search command due shell-escaped newline; corrected command passed.",
+        "retry_count": 1,
+        "max_retries": 3,
+        "error_class": "SEMANTIC",
+        "next_strategy": "",
+        "attempts": [
+          {
+            "attempt_number": 1,
+            "error": "Python -c exact-search command used literal escaped newlines incorrectly and raised SyntaxError.",
+            "diagnosis": "Verification command quoting error, not product/code failure.",
+            "fix_tried": "Rewrote exact-search as a single Python list comprehension without escaped newlines.",
+            "strategy_label": "correct_verification_command",
+            "outcome": "succeeded",
+            "attempted_at": "2026-06-16T02:18:00.000Z"
+          }
+        ]
+      },
+      "updatedAt": "2026-06-16T02:37:23.821Z",
+      "subagent_reports": [
+        {
+          "schema_version": "1.0",
+          "change_id": "removeStrandedV03XTags",
+          "attempt": 1,
+          "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/removeStrandedV03XTags",
+          "task_id": "tk-0f33b56269c4",
+          "scope": {
+            "kind": "task",
+            "task_id": "tk-0f33b56269c4"
+          },
+          "agent": "adv-engineer",
+          "status": "complete",
+          "files_touched": [
+            ".github/workflows/auto-release.yml",
+            "README.md",
+            "ROADMAP.md",
+            "docs/ci-standard.md",
+            "docs/pokeedge-backend-pilot.md",
+            "docs/pokeedge-web-next.md",
+            "examples/pokeedge-python/ci.yml",
+            "examples/pokeedge-python/container-security-gate.yml",
+            "examples/pokeedge-web/ci.yml"
+          ],
+          "verification": [
+            {
+              "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+              "exit_code": 0,
+              "summary": "actionlint passes with no errors on all workflows"
+            },
+            {
+              "command": "test -z \"$(grep -R --exclude-dir=.adv '5afaf289aafeebc18466ca19621ad4d7e9289139' .)\"",
+              "exit_code": 0,
+              "summary": "No live references to old v0.3.2 SHA outside .adv/archive"
+            },
+            {
+              "command": "test -z \"$(grep -R --exclude-dir=.adv 'v0\\.3\\.2' . | grep -v 'docs/ci-standard.md')\"",
+              "exit_code": 0,
+              "summary": "v0.3.2 only remains in docs/ci-standard.md incident narrative; no pins/examples use it"
+            },
+            {
+              "command": "python3 -c 'import json; d=json.load(open(\"rulesets/sharperflow-app-protection.json\")); ...' && shellcheck scripts/apply-ruleset.sh",
+              "exit_code": 0,
+              "summary": "Ruleset JSON invariants hold and apply-ruleset.sh passes shellcheck"
+            },
+            {
+              "command": "git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$' || true",
+              "exit_code": 0,
+              "summary": "Stable semver regex filter correctly ignores prerelease/build tags (verified in isolated temp repo with v0.3.3-rc1 and v0.3.3+build; highest ancestor selected v0.4.0)"
+            },
+            {
+              "command": "set -euo pipefail; COMMITS=$(git log v0.4.0..HEAD --pretty=format:\"%s\" 2>/dev/null || git log --pretty=format:\"%s\"); ... bump computed v0.5.0 minor",
+              "exit_code": 0,
+              "summary": "Determine version bump logic runs cleanly under set -euo pipefail and git-log fallback preserved"
+            }
+          ],
+          "decisions": [
+            {
+              "what": "Added set -euo pipefail to the Determine version bump step",
+              "why": "Provides safe strictness; the existing git-log fallback (|| git log) is compatible because the failure is explicitly handled in a command-list context ignored by set -e."
+            },
+            {
+              "what": "Filtered tag discovery with grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$' || true",
+              "why": "The glob 'v[0-9]*.[0-9]*.[0-9]*' matches prerelease/build tags; the regex makes stable semver selection structural and deterministic while tolerating an empty tag set."
+            },
+            {
+              "what": "Updated ROADMAP latest release reference from v0.3.2 to v0.4.0",
+              "why": "Adjacent live doc that presents the current release pin; keeping it consistent with DOCS-PINS avoids stale guidance."
+            }
+          ],
+          "blockers": [],
+          "scope_drift": null,
+          "follow_ups": [],
+          "required_follow_ups": [],
+          "required_main_agent_actions": [],
+          "related_scan": "Updated all live doc/example pins to v0.4.0 SHA across README.md, both pilot docs, docs/ci-standard.md, ROADMAP.md, and both example CI files; verified no 5afaf289 references remain outside .adv/archive.",
+          "context_update_for_adv": {
+            "what_ads_needs_to_know": "All DOCS-PINS updated to v0.4.0 SHA (4606d0547f41ea7edacfd40ff90c7b71d3449e3f # v0.4.0). auto-release.yml now uses stable semver regex filter for tag discovery and set -euo pipefail in the Determine version bump step. actionlint passes; ruleset invariants and shellcheck pass. v0.3.2 mentions remain only in docs/ci-standard.md incident narrative and archived bundles.",
+            "suggested_next_action": "Review the diff, then run the Self Test workflow on the PR to confirm the actionlint/docs-check/shellcheck jobs pass in GitHub Actions before merge."
+          },
+          "consumer_warnings": [
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: test -z \"$(grep -R --exclude-dir=.adv '5afaf289aafeebc18466ca19621ad4d7e9289139' .)\""
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: test -z \"$(grep -R --exclude-dir=.adv 'v0\\.3\\.2' . | grep -v 'docs/ci-standard.md')\""
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: python3 -c 'import json; d=json.load(open(\"rulesets/sharperflow-app-protection.json\")); ...' && shellcheck scripts/apply-ruleset.sh"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$' || true"
+            },
+            {
+              "kind": "verification_missing",
+              "message": "No adv_run_test evidence found for reported command: set -euo pipefail; COMMITS=$(git log v0.4.0..HEAD --pretty=format:\"%s\" 2>/dev/null || git log --pretty=format:\"%s\"); ... bump computed v0.5.0 minor"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "removeStrandedV03XTags",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:design-validation"
+      },
+      "agent": "adv-researcher",
+      "topic": "Design validation: seed v0.4.0 + harden auto-release base selection (remove stranded v0.3.x dominance)",
+      "sources": [
+        {
+          "label": "auto-release.yml (current base selection)",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/workflows/auto-release.yml#L38-L51",
+          "summary": "Confirms current base = git describe --tags --abbrev=0 (nearest ancestor) and workflow_run trigger on Self Test completion (push to main), NOT on tag creation — validates KD2 race-free ordering."
+        },
+        {
+          "label": "git tags (local refs)",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.git/refs/tags/",
+          "summary": "Highest semver tag is v0.3.2 (=5afaf289, the broken commit); v0.2.24 latest of 0.2.x line; v0 floating = f365a1b. Confirms stranding and that v0.4.0 would become highest."
+        },
+        {
+          "label": "setup-bun-node/action.yml on main HEAD",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/actions/setup-bun-node/action.yml",
+          "summary": "main HEAD has the FIXED composite (quoted bun-version default, well-formed YAML) — DDC1 satisfied by targeting main HEAD, never v0.3.2 (5afaf289)."
+        },
+        {
+          "label": "self-test.yml ruleset invariants",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/workflows/self-test.yml#L54-L82",
+          "summary": "Spec-law invariants: required check exactly 'Sharperflow CI Gate', bypass_actors==[], squash-only, strict=off, non_fast_forward present. Design touches only auto-release.yml + docs + release state — none of these invariants altered."
+        },
+        {
+          "label": "Renovate github-actions versioning docs (Context7)",
+          "locator": "https://github.com/renovatebot/renovate/blob/main/lib/modules/versioning/github-actions/readme.md",
+          "summary": "SHA-pinned actions with a version comment (e.g. # v0.3.2) are updatable; Renovate offers the highest available semver. Once v0.4.x is highest, Renovate proposes v0.4.x — validates AC2/KD4. Immutable-tag path migrates @v0 floating pins to pinned major.minor.patch."
+        },
+        {
+          "label": "gh release create --target docs",
+          "locator": "https://cli.github.com/manual/gh_release_create",
+          "summary": "If no matching tag exists, gh release create auto-creates it from --target (full commit SHA). Validates KD1/DDC1: 'gh release create v0.4.0 --target <fixed main sha>' tags fixed code deterministically."
+        }
+      ],
+      "architecture_assessment": "Design is correct and internally consistent. (1) CORRECTNESS: seed-first works because auto-release triggers on Self Test workflow_run (push to main), not on tag/release creation — verified in auto-release.yml lines 14-18 — so manually seeding v0.4.0 fires no workflow (KD2). After seed, highest-semver-ancestor selection yields v0.4.0 as base; the hardening PR merge then computes v0.4.0..HEAD = only fix/ci/docs commits = patch -> v0.4.1, avoiding the v1.0.0 overshoot. gh release create --target tags fixed code (KD1). The hardening loop correctly excludes the floating v0 tag (glob requires two dots) and sort -V | tail -1 picks highest; merge-base --is-ancestor in a condition is set -e safe. Idempotency guard (skip if NEW_TAG exists) closes the double-fire window. (2) SIMPLICITY: a materially simpler alternative exists (delete the 3 stranded tags), but it was explicitly rejected by the user (OOS1) in favor of history preservation; given that constraint, seed+harden is the minimal correct path — no simpler option meets 'don't delete' + 'highest semver points at fixed code' + 'recurrence guard'. (3) SPEC-LAW: no formal adv_spec specs exist; the executable invariants in self-test.yml (exact 'Sharperflow CI Gate', no-bypass, squash-only, strict-off) are untouched — design adds no workflow paths: filter and edits only auto-release.yml base selection + docs. No conflict. (4) ALTERNATIVES: deletion (rejected by user), Renovate allowedVersions/ignore pinning (rejected as DONT3 manual-pin-adjacent and doesn't fix root cause), and workflow_dispatch version input were considered implicitly; the chosen seed+harden is the only one satisfying all of AC1-AC6 simultaneously.",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "Two non-blocking cautions: (C-a) The hardened base-selection loop runs git tag --list inside the workflow with fetch-depth:0 (already set) — confirm in execution that actionlint accepts the multi-line for-loop and that the unquoted command substitution does not trip SC2086 in any shellcheck pass over the workflow's run: block (actionlint embeds shellcheck). (C-b) AC1 says release '>= v0.4.0' and is highest semver: after seeding v0.4.0 the very next hardened auto-release will cut v0.4.1, so the durable 'highest semver points at fixed code' invariant holds for both; just ensure the v0.4.0 seed and the v0.4.1 auto-cut both target fixed main, never 5afaf289. Both cautions are execution-phase verification items, not design defects."
+      },
+      "recommendation": "VALIDATED. The seed-first + highest-semver-ancestor design is logically sound and the strongest option under the user's no-delete constraint: it makes v0.4.x the highest semver pointing at fixed main code, leaves v0.3.x installable but non-dominant, hardens base selection against recurrence (ancestor-restricted highest-semver, immune to future non-ancestor stranded tags), and adds an idempotency guard. Evidence confirms the trigger model (no workflow on tag creation), gh release --target tagging, and Renovate highest-semver proposal behavior. Proceed to planning. During execution, verify: actionlint+shellcheck clean on the new for-loop (quote where needed), the v0.4.0 seed targets fixed main HEAD (not 5afaf289), floating v0 rolled to v0.4.0, and Renovate proposes v0.4.x on >=1 consumer (AC2). No spec-law invariant in self-test.yml is altered.",
+      "follow_ups": [
+        "Execution: run repo-standard actionlint (rhysd/actionlint:1.7.7) on the modified auto-release.yml; quote the tag-loop command substitution if shellcheck (embedded) flags SC2086.",
+        "Execution: after seeding, assert highest-semver tag resolves to a commit containing the quoted setup-bun-node/action.yml (DDC1) and record created tag SHA + release id (DDC4/C5).",
+        "Acceptance: confirm Renovate raises a v0.4.x PR on PokeEdge and/or PokeEdge-Web (AC2) and that PokeEdge's stale @cb39edc # v0.3.2 python pin is retargeted."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "removeStrandedV03XTags",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/removeStrandedV03XTags",
+      "task_id": "tk-0f33b56269c4",
+      "scope": {
+        "kind": "task",
+        "task_id": "tk-0f33b56269c4"
+      },
+      "agent": "adv-engineer",
+      "status": "complete",
+      "files_touched": [
+        ".github/workflows/auto-release.yml",
+        "README.md",
+        "ROADMAP.md",
+        "docs/ci-standard.md",
+        "docs/pokeedge-backend-pilot.md",
+        "docs/pokeedge-web-next.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-python/container-security-gate.yml",
+        "examples/pokeedge-web/ci.yml"
+      ],
+      "verification": [
+        {
+          "command": "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "exit_code": 0,
+          "summary": "actionlint passes with no errors on all workflows"
+        },
+        {
+          "command": "test -z \"$(grep -R --exclude-dir=.adv '5afaf289aafeebc18466ca19621ad4d7e9289139' .)\"",
+          "exit_code": 0,
+          "summary": "No live references to old v0.3.2 SHA outside .adv/archive"
+        },
+        {
+          "command": "test -z \"$(grep -R --exclude-dir=.adv 'v0\\.3\\.2' . | grep -v 'docs/ci-standard.md')\"",
+          "exit_code": 0,
+          "summary": "v0.3.2 only remains in docs/ci-standard.md incident narrative; no pins/examples use it"
+        },
+        {
+          "command": "python3 -c 'import json; d=json.load(open(\"rulesets/sharperflow-app-protection.json\")); ...' && shellcheck scripts/apply-ruleset.sh",
+          "exit_code": 0,
+          "summary": "Ruleset JSON invariants hold and apply-ruleset.sh passes shellcheck"
+        },
+        {
+          "command": "git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$' || true",
+          "exit_code": 0,
+          "summary": "Stable semver regex filter correctly ignores prerelease/build tags (verified in isolated temp repo with v0.3.3-rc1 and v0.3.3+build; highest ancestor selected v0.4.0)"
+        },
+        {
+          "command": "set -euo pipefail; COMMITS=$(git log v0.4.0..HEAD --pretty=format:\"%s\" 2>/dev/null || git log --pretty=format:\"%s\"); ... bump computed v0.5.0 minor",
+          "exit_code": 0,
+          "summary": "Determine version bump logic runs cleanly under set -euo pipefail and git-log fallback preserved"
+        }
+      ],
+      "decisions": [
+        {
+          "what": "Added set -euo pipefail to the Determine version bump step",
+          "why": "Provides safe strictness; the existing git-log fallback (|| git log) is compatible because the failure is explicitly handled in a command-list context ignored by set -e."
+        },
+        {
+          "what": "Filtered tag discovery with grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$' || true",
+          "why": "The glob 'v[0-9]*.[0-9]*.[0-9]*' matches prerelease/build tags; the regex makes stable semver selection structural and deterministic while tolerating an empty tag set."
+        },
+        {
+          "what": "Updated ROADMAP latest release reference from v0.3.2 to v0.4.0",
+          "why": "Adjacent live doc that presents the current release pin; keeping it consistent with DOCS-PINS avoids stale guidance."
+        }
+      ],
+      "blockers": [],
+      "scope_drift": null,
+      "follow_ups": [],
+      "required_follow_ups": [],
+      "required_main_agent_actions": [],
+      "related_scan": "Updated all live doc/example pins to v0.4.0 SHA across README.md, both pilot docs, docs/ci-standard.md, ROADMAP.md, and both example CI files; verified no 5afaf289 references remain outside .adv/archive.",
+      "context_update_for_adv": {
+        "what_ads_needs_to_know": "All DOCS-PINS updated to v0.4.0 SHA (4606d0547f41ea7edacfd40ff90c7b71d3449e3f # v0.4.0). auto-release.yml now uses stable semver regex filter for tag discovery and set -euo pipefail in the Determine version bump step. actionlint passes; ruleset invariants and shellcheck pass. v0.3.2 mentions remain only in docs/ci-standard.md incident narrative and archived bundles.",
+        "suggested_next_action": "Review the diff, then run the Self Test workflow on the PR to confirm the actionlint/docs-check/shellcheck jobs pass in GitHub Actions before merge."
+      },
+      "consumer_warnings": [
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: test -z \"$(grep -R --exclude-dir=.adv '5afaf289aafeebc18466ca19621ad4d7e9289139' .)\""
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: test -z \"$(grep -R --exclude-dir=.adv 'v0\\.3\\.2' . | grep -v 'docs/ci-standard.md')\""
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: python3 -c 'import json; d=json.load(open(\"rulesets/sharperflow-app-protection.json\")); ...' && shellcheck scripts/apply-ruleset.sh"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$' || true"
+        },
+        {
+          "kind": "verification_missing",
+          "message": "No adv_run_test evidence found for reported command: set -euo pipefail; COMMITS=$(git log v0.4.0..HEAD --pretty=format:\"%s\" 2>/dev/null || git log --pretty=format:\"%s\"); ... bump computed v0.5.0 minor"
+        }
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "removeStrandedV03XTags",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/removeStrandedV03XTags",
+      "scope": {
+        "kind": "change",
+        "scope_key": "scanner-bundle:review"
+      },
+      "agent": "adv-scanner-bundle",
+      "phase": "review",
+      "scanner_count": 3,
+      "dimensions": [
+        "contract-traceability",
+        "correctness-edge-cases",
+        "security",
+        "tests-tdd-evidence",
+        "scope-conformance",
+        "documentation"
+      ],
+      "summary": "Review found no blockers. Initial issues: live docs/examples still pinned v0.3.2; auto-release version-bump step lacked strict shell mode; tag discovery admitted prerelease/build-like tags. Remediation applied and checkpointed at 22c8462: all live pins now v0.4.0 SHA, stable-tag regex added, set -euo pipefail added. actionlint and ruleset invariant checks pass. AC2 remains an async Renovate-observation caveat tracked by ag-kuscC15R; in-repo preconditions are met.",
+      "findings": [
+        {
+          "scanner": "contract-traceability-scope",
+          "severity": "info",
+          "summary": "AC1/AC3/AC4/AC5/AC6 satisfied; AC2 precondition met but empirical Renovate observation is async and tracked by ag-kuscC15R.",
+          "evidence": [
+            {
+              "label": "v0.4.0 release",
+              "locator": "GitHub release id 339871391 / tag v0.4.0",
+              "summary": "Targets fixed main 4606d05 and is highest semver."
+            },
+            {
+              "label": "Verification task",
+              "locator": "tk-0f33b56269c4",
+              "summary": "actionlint pass, ruleset invariant pass, no live v0.3.2 pin remains after remediation."
+            }
+          ]
+        },
+        {
+          "scanner": "security-tests-docs",
+          "severity": "issue",
+          "summary": "Live docs/examples retained 5afaf289 # v0.3.2 pins; fixed by updating README, docs, ROADMAP, and examples to 4606d054... # v0.4.0.",
+          "evidence": [
+            {
+              "label": "checkpoint",
+              "locator": "22c8462738d61cc8f2d56060885195ef469947f0",
+              "summary": "Review remediation commit includes all live pin refreshes."
+            }
+          ]
+        },
+        {
+          "scanner": "workflow-correctness-edge-cases",
+          "severity": "issue",
+          "summary": "Stable-tag selection and strict shell mode were strengthened: prerelease/build tags excluded and version-bump step now uses set -euo pipefail.",
+          "evidence": [
+            {
+              "label": "workflow",
+              "locator": ".github/workflows/auto-release.yml:46,64",
+              "summary": "Stable semver regex and strict mode present after remediation."
+            }
+          ]
+        }
+      ],
+      "follow_ups": [
+        "ag-kuscC15R: confirm Renovate proposes v0.4.x on PokeEdge and/or PokeEdge-Web after next Renovate run; no polling loop in this session."
+      ],
+      "consumer_warnings": []
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "removeStrandedV03XTags",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/removeStrandedV03XTags",
+      "scope": {
+        "kind": "change",
+        "scope_key": "scanner-bundle:harden"
+      },
+      "agent": "adv-scanner-bundle",
+      "phase": "harden",
+      "scanner_count": 3,
+      "dimensions": [
+        "release-deploy-readiness",
+        "production-readiness",
+        "documentation-hygiene",
+        "cleanup-readiness",
+        "residual-slop-maintainability",
+        "test-coverage"
+      ],
+      "summary": "Harden status READY. No blockers/high release defects remain. Review-created agenda audit: 2 completed, 1 duplicate cancelled, 1 canonical async follow-up retained with rationale. Merge dry-run against origin/main was clean/already up to date. Documentation cleanup clean after remediation. Project pinning policy contradiction fixed by aligning project.md and auto-release release notes to SHA-pin-first guidance; actionlint passed. Remaining caveats are non-blocking: AC2 consumer Renovate observation is async (ag-kuscC15R) and release hardening becomes effective on main only after archive/merge, which is the next step.",
+      "findings": [
+        {
+          "scanner": "documentation_hygiene_cleanup",
+          "severity": "info",
+          "summary": "All live pins uniform at v0.4.0 SHA; no temp/debug cleanup candidates; only low ADV-title framing note, no repo defect.",
+          "evidence": [
+            {
+              "label": "docs/examples",
+              "locator": "README.md docs/*.md examples/*.yml ROADMAP.md",
+              "summary": "Live guidance now references v0.4.0 SHA; v0.3.x remains only incident narrative/archive."
+            }
+          ]
+        },
+        {
+          "scanner": "deployment_release_readiness",
+          "severity": "info",
+          "summary": "Release state safe: v0.4.0 highest semver at fixed main 4606d05; v0 rolled; branch-protection/ruleset invariants preserved; merge/merge-to-main is required for new workflow definition to take effect.",
+          "evidence": [
+            {
+              "label": "merge compatibility",
+              "locator": "git merge --no-commit --no-ff origin/main",
+              "summary": "Already up to date/no conflict; no MERGE_HEAD."
+            },
+            {
+              "label": "workflow",
+              "locator": ".github/workflows/auto-release.yml",
+              "summary": "Highest-stable-semver ancestor selection, idempotency guard, strict shell mode."
+            }
+          ]
+        },
+        {
+          "scanner": "production_slop_tests",
+          "severity": "info",
+          "summary": "No blockers/high slop. Actionlint passed; file presence and ruleset invariants passed. Medium suggestion for future shell test harness is non-blocking and not required by current repo norms.",
+          "evidence": [
+            {
+              "label": "adv_run_test",
+              "locator": "tk-0f33b56269c4",
+              "summary": "actionlint/ruleset/file-presence/stale-pin verification recorded."
+            }
+          ]
+        },
+        {
+          "scanner": "policy-consistency",
+          "severity": "info",
+          "summary": "Resolved @v0 vs SHA-pin guidance contradiction by updating project.md and auto-release release notes to SHA-pin-first policy.",
+          "evidence": [
+            {
+              "label": "checkpoint",
+              "locator": "690048ec0c3256c380ecbca141ec6b1f0ac23c29",
+              "summary": "Harden remediation commit for project.md and auto-release release notes."
+            }
+          ]
+        }
+      ],
+      "follow_ups": [
+        "ag-kuscC15R: confirm next PokeEdge/PokeEdge-Web Renovate run proposes v0.4.x; no polling loop in this session.",
+        "Optional future hardening: add a temp-git-repo shell test harness for auto-release tag-selection logic."
+      ],
+      "consumer_warnings": []
+    }
+  ],
+  "deltas": {},
+  "wisdom": [
+    {
+      "id": "ws-YlzBhn",
+      "type": "gotcha",
+      "content": "In GitHub Actions `run: |` blocks, heredocs (`<<EOF`) break because the terminator must be column-0 but YAML indents everything; `<<-EOF` only strips tabs, not the spaces YAML uses. Use a bash here-string (`done <<< \"$VAR\"`) instead — it runs the while-loop in the current shell (so loop-set variables persist) and has no indentation-sensitive terminator. For \"latest maintained release,\" select the highest-semver tag that is an ANCESTOR of HEAD (`git merge-base --is-ancestor` + `sort -V | tail -1`), not nearest-ancestor `git describe --abbrev=0`, which silently regresses when higher-semver tags strand on older commits.",
+      "source_task": "tk-c196c0c113fa",
+      "recorded_at": "2026-06-16T01:51:27.485Z"
+    }
+  ],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-16T00:48:03.185Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved opening this change to fix the stranded v0.3.x tag/version-line regression after reviewing recommendation. Proposal includes problem statement, scope (with Must Not), consumer audit context, and discovery agenda. No CRITICAL B/F/S findings.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "content_hash": "02569c294e4dd4226a6ba4259a1e26365c04c11281883a7c6ddaafe8d85816dd",
+        "non_whitespace_chars": 4725,
+        "checked_at": "2026-06-16T00:47:52.038Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-16T01:17:29.560Z",
+      "completed_by": "agent",
+      "approval_evidence": "Discovery persisted; agreement approved by user at AC checkpoint. Decisions: jump line to v0.4.0 (not delete), harden auto-release version selection now, let Renovate retarget PokeEdge. Contract minted with 23 items (SC1-SC4, AC1-AC6, C1-C5, DONT1-DONT4, OOS1-OOS4).",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "content_hash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "non_whitespace_chars": 4147,
+        "checked_at": "2026-06-16T00:47:52.039Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-16T01:25:02.036Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design persisted. Independent adv-researcher validator returned VALIDATED (all 4 dimensions info-level). Non-blocking execution cautions to carry into prep: (C-a) verify actionlint/shellcheck accepts the highest-semver-ancestor loop, quote to avoid SC2086; (C-b) ensure both v0.4.0 seed and subsequent auto-cut v0.4.1 target fixed main HEAD, never the broken v0.3.2 commit 5afaf289. No CONFLICT, no contract-compromise risk.",
+      "artifact_evidence": {
+        "kind": "design",
+        "content_hash": "112af3bae0f07824d46ced7e625dc853775879acb1de7e25989735a53e839c11",
+        "non_whitespace_chars": 6709,
+        "checked_at": "2026-06-16T00:47:52.040Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-16T01:48:57.650Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved prep plan via inline Tier A reply `approve`. 4 contract-traced tasks (harden auto-release, docs, seed v0.4.0 release op, verify) with dependencies and TDD intent. Validation passed (NO_DELTAS only; no specs)."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-16T01:56:58.593Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 4 tasks done with checkpoints. Hardened auto-release base selection (actionlint pass); documented version-line jump; seeded v0.4.0 (id 339871391) from fixed main as highest semver + rolled v0; verification passed. AC2 consumer Renovate retarget is async (tracked ag-kuscC15R). NO_DELTAS warning only (no specs)."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-16T02:22:24.372Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved delivered work via inline acceptance reply `approve`. Review verdict APPROVED after remediation; 0 blockers/issues unresolved. Contract review matrix persisted (23 rows, 0 failing); executive summary persisted; preview URL not_applicable. Remaining caveat: AC2 empirical Renovate retarget observation is async and tracked by ag-kuscC15R.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "content_hash": "e34901077480a9e0f861e20c31b9e102f9d7a9221687660b4a9c8f027bd0432e",
+        "non_whitespace_chars": 1728,
+        "checked_at": "2026-06-16T00:47:52.041Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "fixOsvRemediation follow-up; PokeEdge-Web PR #109 (closed)"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+      "approvedAt": "2026-06-16T01:17:22.157Z"
+    },
+    "items": [
+      {
+        "id": "SC1",
+        "kind": "success_criterion",
+        "text": "**SC1** The highest-semver release of sharperflow-security-gates points at current fixed `main` code, so Renovate proposes it instead of the stranded broken `v0.3.2`.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC2",
+        "kind": "success_criterion",
+        "text": "**SC2** SHA-pinned consumers keep working throughout; no consumer CI breaks.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC3",
+        "kind": "success_criterion",
+        "text": "**SC3** Auto-release can no longer silently strand a higher-semver tag (recurrence guard in place).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC4",
+        "kind": "success_criterion",
+        "text": "**SC4** The version-line jump and auto-release selection behavior are documented.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "**AC1** Given `main` has the fixed `setup-bun-node` composite, when the version-line jump is applied, then a release at `v0.4.0` or higher exists whose tag points at fixed `main` code (never the broken `v0.3.2` commit) and is the highest semver tag in the repo.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "**AC2** Given the `v0.4.0` release exists, when Renovate next evaluates a consumer (PokeEdge and/or PokeEdge-Web), then it proposes the `v0.4.x` line — verified on at least one consumer.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "**AC3** Given known consumers are SHA-pinned, when the jump is applied, then no consumer CI breaks and existing SHA pins still resolve.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "**AC4** Given auto-release version selection is hardened, when a higher-semver tag exists off the nearest-ancestor path, then auto-release selects the highest semver as its base so stranding cannot recur (verified by logic review + actionlint/self-test).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "**AC5** Given the change is verified, when checks run, then actionlint passes for `auto-release.yml` and the repo self-test / ruleset invariants still pass.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC6",
+        "kind": "acceptance_criterion",
+        "text": "**AC6** Given the version-line policy changed, when maintainers read the docs, then the `v0.4.0` jump and highest-semver auto-release behavior are documented.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "**C1** Preserve the `Sharperflow CI Gate` contract and no-bypass branch protection.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "**C2** The new highest-semver tag must point at fixed `main` code, never the broken `v0.3.2` commit.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "**C3** Do not delete or rewrite git history/commits.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "**C4** Changes to `auto-release.yml` must pass actionlint and must not bypass required status checks.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C5",
+        "kind": "constraint",
+        "text": "**C5** Tag/release operations must be auditable and reversible-by-recreate (record affected SHAs/IDs).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "**DONT1** Do not break SHA-pinned consumers.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "**DONT2** Do not weaken or bypass `Sharperflow CI Gate`.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "**DONT3** Do not hand-edit consumer pins as the primary retarget mechanism (let Renovate raise the corrected PR).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "**DONT4** Do not create any tag/release pointing at the broken `setup-bun-node` commit.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "OOS1",
+        "kind": "out_of_scope",
+        "text": "**OOS1** Deleting or yanking the stranded `v0.3.0/v0.3.1/v0.3.2` releases or tags (jump-forward to `v0.4.0` chosen instead).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS2",
+        "kind": "out_of_scope",
+        "text": "**OOS2** Changing the security-gate scanning behavior delivered by `fixOsvRemediation`.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS3",
+        "kind": "out_of_scope",
+        "text": "**OOS3** Manual consumer pin rewrites as the primary mechanism.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS4",
+        "kind": "out_of_scope",
+        "text": "**OOS4** Enabling Dependabot security updates.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-16T02:19:41.039Z",
+      "rows": [
+        {
+          "contractId": "SC1",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "v0.4.0 release id 339871391 targets fixed main 4606d05 and is highest semver; live docs/examples remediated to v0.4.0 SHA at checkpoint 22c8462.",
+          "notes": "Renovate no longer sees stranded v0.3.2 as highest semver."
+        },
+        {
+          "contractId": "SC2",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "No tags deleted/repointed except floating v0; consumer SHA pins still resolve. Existing consumer refs remain immutable; live examples now point to v0.4.0 SHA.",
+          "notes": "No consumer repo mutation performed."
+        },
+        {
+          "contractId": "SC3",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "auto-release.yml now selects highest stable semver tag that is an ancestor of HEAD and skips existing computed tags; actionlint passed via adv_run_test.",
+          "notes": "Prerelease/build-like tags excluded structurally after review remediation."
+        },
+        {
+          "contractId": "SC4",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "docs/ci-standard.md documents highest-semver-ancestor behavior and v0.4.0 jump; README/docs/examples/ROADMAP pins updated to v0.4.0 SHA.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "v0.4.0 release id 339871391 targets fixed main 4606d05; highest semver is v0.4.0; tag is not broken v0.3.2/5afaf289.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "not_applicable",
+          "evidencePolicy": "review",
+          "evidence": "Renovate next-evaluation event has not occurred during this session. In-repo preconditions are satisfied (v0.4.0 highest semver, docs/examples updated); empirical consumer observation is tracked as agenda ag-kuscC15R and not polled per no-polling policy.",
+          "notes": "Acceptance caveat: verify next Renovate consumer PR proposes v0.4.x before treating external retarget fully closed."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "No immutable consumer SHAs were rewritten; v0.3.x tags left installable; exact old-pin search remediated only local docs/examples, not consumer repos.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "static_check",
+          "evidence": "auto-release highest stable semver ancestor loop and idempotency guard present; actionlint pass; review remediation added stable-tag regex and strict version-bump shell mode.",
+          "notes": ""
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "adv_run_test actionlint exit 0; adv_run_test ruleset invariant check exit 0; exact stale-pin check exit 0 after corrected rerun.",
+          "notes": "One syntax-only verification command failed before rerun; corrected command passed."
+        },
+        {
+          "contractId": "AC6",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "docs/ci-standard.md release-line section documents v0.4.0 jump and highest-semver behavior; README/docs/examples/ROADMAP live references updated to v0.4.0.",
+          "notes": ""
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Ruleset invariant check passed: required context exactly Sharperflow CI Gate, no bypass actors, squash-only, strict checks off. self-test/ruleset semantics not weakened.",
+          "notes": ""
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "v0.4.0 targets 4606d05 fixed main code, not v0.3.2/5afaf289.",
+          "notes": ""
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No history/commit rewrite; v0.3.x releases/tags left installable; added v0.4.0 and rolled floating v0 only.",
+          "notes": ""
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "test",
+          "evidence": "actionlint passed on modified auto-release.yml; no required status check bypass introduced.",
+          "notes": ""
+        },
+        {
+          "contractId": "C5",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Recorded v0.4.0 release id 339871391, target 4606d05, prior v0 f365a1b, and remediation checkpoint 22c8462.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Existing SHA-pinned consumers still resolve; no consumer repo pins hand-edited; local examples now use v0.4.0 SHA.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Ruleset invariant check passed; Sharperflow CI Gate contract preserved.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No consumer pins were manually rewritten as retarget mechanism; only this repo docs/examples refreshed. Renovate retarget remains tracked by ag-kuscC15R.",
+          "notes": ""
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "v0.4.0 release and docs/examples point to 4606d05 fixed main, not the broken stranded v0.3.2 line.",
+          "notes": ""
+        },
+        {
+          "contractId": "OOS1",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "v0.3.0/v0.3.1/v0.3.2 tags/releases were not deleted or yanked.",
+          "notes": ""
+        },
+        {
+          "contractId": "OOS2",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Security-gate scan behavior from fixOsvRemediation was not changed; code changes limited to auto-release version selection and docs/examples pins.",
+          "notes": ""
+        },
+        {
+          "contractId": "OOS3",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No manual consumer pin rewrites performed; local docs/examples only.",
+          "notes": ""
+        },
+        {
+          "contractId": "OOS4",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Dependabot security updates were not enabled by this change.",
+          "notes": ""
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "**AC1** Given `main` has the fixed `setup-bun-node` composite, when the version-line jump is applied, then a release at `v0.4.0` or higher exists whose tag points at fixed `main` code (never the broken `v0.3.2` commit) and is the highest semver tag in the repo.",
+    "**AC2** Given the `v0.4.0` release exists, when Renovate next evaluates a consumer (PokeEdge and/or PokeEdge-Web), then it proposes the `v0.4.x` line — verified on at least one consumer.",
+    "**AC3** Given known consumers are SHA-pinned, when the jump is applied, then no consumer CI breaks and existing SHA pins still resolve.",
+    "**AC4** Given auto-release version selection is hardened, when a higher-semver tag exists off the nearest-ancestor path, then auto-release selects the highest semver as its base so stranding cannot recur (verified by logic review + actionlint/self-test).",
+    "**AC5** Given the change is verified, when checks run, then actionlint passes for `auto-release.yml` and the repo self-test / ruleset invariants still pass.",
+    "**AC6** Given the version-line policy changed, when maintainers read the docs, then the `v0.4.0` jump and highest-semver auto-release behavior are documented."
+  ],
+  "documents": {
+    "proposal": "# Remove stranded v0.3.x tags\n\n## Why\n\n`sharperflow-security-gates` has a version-line regression. The auto-release workflow uses `git describe --tags --abbrev=0` (nearest ancestor tag by history), so it keeps bumping the `v0.2.x` line forward (latest `v0.2.24`, fixed). But three higher-semver release tags — `v0.3.0` (2026-05-23), `v0.3.1` (2026-05-24), `v0.3.2` (2026-06-05) — are stranded on older commits that are now ancestors of the `v0.2.x` releases.\n\nRenovate sorts by **semver**, sees `v0.3.2 > v0.2.24`, and keeps proposing the stranded `v0.3.2` to consumers. `v0.3.2` is both **stale** (60 commits behind `main`) and **broken**: its `setup-bun-node/action.yml` has an unquoted `default:` colon on line 12, so the composite fails to load and any consuming job fails at setup. This produced PokeEdge-Web PR #109 (now closed), whose `Sharperflow CI Gate` was red for exactly this reason.\n\nDesired outcome: make the maintained, fixed `v0.2.x` line the highest semver so Renovate retargets consumers correctly, without breaking SHA-pinned consumers.\n\n## What Changes\n\nSubject to discovery:\n\n- Delete the stranded GitHub releases and git tags `v0.3.0`, `v0.3.1`, `v0.3.2` from `Sharper-Flow/sharperflow-security-gates`.\n- Verify no consumer relies on a `@v0.3.x` tag ref (all known consumers are SHA-pinned).\n- Let Renovate retarget consumers (PokeEdge, PokeEdge-Web) to the maintained `v0.2.x` line.\n- Optionally harden `auto-release.yml` version selection so higher-semver tags cannot strand again.\n- Document the version-line policy.\n\n## User Outcomes\n\n- Renovate proposes the maintained, fixed `v0.2.x` line to all consumers, not the broken stranded `v0.3.2`.\n- Consumers (PokeEdge, PokeEdge-Web) can take routine security-gate updates without red CI from a broken composite action.\n- SHA-pinned consumers keep working through the cleanup (no orphaned commits).\n- Maintainers have a documented, monotonic version line and an auto-release that cannot re-strand tags.\n\n## Scope\n\n### In Scope\n\n- Removal of stranded `v0.3.0`, `v0.3.1`, `v0.3.2` releases and tags in this repo.\n- Pre-deletion consumer audit for `@v0.3.x` tag refs vs SHA pins.\n- Verification that the maintained `v0.2.x` line is highest semver after cleanup and that Renovate retargets correctly.\n- Optional hardening of `auto-release.yml` version-selection logic.\n- Documentation of the version-line policy.\n\n### Out of Scope\n\n- Changing the security-gate scanning behavior delivered by `fixOsvRemediation`.\n- Rewriting consumer pins by hand as the primary mechanism (prefer Renovate retarget; manual only if required).\n- Broad redesign of the release pipeline beyond preventing tag stranding.\n- Enabling Dependabot security updates (already decided against — Renovate owns updates).\n\n### Must Not\n\n- Must not delete or rewrite git history/commits (only tags/releases that are ancestors and safe to drop).\n- Must not break SHA-pinned consumers.\n- Must not introduce a tag that points at the broken `setup-bun-node` commit.\n- Must not weaken or bypass `Sharperflow CI Gate`.\n\n## Affected Code\n\n- Git tags / GitHub releases `v0.3.0`, `v0.3.1`, `v0.3.2` (release state, not files).\n- `.github/workflows/auto-release.yml` — `git describe --abbrev=0` nearest-ancestor selection is the latent cause (line ~41).\n- Possibly `docs/ci-standard.md` / `README.md` — version-line policy documentation.\n- Consumer repos `Sharper-Flow/PokeEdge` and `Sharper-Flow/PokeEdge-Web` — verification/retarget only.\n\n## Related Repositories\n\n- Primary: `Sharper-Flow/sharperflow-security-gates`.\n- Consumers to verify/retarget: `Sharper-Flow/PokeEdge` (SHA-pinned `@cb39edc # v0.3.2`, python paths) and `Sharper-Flow/PokeEdge-Web` (SHA-pinned `@926408c # v0.2.1`).\n\n## Constraints\n\n- Preserve `Sharperflow CI Gate` contract and no-bypass branch protection.\n- Tag deletions must be reversible-by-recreate (record SHAs before deletion).\n- Renovate must end up proposing the maintained `v0.2.x` line.\n\n## Impact\n\n- Stops Renovate from chasing the broken stranded `v0.3.2`.\n- Removes a latent CI-breakage trap for every JS/Bun consumer.\n- Restores a monotonic, trustworthy version line.\n\n## Context\n\n- Auto-release uses conventional commits; latest release `v0.2.24` (2026-06-16), cut from current fixed `main`.\n- `v0.3.2` tag SHA `5afaf289`; Renovate-resolved `v0.3.2` SHA `cb39edc` — both carry the broken `setup-bun-node/action.yml`; both are ancestors of `main`.\n- PokeEdge-Web Dependabot alerts were enabled during this session; PR #109 was closed as superseded.\n\n## Discovery Findings\n\n### Discovery Checklist\n\n| Step | Result | Reason |\n|---|---|---|\n| Skill Discovery | PASS | Considered ADV skills; no pending-review skill frontmatter; closest match adv-ci-release (release CI), partial. |\n| Prior Research Extension | PASS | Extended fixOsvRemediation evidence + auto-release.yml read; added precise tag SHAs/release IDs and python-path validity. |\n| Conflict & Related-Work Scan | PASS | No conflicting active change; related agenda items found; own-change NO_TASKS/NO_DELTAS expected. |\n| Edge Case Investigation | PASS | Edge cases recorded for deletion, Renovate retarget, and reversibility. |\n| Design Question Depth | PASS | Delete-vs-jump and hardening questions annotated with trust/blast/alternatives. |\n| Draft Spec Delta Shapes | PASS | Draft rq-* deltas recorded. |\n| Related Pattern Scan | PASS | Only v0.3.x are stranded-higher; no other stranded-higher tags. |\n| LBP Check | PASS | Delete stranded tags is least-bad durable fix; internal change, no external tool needed. |\n\n### Skills Considered\n\n- `adv-ci-release`: partial — conventional-commit auto-release pattern is relevant background; not loaded as core (this is a cleanup/repair, not new release CI).\n- `adv-cleanup` / `adv-triage`: tangential.\n- No skill gap warranting creation; release-tag-hygiene is bounded and captured here.\n\n### Extends\n\n- `fixOsvRemediation` (archived this session): surfaced the broken `v0.3.2` `setup-bun-node` composite and PokeEdge/PokeEdge-Web pins.\n  - New finding: precise tag SHAs and release IDs recorded (v0.3.0 `5c9d5cd` id 328401518; v0.3.1 `3ce9b06` id 328435780; v0.3.2 `5afaf289` id 335032903).\n  - New finding: `setup-python-uv@cb39edc` is valid YAML, so PokeEdge's python path on v0.3.2 is NOT broken — only the bun-node composite is. PokeEdge is merely on a stale pin.\n- `auto-release.yml` (read): uses `git describe --tags --abbrev=0` (nearest ancestor), which is why the line stays on v0.2.x while v0.3.x strand higher by semver.\n- No `temp/*.md` or `docs/*-prep.md` research packs found.\n\n### Conflict Scan\n\n- `adv_change_list includeArchived:true`: no active change conflicts. `deepenSastDataflow` (draft) is unrelated.\n- `adv_change_validate`: passed; `NO_TASKS`/`NO_DELTAS` expected pre-prep.\n- `adv_agenda_list`: related items found and partially addressed this session:\n  - `ag-aLQBEmtj` and `ag-dYpzMDK5`: PokeEdge-Web enable alerts + merge pin PR — alerts now enabled; PR #109 closed (not merged) because it targeted broken v0.3.2. These agenda items are superseded by this change's correct-retarget plan.\n  - `ag-CaXs6Lkd`: verify pending gate-pin update doesn't change osv-scanner-action version — relevant when Renovate raises the corrected v0.2.x PR.\n\n### Current State\n\n- Tags `v0.3.0/v0.3.1/v0.3.2` are real, non-draft GitHub releases targeting `main`; all three are ancestors of `main`.\n- `git tag --list 'v*.*.*' | sort -V | tail` → highest semver is `v0.3.2`; the maintained auto-release line tops out at `v0.2.24` (lower semver, newer code, fixed).\n- Floating `v0` tag (`f365a1b`) is auto-rolled; consumers in scope pin specific SHAs, not `@v0`.\n- `renovate.json` (this repo) has no `allowedVersions`; consumers extend the shared preset which groups github-actions without version restriction.\n- Known consumers are SHA-pinned: PokeEdge `@cb39edc # v0.3.2` (python), PokeEdge-Web `@926408c # v0.2.1` (bun-node).\n- Org code search for other consumers returned nothing (private repos not indexed).\n\n### Edge Cases\n\n1. Tag/release deletion mechanics\n   - Deleting a GitHub *release* leaves the underlying git *tag*; both the release (by id) and the ref (`refs/tags/v0.3.x`) must be deleted for Renovate to stop seeing the tag.\n   - A consumer (unknown) using `@v0.3.x` as a tag ref would break on deletion; mitigated because all known consumers are SHA-pinned and SHAs survive tag deletion.\n2. Renovate retarget timing\n   - Renovate may not re-evaluate immediately; consumers stay on their current working SHA pins until the next Renovate run raises a corrected PR.\n   - If the shared preset or a consumer has cached/branch state referencing v0.3.x, a stale PR could linger; closing #109 already handled the one known case.\n3. Reversibility\n   - If deletion proves wrong, tags/releases can be recreated from the recorded SHAs (release notes regenerated), since commits remain reachable.\n\n### Open Design Questions\n\n1. Delete stranded `v0.3.x` vs jump the line to `v0.4.0`.\n   - Trust model: user-facing version policy.\n   - Blast radius: org-wide version perception + Renovate behavior; wrong choice leaves broken v0.3.2 installable or burns version numbers.\n   - Alternatives: (a) delete v0.3.x releases+tags — cleanest, recommended; (b) cut `v0.4.0` from fixed main so the maintained line surpasses v0.3.x (leaves broken v0.3.2 installable); (c) Renovate `allowedVersions` pin on consumers — masks rather than fixes.\n2. Harden `auto-release.yml` version selection now or as a follow-up.\n   - Trust model: agent-resolvable design, but scope decision is joint.\n   - Blast radius: future tag stranding recurrence.\n   - Alternatives: switch `git describe --abbrev=0` to highest-semver selection (`git tag | sort -V | tail -1`) in this change; or defer to a follow-up change.\n3. Retarget PokeEdge's stale `@cb39edc # v0.3.2` python pin in this change or via Renovate follow-up.\n   - Trust model: joint.\n   - Blast radius: PokeEdge CI currency.\n   - Alternatives: let Renovate raise the corrected PR after cleanup (recommended, low-touch); or push a manual retarget PR now.\n\n### Draft Spec Deltas\n\n- `rq-strandedTagRemoval01` — Given stranded higher-semver tags `v0.3.0/v0.3.1/v0.3.2` exist, when the cleanup runs, then their GitHub releases and git tag refs are removed and the highest remaining semver tag is the maintained `v0.2.x` line.\n- `rq-strandedTagSafety01` — Given known consumers are SHA-pinned, when the tags are deleted, then no consumer CI breaks and SHAs remain resolvable; tag SHAs are recorded for reversibility.\n- `rq-renovateRetarget01` — Given the stranded tags are removed, when Renovate next runs on a consumer, then it proposes the maintained `v0.2.x` line (not a v0.3.x tag).\n- `rq-autoReleaseHardening01` — Given the auto-release selects the next version, when a higher-semver tag exists off the maintained line, then version selection does not silently strand it (only if hardening is in scope).\n\n### Related Pattern Scan\n\n- Full tag list: `v0.0.0`, `v0.1.0`, `v0.2.0`–`v0.2.24`, `v0.3.0`–`v0.3.2`, plus floating `v0`.\n- Only `v0.3.0/v0.3.1/v0.3.2` are stranded-higher than the maintained line. No other stranded-higher tags exist. `v0.0.0/v0.1.0` are lower and harmless.\n\n### LBP Check\n\n- Internal release-hygiene change; no external tool/library decision → External-Solution Check skipped (stated explicitly).\n- Long-term best practice: a monotonic, single highest-semver line that matches newest code. Deleting the three stranded tags achieves that with minimal blast radius and full reversibility, and requires no workflow change. Hardening `auto-release.yml` to select highest semver is a sound recurrence guard but secondary.\n\n### Discovery Opportunity Scout\n\n- Scout: skipped — narrow internal release-tag cleanup with low opportunity surface; candidates already enumerated as design questions (delete vs jump, hardening, consumer retarget).\n\n### Recommended Objectives\n\n1. Remove the stranded `v0.3.0/v0.3.1/v0.3.2` releases and tags so the maintained `v0.2.x` line is the highest semver.\n2. Preserve all SHA-pinned consumers and record tag SHAs for reversibility.\n3. Ensure Renovate retargets consumers to the maintained line (verify post-cleanup).\n4. Decide and apply the recurrence guard (auto-release hardening) now or record it as a tracked follow-up.\n5. Document the version-line policy.\n\n### AMBIGUITY ANALYSIS\n\nM1 HIGH Missing Information — the version-policy direction (delete v0.3.x vs jump to v0.4.0) is not yet decided.\n  Evidence: \"Decide intended version line going forward: continue `v0.2.x`, or deliberately jump to `v0.4.0` to surpass the stranded tags instead of deleting them.\"\n  Reason: unclear because the chosen direction changes objectives, AC, and the deletion vs re-release task graph.\n\nCoverage: B:C F:C S:P M:P\n",
+    "problemStatement": "sharperflow-security-gates has a version-line regression: stranded higher-semver release tags `v0.3.0`, `v0.3.1`, `v0.3.2` exist on older commits, while the maintained auto-release line now ships `v0.2.x` (latest `v0.2.24`). Renovate sorts by semver, so it keeps proposing the stranded, stale, and broken `v0.3.2` to consumers (e.g. PokeEdge-Web PR #109, now closed). `v0.3.2` also ships a broken `setup-bun-node/action.yml` (unquoted `default:` colon → action fails to load), so any consumer Renovate moves onto it gets red CI.\n\nDesired outcome: make the maintained, fixed `v0.2.x` line the highest semver so Renovate retargets consumers correctly, without breaking SHA-pinned consumers, and optionally harden the auto-release version-selection logic so tags cannot strand again.",
+    "agreement": "# Agreement — removeStrandedV03XTags\n\n## Objectives\n\n1. Make the maintained, fixed release line the highest semver by jumping forward to `v0.4.0` (rather than deleting the stranded `v0.3.x` tags).\n2. Keep all SHA-pinned consumers working; ensure Renovate retargets consumers to the new `v0.4.x` line.\n3. Harden `auto-release.yml` version selection so higher-semver tags cannot strand again.\n4. Document the version-line jump and the hardened auto-release behavior.\n\n## Success Criteria\n\n- **SC1** The highest-semver release of sharperflow-security-gates points at current fixed `main` code, so Renovate proposes it instead of the stranded broken `v0.3.2`.\n- **SC2** SHA-pinned consumers keep working throughout; no consumer CI breaks.\n- **SC3** Auto-release can no longer silently strand a higher-semver tag (recurrence guard in place).\n- **SC4** The version-line jump and auto-release selection behavior are documented.\n\n## Acceptance Criteria\n\n- **AC1** Given `main` has the fixed `setup-bun-node` composite, when the version-line jump is applied, then a release at `v0.4.0` or higher exists whose tag points at fixed `main` code (never the broken `v0.3.2` commit) and is the highest semver tag in the repo.\n- **AC2** Given the `v0.4.0` release exists, when Renovate next evaluates a consumer (PokeEdge and/or PokeEdge-Web), then it proposes the `v0.4.x` line — verified on at least one consumer.\n- **AC3** Given known consumers are SHA-pinned, when the jump is applied, then no consumer CI breaks and existing SHA pins still resolve.\n- **AC4** Given auto-release version selection is hardened, when a higher-semver tag exists off the nearest-ancestor path, then auto-release selects the highest semver as its base so stranding cannot recur (verified by logic review + actionlint/self-test).\n- **AC5** Given the change is verified, when checks run, then actionlint passes for `auto-release.yml` and the repo self-test / ruleset invariants still pass.\n- **AC6** Given the version-line policy changed, when maintainers read the docs, then the `v0.4.0` jump and highest-semver auto-release behavior are documented.\n\n## Constraints\n\n- **C1** Preserve the `Sharperflow CI Gate` contract and no-bypass branch protection.\n- **C2** The new highest-semver tag must point at fixed `main` code, never the broken `v0.3.2` commit.\n- **C3** Do not delete or rewrite git history/commits.\n- **C4** Changes to `auto-release.yml` must pass actionlint and must not bypass required status checks.\n- **C5** Tag/release operations must be auditable and reversible-by-recreate (record affected SHAs/IDs).\n\n## Avoidances\n\n- **DONT1** Do not break SHA-pinned consumers.\n- **DONT2** Do not weaken or bypass `Sharperflow CI Gate`.\n- **DONT3** Do not hand-edit consumer pins as the primary retarget mechanism (let Renovate raise the corrected PR).\n- **DONT4** Do not create any tag/release pointing at the broken `setup-bun-node` commit.\n\n## Out of Scope\n\n- **OOS1** Deleting or yanking the stranded `v0.3.0/v0.3.1/v0.3.2` releases or tags (jump-forward to `v0.4.0` chosen instead).\n- **OOS2** Changing the security-gate scanning behavior delivered by `fixOsvRemediation`.\n- **OOS3** Manual consumer pin rewrites as the primary mechanism.\n- **OOS4** Enabling Dependabot security updates.\n\n## Preview Applicability\n\n- `visual_surface: false`\n- Rationale: change affects release tags/state, the `auto-release.yml` workflow, and docs. No frontend, browser-visible UI, or visual product output.\n\n## Decisions\n\n### User Decisions\n\n- Version-line direction: jump the maintained line forward to `v0.4.0` so it surpasses the stranded `v0.3.x` tags, rather than deleting them. Accepts that the broken `v0.3.2` remains installable but is no longer the highest semver.\n- Recurrence guard: harden `auto-release.yml` version selection in this change.\n- PokeEdge stale `@cb39edc # v0.3.2` python pin: let Renovate raise the corrected `v0.4.x` PR after the jump; no manual retarget PR.\n\n### Agent Decisions (LBP)\n\n- The `v0.4.0` release must be cut from current fixed `main` (which has the quoted `setup-bun-node/action.yml`) so the highest semver points at working code.\n- Verification uses repo-standard actionlint (`docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7`) and the existing Self Test / ruleset invariant checks.\n- Recorded current state for auditability: stranded releases v0.3.0 (tag `5c9d5cd`, id 328401518), v0.3.1 (tag `3ce9b06`, id 328435780), v0.3.2 (tag `5afaf289`, id 335032903); latest maintained release v0.2.24; floating `v0` → `f365a1b`.\n\n## Deferred Questions\n\n- None. All three discovery decisions (version direction, hardening scope, consumer retarget) were resolved by the user.\n\n## Sign-Off\n\nCriteria approved by user: `approve` at the discovery acceptance-criteria checkpoint after selecting jump-to-`v0.4.0`, harden-now, and Renovate-retarget.\n",
+    "design": "# Design — removeStrandedV03XTags\n\n## Architecture Overview\n\nTwo coordinated actions restore a monotonic, trustworthy version line without deleting the stranded `v0.3.x` tags:\n\n1. **Deterministic forward jump to `v0.4.0`** — manually seed a `v0.4.0` release+tag pointing at current fixed `main` (`4606d05`, which has the quoted `setup-bun-node/action.yml`). This makes the highest semver tag point at working code and surpass the stranded broken `v0.3.2`.\n2. **Auto-release recurrence guard** — change `auto-release.yml` base-version selection from nearest-ancestor (`git describe --abbrev=0`) to **highest-semver among ancestor tags**, plus an idempotency guard. After the jump, the maintained line (`v0.4.x`) is always the highest semver, so future auto-releases compute from it and cannot strand again.\n\nThe stranded `v0.3.0/v0.3.1/v0.3.2` releases are intentionally **left in place** (user decision: jump, not delete). They are no longer the highest semver, so Renovate stops proposing them.\n\n## Key Decisions\n\n### KD1 — Manual seed of `v0.4.0`, not conventional-commit auto-bump\n\nEvidence: `git log v0.3.2..main` contains **0 `feat` and 0 breaking** commits. If the hardened auto-release computed a bump from base `v0.3.2`, it would produce a **patch → `v0.3.3`**, not the agreed `v0.4.0`. Relying on commit-message bumping cannot deterministically land `v0.4.0`.\n\nDecision: cut `v0.4.0` explicitly via `gh release create v0.4.0 --target 4606d05…` (current fixed `main` HEAD). Deterministic, points at fixed code, honors the user's \"jump to v0.4.0\" intent exactly.\n\n### KD2 — Seed BEFORE merging the hardening change (race-free ordering)\n\n`auto-release.yml` triggers on `workflow_run` of **Self Test on main** (i.e. on push to `main`), **not** on tag/release creation. Therefore manually creating `v0.4.0` triggers **no** workflow.\n\nOrdering:\n1. Seed `v0.4.0` (+ roll floating `v0` → `v0.4.0`) from `main` HEAD. Highest semver is now `v0.4.0`. No workflow fires.\n2. Land the `auto-release.yml` hardening + docs via the normal PR → `Sharperflow CI Gate` → merge flow.\n3. On that merge, the **hardened** auto-release runs with base = highest semver = `v0.4.0`; range `v0.4.0..HEAD` = only the hardening commits (`fix`/`ci`/`docs`) → patch → `v0.4.1`, cut from fixed code. Monotonic and harmless.\n\nThis sidesteps any dependence on the 60 stranded historical commits and avoids an overshoot to `v1.0.0`.\n\n### KD3 — Harden base selection to highest-semver ancestor + idempotency\n\nReplace line ~41:\n```bash\nLAST_TAG=$(git describe --tags --abbrev=0 --match='v[0-9]*.[0-9]*.[0-9]*' 2>/dev/null || echo \"v0.0.0\")\n```\nwith highest-semver selection restricted to **ancestor** tags (so a future stranded non-ancestor tag cannot hijack the base), falling back to highest overall, then `v0.0.0`:\n```bash\n# Prefer the highest-semver tag that is an ancestor of HEAD (the maintained line).\nLAST_TAG=$(for t in $(git tag --list 'v[0-9]*.[0-9]*.[0-9]*'); do \\\n  git merge-base --is-ancestor \"$t\" HEAD 2>/dev/null && echo \"$t\"; done | sort -V | tail -1)\n[ -z \"$LAST_TAG\" ] && LAST_TAG=\"v0.0.0\"\n```\nAdd an idempotency guard before tagging: if the computed `NEW_TAG` already exists, skip cleanly instead of failing.\n\nRationale: highest-semver-ancestor is the correct \"latest maintained release\" and is immune to stranded higher tags on non-ancestor commits. `fetch-depth: 0` (already set) guarantees tags/history are present.\n\n### KD4 — Leave `v0.3.x` installable; rely on Renovate retarget\n\nPer user decision, `v0.3.x` releases/tags are not deleted. Because Renovate proposes the highest semver, consumers move to `v0.4.x`. PokeEdge's stale `@cb39edc # v0.3.2` python pin is retargeted by Renovate's next run (no manual PR). Known consumers are SHA-pinned, so nothing breaks during the transition.\n\n## ADR Drafts\n\nCandidate ADR (meets rubric: hard-to-reverse version-policy choice, surprising-without-context 0.3→0.4 jump while 0.2.x line continues, real tradeoff vs deleting tags). Draft `docs/adr/0001-version-line-jump-to-v0.4.0.md` is advisory and non-blocking; will be proposed during prep/execution if the repo adopts ADRs.\n\n## Implementation Strategy\n\n1. **Worktree + branch** for the code change (`auto-release.yml` hardening + docs + optional ADR).\n2. **Code**: harden base-version selection (KD3) + idempotency guard; document the version-line jump and highest-semver auto-release behavior in `docs/ci-standard.md` (and/or `README.md`).\n3. **Verify locally**: actionlint on `auto-release.yml`; shell logic review; ruleset/self-test invariants unaffected.\n4. **Release op (operator, audited)**: `gh release create v0.4.0 --target <fixed main sha>` and roll floating `v0` → `v0.4.0`. Record created tag/release IDs. Do this **before** merging the hardening PR (KD2), or immediately after with verification that highest semver is `v0.4.x` pointing at fixed code.\n5. **Merge** the hardening PR via `Sharperflow CI Gate`.\n6. **Verify**: highest semver tag = `v0.4.x`, points at fixed code (not the broken `v0.3.2` commit); Renovate proposes `v0.4.x` on at least one consumer (PokeEdge or PokeEdge-Web); actionlint + self-test pass.\n\n## LBP Analysis\n\n- Jump-forward + highest-semver-ancestor selection produces a **monotonic** version line that always matches newest code — the durable best practice for tag-driven Renovate consumers.\n- Avoids deleting published releases (history-preserving, per user choice) while still removing the operational harm (Renovate no longer chases the stranded broken `v0.3.2`).\n- The ancestor-restricted highest-semver base is strictly more correct than nearest-ancestor `git describe`, which silently regressed the line in the first place.\n- Internal release-ops change; no external tool/library decision (External-Solution Check N/A).\n\n## Affected Components\n\n- `.github/workflows/auto-release.yml` — base-version selection (line ~41) + idempotency guard.\n- `docs/ci-standard.md` / `README.md` — version-line policy + auto-release behavior docs.\n- Optional `docs/adr/0001-version-line-jump-to-v0.4.0.md`.\n- Release state: new `v0.4.0` release/tag; floating `v0` rolled to `v0.4.0` (operator action, not a repo file).\n- Consumers (PokeEdge, PokeEdge-Web): verification/Renovate-retarget only; no direct edits.\n\n## Design Leverage Scout\n\nScout: skipped — narrow release-ops + single-workflow change. Leverage points already enumerated as key decisions (manual seed vs auto-bump, race-free ordering, ancestor-restricted highest-semver selection, idempotency guard). Opportunity surface ≈ zero beyond these.\n\n## Design-Derived Criteria\n\n- **DDC1** The `v0.4.0` tag's commit must contain the quoted `setup-bun-node/action.yml` (fixed composite) — enforce by targeting current `main` HEAD, never a `v0.3.x` commit.\n- **DDC2** Hardened base selection must restrict to ancestor tags so a stranded non-ancestor higher tag cannot become the bump base.\n- **DDC3** Auto-release must be idempotent: never fail or duplicate when the computed tag already exists.\n- **DDC4** All tag/release operations recorded (tag SHA, release id) for auditability and reversibility.\n\n## Risks / Mitigations\n\n- **Risk**: merge-triggered auto-release overshoots (e.g. `v1.0.0`) if it runs with base `v0.3.2` before the seed. **Mitigation**: KD2 ordering — seed `v0.4.0` first (no workflow fired), so the hardened run uses base `v0.4.0`.\n- **Risk**: floating `v0` left at `v0.2.24` confuses `@v0` consumers. **Mitigation**: roll `v0` → `v0.4.0` during the seed.\n- **Risk**: an unknown consumer pins `@v0.3.x` as a tag ref. **Mitigation**: tags are NOT deleted in this approach, so any such ref keeps resolving; Renovate still offers `v0.4.x` forward.\n- **Risk**: broken `v0.3.2` remains installable. **Mitigation**: accepted by user (jump, not delete); no longer highest semver, so default Renovate path avoids it.\n",
+    "executiveSummary": "# Executive Summary\n\n## Outcome\n\nDelivered the v0.4.0 forward jump for `sharperflow-security-gates`, hardened auto-release base selection against stranded semver tags, and refreshed live consumer-facing guidance so new users pin the fixed v0.4.0 SHA instead of the stranded v0.3.2 line.\n\n## Verdict\n\nAPPROVED with one external-timing caveat: empirical Renovate retarget observation is pending the next consumer Renovate run and is tracked by agenda `ag-kuscC15R`.\n\n## What Was Built\n\n1. Replaced nearest-ancestor release base selection with highest stable semver tag that is an ancestor of `HEAD`, plus idempotency guard for existing computed tags.\n2. Documented the v0.4.0 version-line realignment and highest-semver-ancestor release behavior in `docs/ci-standard.md`.\n3. Created GitHub release `v0.4.0` (release id `339871391`) targeting fixed main commit `4606d05`; rolled floating `v0` to the same fixed commit; left `v0.3.x` installable.\n4. Remediated review findings by updating live README/docs/examples/ROADMAP pins to `4606d0547f41ea7edacfd40ff90c7b71d3449e3f # v0.4.0`, adding stable-tag filtering, and adding strict shell mode to the version-bump step.\n\n## What Was Verified\n\n- Verdict: APPROVED after review remediation. Findings: 0 blockers, 0 unresolved issues, suggestions/nits only.\n- Tests: actionlint passed; ruleset invariant check passed; exact stale-pin search passed after corrected rerun; task checkpoints recorded through `22c8462738d61cc8f2d56060885195ef469947f0`.\n- Preview URL: not_applicable — agreement declares `visual_surface: false`; implementation is workflow/release/docs only, with no browser-visible output.\n- Contract matrix: 23 rows persisted; 22 pass/respected, 1 not_applicable (`AC2` pending future Renovate evaluation), 0 fail/violated/unknown.\n\n## Remaining Concerns\n\n- `AC2` empirical consumer proof is async: verify next PokeEdge/PokeEdge-Web Renovate run proposes `v0.4.x` via agenda `ag-kuscC15R`; no polling loop in this acceptance session.\n",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-16T02:19:41.039Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| SC1 | success_criterion | **SC1** The highest-semver release of sharperflow-security-gates points at current fixed `main` code, so Renovate proposes it instead of the stranded broken `v0.3.2`. | pass | v0.4.0 release id 339871391 targets fixed main 4606d05 and is highest semver; live docs/examples remediated to v0.4.0 SHA at checkpoint 22c8462. |\n| SC2 | success_criterion | **SC2** SHA-pinned consumers keep working throughout; no consumer CI breaks. | pass | No tags deleted/repointed except floating v0; consumer SHA pins still resolve. Existing consumer refs remain immutable; live examples now point to v0.4.0 SHA. |\n| SC3 | success_criterion | **SC3** Auto-release can no longer silently strand a higher-semver tag (recurrence guard in place). | pass | auto-release.yml now selects highest stable semver tag that is an ancestor of HEAD and skips existing computed tags; actionlint passed via adv_run_test. |\n| SC4 | success_criterion | **SC4** The version-line jump and auto-release selection behavior are documented. | pass | docs/ci-standard.md documents highest-semver-ancestor behavior and v0.4.0 jump; README/docs/examples/ROADMAP pins updated to v0.4.0 SHA. |\n| AC1 | acceptance_criterion | **AC1** Given `main` has the fixed `setup-bun-node` composite, when the version-line jump is applied, then a release at `v0.4.0` or higher exists whose tag points at fixed `main` code (never the broken `v0.3.2` commit) and is the highest semver tag in the repo. | pass | v0.4.0 release id 339871391 targets fixed main 4606d05; highest semver is v0.4.0; tag is not broken v0.3.2/5afaf289. |\n| AC2 | acceptance_criterion | **AC2** Given the `v0.4.0` release exists, when Renovate next evaluates a consumer (PokeEdge and/or PokeEdge-Web), then it proposes the `v0.4.x` line — verified on at least one consumer. | not_applicable | Renovate next-evaluation event has not occurred during this session. In-repo preconditions are satisfied (v0.4.0 highest semver, docs/examples updated); empirical consumer observation is tracked as agenda ag-kuscC15R and not polled per no-polling policy. |\n| AC3 | acceptance_criterion | **AC3** Given known consumers are SHA-pinned, when the jump is applied, then no consumer CI breaks and existing SHA pins still resolve. | pass | No immutable consumer SHAs were rewritten; v0.3.x tags left installable; exact old-pin search remediated only local docs/examples, not consumer repos. |\n| AC4 | acceptance_criterion | **AC4** Given auto-release version selection is hardened, when a higher-semver tag exists off the nearest-ancestor path, then auto-release selects the highest semver as its base so stranding cannot recur (verified by logic review + actionlint/self-test). | pass | auto-release highest stable semver ancestor loop and idempotency guard present; actionlint pass; review remediation added stable-tag regex and strict version-bump shell mode. |\n| AC5 | acceptance_criterion | **AC5** Given the change is verified, when checks run, then actionlint passes for `auto-release.yml` and the repo self-test / ruleset invariants still pass. | pass | adv_run_test actionlint exit 0; adv_run_test ruleset invariant check exit 0; exact stale-pin check exit 0 after corrected rerun. |\n| AC6 | acceptance_criterion | **AC6** Given the version-line policy changed, when maintainers read the docs, then the `v0.4.0` jump and highest-semver auto-release behavior are documented. | pass | docs/ci-standard.md release-line section documents v0.4.0 jump and highest-semver behavior; README/docs/examples/ROADMAP live references updated to v0.4.0. |\n| C1 | constraint | **C1** Preserve the `Sharperflow CI Gate` contract and no-bypass branch protection. | respected | Ruleset invariant check passed: required context exactly Sharperflow CI Gate, no bypass actors, squash-only, strict checks off. self-test/ruleset semantics not weakened. |\n| C2 | constraint | **C2** The new highest-semver tag must point at fixed `main` code, never the broken `v0.3.2` commit. | respected | v0.4.0 targets 4606d05 fixed main code, not v0.3.2/5afaf289. |\n| C3 | constraint | **C3** Do not delete or rewrite git history/commits. | respected | No history/commit rewrite; v0.3.x releases/tags left installable; added v0.4.0 and rolled floating v0 only. |\n| C4 | constraint | **C4** Changes to `auto-release.yml` must pass actionlint and must not bypass required status checks. | respected | actionlint passed on modified auto-release.yml; no required status check bypass introduced. |\n| C5 | constraint | **C5** Tag/release operations must be auditable and reversible-by-recreate (record affected SHAs/IDs). | respected | Recorded v0.4.0 release id 339871391, target 4606d05, prior v0 f365a1b, and remediation checkpoint 22c8462. |\n| DONT1 | avoidance | **DONT1** Do not break SHA-pinned consumers. | respected | Existing SHA-pinned consumers still resolve; no consumer repo pins hand-edited; local examples now use v0.4.0 SHA. |\n| DONT2 | avoidance | **DONT2** Do not weaken or bypass `Sharperflow CI Gate`. | respected | Ruleset invariant check passed; Sharperflow CI Gate contract preserved. |\n| DONT3 | avoidance | **DONT3** Do not hand-edit consumer pins as the primary retarget mechanism (let Renovate raise the corrected PR). | respected | No consumer pins were manually rewritten as retarget mechanism; only this repo docs/examples refreshed. Renovate retarget remains tracked by ag-kuscC15R. |\n| DONT4 | avoidance | **DONT4** Do not create any tag/release pointing at the broken `setup-bun-node` commit. | respected | v0.4.0 release and docs/examples point to 4606d05 fixed main, not the broken stranded v0.3.2 line. |\n| OOS1 | out_of_scope | **OOS1** Deleting or yanking the stranded `v0.3.0/v0.3.1/v0.3.2` releases or tags (jump-forward to `v0.4.0` chosen instead). | respected | v0.3.0/v0.3.1/v0.3.2 tags/releases were not deleted or yanked. |\n| OOS2 | out_of_scope | **OOS2** Changing the security-gate scanning behavior delivered by `fixOsvRemediation`. | respected | Security-gate scan behavior from fixOsvRemediation was not changed; code changes limited to auto-release version selection and docs/examples pins. |\n| OOS3 | out_of_scope | **OOS3** Manual consumer pin rewrites as the primary mechanism. | respected | No manual consumer pin rewrites performed; local docs/examples only. |\n| OOS4 | out_of_scope | **OOS4** Enabling Dependabot security updates. | respected | Dependabot security updates were not enabled by this change. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/removeStrandedV03XTags/proposal.md",
+      "updatedAt": "2026-06-16T00:53:00.109Z",
+      "contentHash": "e46950449ef83b204d923d62b9a15dd9400df2ed3e233faed13bcb0d3395d234"
+    },
+    "problemStatement": {
+      "updatedAt": "2026-06-16T00:47:52.186Z",
+      "source": "temporal",
+      "readable": false
+    },
+    "agreement": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/removeStrandedV03XTags/agreement.md",
+      "updatedAt": "2026-06-16T01:17:16.875Z",
+      "contentHash": "c232aac135d235c97b9ef30004ababdc9052127f9ab8e13ae33245be606edc77"
+    },
+    "design": {
+      "path": "/home/jon/.local/share/opencode-projects/d5d80b9521a34fb6944cc363dee739e8ecabb54d/opencode/plugins/advance/d5d80b9521a34fb6944cc363dee739e8ecabb54d/changes/removeStrandedV03XTags/design.md",
+      "updatedAt": "2026-06-16T01:22:22.263Z",
+      "contentHash": "112af3bae0f07824d46ced7e625dc853775879acb1de7e25989735a53e839c11"
+    },
+    "executiveSummary": {
+      "updatedAt": "2026-06-16T02:20:33.198Z",
+      "contentHash": "e34901077480a9e0f861e20c31b9e102f9d7a9221687660b4a9c8f027bd0432e",
+      "source": "temporal",
+      "readable": false
+    }
+  },
+  "lastSignalAt": "2026-06-16T02:37:52.908Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d"
+}

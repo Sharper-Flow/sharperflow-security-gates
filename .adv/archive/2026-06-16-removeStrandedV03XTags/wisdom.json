@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "id": "ws-YlzBhn",
+      "type": "gotcha",
+      "content": "In GitHub Actions `run: |` blocks, heredocs (`<<EOF`) break because the terminator must be column-0 but YAML indents everything; `<<-EOF` only strips tabs, not the spaces YAML uses. Use a bash here-string (`done <<< \"$VAR\"`) instead — it runs the while-loop in the current shell (so loop-set variables persist) and has no indentation-sensitive terminator. For \"latest maintained release,\" select the highest-semver tag that is an ANCESTOR of HEAD (`git merge-base --is-ancestor` + `sort -V | tail -1`), not nearest-ancestor `git describe --abbrev=0`, which silently regresses when higher-semver tags strand on older commits.",
+      "source_task": "tk-c196c0c113fa",
+      "recorded_at": "2026-06-16T01:51:27.485Z"
+    }
+  ],
+  "count": 1
+}
