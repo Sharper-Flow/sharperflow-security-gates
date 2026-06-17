@@ -1,0 +1,486 @@
+{
+  "id": "fixCiFailFastTopology",
+  "title": "Fix CI fail-fast topology",
+  "status": "archived",
+  "created_at": "2026-06-16T23:14:03.089Z",
+  "tasks": [
+    {
+      "id": "tk-92cc4f9df5cd",
+      "title": "Document `security → test/build` fail-fast edge in `docs/ci-standard.md` §2",
+      "type": "code",
+      "section": "This repo (docs)",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-17T01:03:35.869Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Documentation change; verified by review. Respects DONT6 (no anti-example).",
+        "respects": [
+          "DONT6"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:07:17.514Z",
+      "verification": "ci-standard.md §1: added stage-ordering clarification. §2: added \"Fail-fast edges\" subsection documenting direct pattern, fast-gate join pattern (cross-ref PokeEdge backend), anti-pattern, and choosing guidance. Review-verified, no actionlint needed (markdown).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-web/ci.yml"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md",
+        "examples/pokeedge-python/ci.yml",
+        "examples/pokeedge-web/ci.yml"
+      ],
+      "checkpointSha": "db3d71b2026f53edc3e3e3b3ed517fbc721dcef6",
+      "completedAt": "2026-06-17T01:10:55.339Z",
+      "completed_at": "2026-06-17T01:10:55.339Z"
+    },
+    {
+      "id": "tk-c2ad8c175422",
+      "title": "Demonstrate `security → test/build` fail-fast edge in both example CI workflows",
+      "type": "code",
+      "section": "This repo (examples)",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-17T01:03:39.508Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint. Respects DONT6.",
+        "respects": [
+          "DONT6"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:09:52.622Z",
+      "verification": "Both examples demonstrate fail-fast edge: needs: [fast-checks, security] on test+build. actionlint clean (EXIT:0). Anti-example eliminated (DONT6 satisfied).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "db3d71b2026f53edc3e3e3b3ed517fbc721dcef6",
+      "completedAt": "2026-06-17T01:11:48.339Z",
+      "completed_at": "2026-06-17T01:11:48.339Z"
+    },
+    {
+      "id": "tk-b7f4419a9eac",
+      "title": "PokeEdge-Web ci.yml: add `security` to test/build needs: + remove `integration` job",
+      "type": "code",
+      "section": "PokeEdge-Web",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-17T01:03:45.254Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint + CI evidence. Respects DONT4.",
+        "respects": [
+          "DONT4"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:30:24.598Z",
+      "verification": "PokeEdge-Web ci.yml: test/build needs: now [changes, lint, typecheck, security]. Integration job + stale comment removed. ci-gate needs: unchanged. Sharperflow CI Gate name unchanged. actionlint clean on ci.yml + ci-quality.yml (EXIT:0).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e5862e250252e2df00e7e3cf042aadc3cec96a10",
+      "completedAt": "2026-06-17T01:33:30.099Z",
+      "completed_at": "2026-06-17T01:33:30.099Z"
+    },
+    {
+      "id": "tk-123f5d956c34",
+      "title": "PokeEdge-Web: bump security-gates pin v0.2.1 → v0.4.1 (7 uses, 6 after T3 removes integration)",
+      "type": "code",
+      "section": "PokeEdge-Web",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-17T01:03:52.677Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Mechanical pin bump; verified by actionlint + CI. Respects DONT2, DONT3.",
+        "respects": [
+          "DONT2",
+          "DONT3"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:31:52.231Z",
+      "verification": "All 6 remaining pins (5 in ci.yml + 1 in ci-quality.yml) bumped from 926408c # v0.2.1 to e241c12b # v0.4.1. 7th occurrence was inside removed integration job. actionlint clean (EXIT:0). PokeEdge backend pin and Advance pilot untouched (DONT2/DONT3).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "e5862e250252e2df00e7e3cf042aadc3cec96a10",
+      "completedAt": "2026-06-17T01:33:30.114Z",
+      "completed_at": "2026-06-17T01:33:30.114Z"
+    },
+    {
+      "id": "tk-126b6a6664db",
+      "title": "PokeEdge pr-gate.yml: add fail-fast `-x` to unit + api pytest lanes",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-17T01:03:58.057Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint + CI evidence. Respects DONT1, DONT5.",
+        "respects": [
+          "DONT1",
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:33:46.642Z",
+      "verification": "PokeEdge pr-gate.yml: unit lane now has -x after -m \"not serial and not slow\". Api lane now has -x after --timeout-method=signal. Comments explain xdist compatibility. actionlint clean (EXIT:0). Stage-3 siblings untouched (DONT1). Api lane bundled not split (DONT5).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "3deef7684bd8fef8a8a4b54e5d9eec170f19861f",
+      "completedAt": "2026-06-17T01:36:13.602Z",
+      "completed_at": "2026-06-17T01:36:13.602Z"
+    },
+    {
+      "id": "tk-135ac356a59e",
+      "title": "PokeEdge dependency-review.yml: add concurrency block",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 5,
+      "created_at": "2026-06-17T01:04:02.080Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint. Respects DONT4.",
+        "respects": [
+          "DONT4"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:33:46.644Z",
+      "verification": "PokeEdge dependency-review.yml: concurrency block added (group: workflow-ref, cancel-in-progress: true). Other helper workflows untouched (DONT4). actionlint clean (EXIT:0).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "3deef7684bd8fef8a8a4b54e5d9eec170f19861f",
+      "completedAt": "2026-06-17T01:36:13.600Z",
+      "completed_at": "2026-06-17T01:36:13.600Z"
+    },
+    {
+      "id": "tk-eb44b5fe3361",
+      "title": "Verify all changes: actionlint clean across 3 repos + collect post-merge CI evidence",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 6,
+      "created_at": "2026-06-17T01:04:22.744Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-92cc4f9df5cd"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-c2ad8c175422"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-b7f4419a9eac"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-123f5d956c34"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-126b6a6664db"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-135ac356a59e"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T01:39:07.059Z",
+      "verification": "Actionlint verified across all 3 repos (all EXIT:0): sharperflow-security-gates examples, PokeEdge-Web ci.yml+ci-quality.yml, PokeEdge pr-gate.yml+dependency-review.yml. CI evidence (AC3) deferred to acceptance — requires post-merge CI runs from PRs #20 (security-gates), #193 (PokeEdge-Web), #498 (PokeEdge).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "db3d71b2026f53edc3e3e3b3ed517fbc721dcef6",
+      "completedAt": "2026-06-17T01:40:15.404Z",
+      "completed_at": "2026-06-17T01:40:15.404Z",
+      "contract_refs": {
+        "not_applicable_reason": "Verification task (actionlint + CI evidence). Not a contract item implementation. Verifies AC3/AC4/AC7 outcomes."
+      },
+      "updatedAt": "2026-06-17T01:52:29.597Z"
+    }
+  ],
+  "subagent_reports": [],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-17T00:37:54.852Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved via Tier A \"approve\" whitelist. Proposal + problem-statement persisted. Clarify warning on \"fast\" dismissed as industry-standard CI term.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "content_hash": "bb4b829dd6d98a056a8f20eb41b9e147c1886b876da168571ddc7b5fd1b3975a",
+        "non_whitespace_chars": 2509,
+        "checked_at": "2026-06-16T23:14:03.115Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "started_at": "2026-06-17T00:56:22.551Z",
+      "completed_at": "2026-06-17T00:57:00.313Z",
+      "completed_by": "user",
+      "approval_evidence": "Agreement approved (Tier A). Contract minted strict rigor (6 items). Discovery validated all open questions + surfaced api-lane scope.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "content_hash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "non_whitespace_chars": 3528,
+        "checked_at": "2026-06-16T23:14:03.117Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-17T01:00:54.491Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design.md persisted (7 LBP decisions, 3-repo fan-out architecture, task breakdown, risk register). Inline validator (adv-researcher unavailable after 3 cancellations): all 7 technical claims PASS against GitHub Actions docs, pytest-xdist docs, pytest-cov source/tests, actionlint conventions. Verdict READY. No CONFLICT, no collaborative checkpoint needed.",
+      "artifact_evidence": {
+        "kind": "design",
+        "content_hash": "dcebdae504e81ab46d419caf6a8f333f23327630b1ebb397988ec77504bf7603",
+        "non_whitespace_chars": 10594,
+        "checked_at": "2026-06-16T23:14:03.118Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-17T01:07:17.515Z",
+      "completed_by": "user",
+      "approval_evidence": "7 tasks created. Phase 1 (T1+T2, this repo) starts on approval. Phase 2-3 (T3-T6, app repos) pause at execution gate for C7 cross-repo approval. T7 verification after all. All tasks tdd_intent=not_applicable (declarative YAML/docs). Contract refs mapped to DONT1-DONT6."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-17T01:40:36.592Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 7 tasks done. 3 PRs created: security-gates #20, PokeEdge-Web #193, PokeEdge #498. Actionlint clean across all 3 repos (EXIT:0). CI evidence (AC3) deferred to acceptance — requires post-merge runs."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-17T01:46:47.132Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved via Tier A. Contract review matrix: 6 rows, 0 failing. AC1-AC2,AC4-AC7 verified. AC3 (CI evidence) deferred to post-merge — PRs #20/#193/#498 CI status checked one-shot: security-gates all pass, PokeEdge-Web security+lint+typecheck pass (test/build running after security completed = edge wired correctly), PokeEdge CI Gate pass. Executive summary persisted.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "content_hash": "541d6775bbab42b151560850810fcb6dc3bbf662d97b2dfb23857be1adc12616",
+        "non_whitespace_chars": 1862,
+        "checked_at": "2026-06-16T23:14:03.119Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "fast_follow_of": {
+    "parent_change_id": "reduceActionsCost",
+    "linked_at": "2026-06-16T23:14:03.075Z"
+  },
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "session:2026-06-16 fail-fast investigation"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "strict",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+      "approvedAt": "2026-06-17T00:56:46.329Z"
+    },
+    "items": [
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not serialize PokeEdge Stage-3 siblings (proven net-negative).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not touch PokeEdge backend pin (separate change).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "Do not bundle Advance pilot `@v0` (different gap class).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "No BuildKit, Renovate batch, or deploy-chain changes.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT5",
+        "kind": "avoidance",
+        "text": "Do not split api-lane edit into a follow-up (bundle with unit lane).",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT6",
+        "kind": "avoidance",
+        "text": "Do not preserve anti-example in examples \"for backward compatibility.\"",
+        "sourceArtifact": "agreement",
+        "sourceHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-17T01:42:17.477Z",
+      "rows": [
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge pr-gate.yml diff: only -x added to unit+api lanes (lines 366, 378). Stage-3 sibling jobs (Integration, E2E, Acceptance, Migration Chain, Contract) untouched. No serialization introduced."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge-Web pins bumped (926408c→e241c12b). PokeEdge backend pin (cb39edcd # v0.3.2 in pr-gate.yml:256) untouched. Diff verified: only PokeEdge-Web ci.yml + ci-quality.yml changed."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No Advance repo changes. PRs created only for sharperflow-security-gates (#20), PokeEdge-Web (#193), PokeEdge (#498). Advance floating @v0 flagged in discovery but explicitly out of scope (A3)."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Only dependency-review.yml concurrency added. pr_agent.yml, pr-size-labeler.yml, auto-merge.yml untouched (already exclude synchronize). No deploy-chain, BuildKit, or Renovate changes."
+        },
+        {
+          "contractId": "DONT5",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Both unit lane (pr-gate.yml:366) and api lane (pr-gate.yml:378) have -x flag. Not split into follow-up. Bundled per A5."
+        },
+        {
+          "contractId": "DONT6",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "examples/pokeedge-web/ci.yml + pokeedge-python/ci.yml: test/build now have needs: [fast-checks, security]. docs/ci-standard.md §2: Fail-fast edges subsection documents direct + fast-gate + anti-pattern. No anti-example preserved."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [],
+  "documents": {
+    "proposal": "# Proposal: Fix CI fail-fast topology\n\n## Why\nRecurring monthly GitHub Actions bleed from fail-fast topology gaps in PokeEdge-Web (54% CI failure rate; security/integration failures don't gate test/build) and PokeEdge (pr-gate unit lane lacks --maxfail). Plus doc gap in this repo's standard/examples. The June-15 Renovate spike (now resolved) made the steady leak visible. Parent: archived `reduceActionsCost`, which deliberately left the fail-fast lever alone.\n\n## What changes\nCross-repo change, same shape as `reduceActionsCost`. Three surfaces:\n\n1. **PokeEdge-Web** (`Sharper-Flow/PokeEdge-Web`, direct target with explicit user approval at execution):\n   - Add `security` to `test` and `build` `needs:` in `.github/workflows/ci.yml`.\n   - Resolve `integration` job: gate it behind `test`/`build`/`security` OR remove until budget-bounded (discovery decides; current state = false-success risk).\n   - Rider: bump stale security-gates pin from `926408c # v0.2.1` -> current `v0.4.1` SHA across all 7 uses.\n\n2. **PokeEdge** (`Sharper-Flow/PokeEdge`, direct target with explicit user approval at execution):\n   - Add `pytest --maxfail=1 -x` (or lane-appropriate fail-fast flag) to the `pr-gate` unit lane in `.github/workflows/pr-gate.yml`.\n   - Rider: add `concurrency: cancel-in-progress: true` to `dependency-review.yml` (and assess the other 3 helpers).\n\n3. **This repo** (`sharperflow-security-gates`):\n   - Update `docs/ci-standard.md` S1/S2 to document the `security -> test/build` fail-fast edge as recommended app-wiring (not just the summary gate).\n   - Update `examples/pokeedge-web/ci.yml` and `examples/pokeedge-python/ci.yml` to demonstrate the edge.\n\n## Strictness\n- Contract rigor: **strict** (user requirement: \"strict outcomes\").\n- Carries forward `reduceActionsCost` constraints C1-C6: no security-posture weakening, no frozen reusable-job-name rename, no GHAS/CodeQL/SonarCloud dependency, no slow-check deletion, no skipped-job-as-free assumption, no app-repo/reusable-gate conflation.\n\n## Explicitly out of scope\n- Renovate batch-incident follow-up (resolved Jun 16 via v0.4.0 realignment).\n- BuildKit cache cleanup (PokeEdge-Web 10.7GB / 604 entries) - separate; reduceActionsCost left it approval-gated.\n- PokeEdge Stage-3 sibling serialization (proven net-negative; correct as parallel).\n- Deploy-chain changes.\n\n## Open questions for discovery\n- `integration` job: gate-behind or remove? (215s, advisory, false-success risk - discovery validates which against real runs.)\n- Does PokeEdge unit lane use pytest directly or a wrapper? (Affects --maxfail wiring.)\n- Are there other app repos consuming the gates with the same gap?\n- Does adding `security` to test/build `needs:` materially delay the happy-path wall-clock? (Measure before/after on a sample.)\n\n## Implementation-free\nDiscovery validates each lever against real runs before any edit. No code changes in this proposal.",
+    "problemStatement": "# Problem: CI pipelines don't fail-fast, burning GitHub Actions minutes\n\n## User concern\nCI/CD pipelines in GitHub aren't wired for fail-fast: some checks fail but the whole run keeps going. GitHub Actions spend is unusually high this month.\n\n## Investigation (2026-06-16, read-only, evidence-backed)\nAudited both app repos' actual CI wiring + last 50-200 runs via `gh`. Also audited this repo's reusable gates, standard, and examples. Two parallel `general` workers gathered per-repo evidence; results cross-checked inline.\n\n### Finding 1 - PokeEdge-Web has real fail-fast gaps (the recurring bleed)\n`Sharper-Flow/PokeEdge-Web` `.github/workflows/ci.yml`:\n- `security` job (`ci.yml:214-225`) only `needs: changes` - does NOT gate `test` or `build`.\n- `test` (`ci.yml:161-182`) and `build` (`ci.yml:187-206`) define `needs: [changes, lint, typecheck]` - no `security`.\n- `integration` (`ci.yml:235-307`) is advisory/non-blocking, 215s, parallel fan-out, NOT in `ci-gate` needs. When it fails, the gate FALSELY reports success.\n- `commit-lint` (`ci.yml:313-365`) has no `needs:` at all.\n- The ONE working fail-fast edge is `lint/typecheck -> test/build` (`ci.yml:163,189`). That's why CI failure-median (235s) < success-median (554s). But security/integration/commit-lint failures don't gate test/build.\n\nEvidence (4 of 5 recent non-test failures): OSV/security fails at +24-28s, then Unit Tests (446s) + Build (61s) run to completion anyway ~= 8 min wasted per failure. CI failure rate = 54% (43 failed / 80 CI runs in sample). Estimated savings from fixing: ~5.7 hr / 200 runs.\n\n### Finding 2 - PokeEdge's waste is inside pr-gate, not topology\n`Sharper-Flow/PokeEdge` `.github/workflows/pr-gate.yml`:\n- Fast-gate -> Stage-3 fail-fast (`pr-gate.yml:275-314`) WORKS correctly (verified both sampled failures).\n- Stage-3's 6 parallel siblings (`pr-gate.yml:319,406,464,499,549,571`) are CORRECT as parallel - serializing is net-negative (saves ~7 runner-min/failure, adds ~7 wall-clock min/success).\n- The real waste: `pr-gate` job's unit lane (`pr-gate.yml:362-371`) has no `pytest --maxfail=1 -x`. A unit failure surfaces at minute 10-15 instead of seconds. Estimated savings: ~200-300 wall-clock min/month. Strongest single lever.\n\n### Finding 3 - Renovate mass-failure (June 15) was one-time, now resolved\n- Jun 15: Renovate PR #109 (bump security-gates pin) targeted stranded v0.3.x tag -> CI failed (run 27584258658). 3 sibling dep PRs also failed. ~2.1 hr burned.\n- Jun 16 ~01:54Z: v0.4.0 realignment cut (escape stranded v0.3.x). v0.4.1 at 02:48Z.\n- Jun 16: PR #109 CLOSED. Sibling dep PRs re-ran and MERGED (#174, #110, #115). Renovate functioning normally.\n- Verdict: one-time incident, contained. NOT the recurring bleed.\n\n### Finding 4 - PokeEdge-Web pin is stale (rider, not bleed)\n- PokeEdge-Web pins `926408c850f26aee21474e70b3aaadac588cf057 # v0.2.1` (Jun 6 commit) across all 7 uses (ci.yml x6, ci-quality.yml x1).\n- PR #109's bump never landed. 10 days stale - missing reduceActionsCost SBOM/retention fixes + all v0.4.x. Reusable gate works at this SHA but is behind.\n\n### Finding 5 - small gaps in PokeEdge helper workflows\n- `dependency-review.yml`, `pr_agent.yml`, `pr-size-labeler.yml`, `auto-merge.yml` lack `concurrency:`. `dependency-review.yml` most material (synchronize-default trigger -> runs per push).\n\n### Finding 6 - this repo's standard/examples doc gap\n- `docs/ci-standard.md` S1 arrow notation (`setup -> fast-checks -> tests -> build -> security -> summary`) implies sequencing the example YAML doesn't enforce.\n- Examples (`examples/pokeedge-*/ci.yml`) show the `ci-gate` summary but do NOT demonstrate the `security -> test/build` fail-fast edge as recommended pattern.\n\n## What \"done\" must mean (strict outcomes - user requirement)\n- PokeEdge-Web: `security` failure stops `test`/`build`; `integration` either gates correctly or is removed; no false-success path remains.\n- PokeEdge: `pr-gate` unit lane fails in seconds, not 10-15 min.\n- Measurable: sampled failed CI runs show expensive jobs SKIPPED (not run-to-completion) after an upstream failure.\n- No weakening of security coverage (AC8 from reduceActionsCost carries forward).\n- `Sharperflow CI Gate` frozen context unchanged in both repos.\n- All touched workflows pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7`.",
+    "agreement": "# Agreement: Fix CI fail-fast topology\n\n## Objectives\n\n### O1 — PokeEdge-Web security gates test/build (fail-fast edge)\n`security` job failure stops `test` and `build` from running. No security failure runs expensive downstream jobs to completion.\n\n### O2 — PokeEdge-Web `integration` job no longer a false-success risk\n`integration` job removed (including stale comment at ci.yml:229-234). Discovery validated: 29/29 success, 0 failures, max 5m51s, zero gate signal.\n\n### O3 — PokeEdge pr-gate unit + api lanes fail-fast\nUnit and api pytest lanes stop at first failure instead of running full suite end-to-end.\n\n### O4 — PokeEdge helper workflow concurrency\n`dependency-review.yml` gets `concurrency: cancel-in-progress: true`. Other helpers already exclude synchronize — out of scope.\n\n### O5 — Security-gates pin bump (PokeEdge-Web rider)\nAll 7 uses of `926408c # v0.2.1` bumped to `e241c12b # v0.4.1`.\n\n### O6 — This repo's standard + examples teach the correct pattern\n`docs/ci-standard.md` S2 documents `security → test/build` fail-fast edge. Both `examples/pokeedge-{web,python}/ci.yml` demonstrate the edge.\n\n## Acceptance criteria\n\n### AC1 — PokeEdge-Web ci.yml topology\n- `test` and `build` `needs:` include `security`.\n- `integration` job removed (including stale comment ci.yml:229-234).\n- `Sharperflow CI Gate` job name and `needs:` list otherwise unchanged.\n- All 7 pin occurrences updated to `e241c12b542b2f338761228c8dd0bac72c51cc76 # v0.4.1`.\n- **Evidence:** sampled failed CI runs show `test`/`build` SKIPPED after `security` fails. actionlint clean.\n\n### AC2 — PokeEdge pr-gate.yml fail-fast\n- `Lane: unit` and `Lane: api` pytest invocations include `--maxfail=1 -x`.\n- `dependency-review.yml` has `concurrency:` with `cancel-in-progress: true`.\n- `Sharperflow CI Gate` context unchanged.\n- **Evidence:** sampled unit-lane failure shows pytest exits at first failure. actionlint clean.\n\n### AC3 — Measurable savings\n- PokeEdge-Web: post-change failed runs show test/build skipped when security fails.\n- PokeEdge: post-change pr-gate failures stop at first failing test.\n- Reported in acceptance evidence (run IDs + job conclusions).\n\n### AC4 — This repo docs + examples\n- `docs/ci-standard.md` S2 updated with fail-fast edge as recommended pattern.\n- `examples/pokeedge-web/ci.yml` demonstrates `security` in `test`/`build` `needs:`.\n- `examples/pokeedge-python/ci.yml` demonstrates the same.\n- No anti-example remains.\n\n### AC5 — No security-posture weakening\n- No scanner removed or made advisory.\n- No severity threshold raised.\n- No skip-on-failure introduced.\n\n### AC6 — Reusable job names frozen\n- `Sharperflow CI Gate` context unchanged in both app repos.\n- `security` job name unchanged in both app repos.\n\n### AC7 — actionlint clean\nAll touched workflows pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` in their respective repos.\n\n## Constraints\n\n### C1-C6 — Carried from reduceActionsCost\nC1 no security weakening · C2 no job-name rename · C3 no GHAS/CodeQL/SonarCloud · C4 no slow-check deletion · C5 no skipped-job-as-free assumption · C6 no app-repo/reusable-gate conflation.\n\n### C7 — Cross-repo execution requires explicit user approval at execution gate\nPokeEdge-Web and PokeEdge are direct-target repos. Execution gate requires explicit user approval before any edit to either remote repo.\n\n### C8 — Worktree isolation\nThis repo's edits go through ADV worktree. App repo edits go through their respective worktrees.\n\n## Avoidances\n\n- A1: Do not serialize PokeEdge Stage-3 siblings (proven net-negative).\n- A2: Do not touch PokeEdge backend pin (separate change).\n- A3: Do not bundle Advance pilot `@v0` (different gap class).\n- A4: No BuildKit, Renovate batch, or deploy-chain changes.\n- A5: Do not split api-lane edit into a follow-up (bundle with unit lane).\n- A6: Do not preserve anti-example in examples \"for backward compatibility.\"\n\n## Out of scope\nRenovate batch-incident (resolved) · BuildKit cache cleanup · PokeEdge Stage-3 serialization · Deploy-chain · PokeEdge backend pin bump · Advance pilot `@v0` · Helper concurrency beyond `dependency-review.yml`.\n",
+    "design": "# Design: Fix CI fail-fast topology\n\n## Architecture\n\n### Three-repo change, fan-out execution\n\n```\nfixCiFailFastTopology (primary change in sharperflow-security-gates)\n├── Surface 1: THIS REPO (sharperflow-security-gates)\n│   ├── docs/ci-standard.md (S2 fail-fast edge section)\n│   └── examples/pokeedge-{web,python}/ci.yml (demonstrate edge)\n│   └── Worktree: ADV change/fixCiFailFastTopology\n│\n├── Surface 2: PokeEdge-Web (direct target, execution-gated)\n│   ├── .github/workflows/ci.yml (security→test/build needs:, remove integration, pin bump x6)\n│   └── .github/workflows/ci-quality.yml (pin bump x1)\n│   └── Worktree: manual in PokeEdge-Web repo\n│\n└── Surface 3: PokeEdge (direct target, execution-gated)\n    ├── .github/workflows/pr-gate.yml (--maxfail=1 -x on unit + api lanes)\n    └── .github/workflows/dependency-review.yml (concurrency block)\n    └── Worktree: manual in PokeEdge repo\n```\n\nThe ADV change is the coordination + spec artifact. It tracks all 3 surfaces. The actual code edits for app repos happen in their own repos' worktrees, coordinated at the execution gate with explicit user approval (C7).\n\n### Verification model\n\nPer-repo actionlint + post-change CI evidence. No shared test suite — each repo has its own CI.\n\n---\n\n## LBP decisions\n\n### LBP-1: PokeEdge-Web topology — DIRECT `security` in needs:, NOT fast-gate join\n\n**Decision:** Add `security` directly to `test`/`build` `needs:` arrays. Do NOT introduce a `fast-gate` join job.\n\n**Rationale:**\n- PokeEdge-Web has 2 expensive downstream jobs (test, build). PokeEdge backend (which uses fast-gate join) has 6+ expensive downstream jobs. The fast-gate join abstraction pays for itself at scale; for 2 downstream consumers, direct is simpler (P19).\n- Discovery Q2 validated ~0s wall-clock penalty (median 0s, worst 2s, n=16). No serialization risk.\n- Direct matches the current workflow shape — minimal diff, easier to review.\n- Avoidance of premature abstraction (P19/P29: YAGNI). If PokeEdge-Web grows more expensive jobs later, a follow-up change can introduce fast-gate join.\n\n**Rejected alternative — fast-gate join:** More \"correct\" in the abstract (canonical pattern), but adds a job + restructures needs: for zero measurable benefit at this workflow's scale.\n\n### LBP-2: PokeEdge pytest — `--maxfail=1 -x`, NOT `--maxfail=N` or `--exitfirst` alone\n\n**Decision:** Add `--maxfail=1 -x` to both unit and api lanes.\n\n**Rationale:**\n- `--maxfail=1` = stop after 1 failure. `-x` (`--exitfirst`) = stop on first failure. Together they're redundant belt-and-suspenders, but `-x` alone is the common idiom and `--maxfail=1` makes the intent explicit.\n- Actually: `-x` IS `--exitfirst` which IS `--maxfail=1`. Using just `-x` is sufficient and idiomatic. **Revised decision: use `-x` only** (drop `--maxfail=1` as redundant). Simpler.\n- xdist (`-n auto --dist loadgroup`) compatibility: pytest-xdist documents that `-x`/`--maxfail` work with xdist — master signals workers to stop after current test when threshold reached. Verified behavior, not heuristic.\n- `--cov-fail-under=55`: still evaluated at session end. If `-x` causes early exit with coverage < 55%, the coverage gate also fails — correct behavior (already-failing run).\n\n**Revised flag:** `-x` (single flag, idiomatic, xdist-compatible).\n\nWait — let me reconsider. The problem statement said \"pytest --maxfail=1 -x (or lane-appropriate fail-fast flag)\". The proposal used both. Discovery confirmed direct pytest, no wrapper. For clarity and explicitness in a CI file (where readability for all contributors matters), `--maxfail=1 -x` with a comment is clearer than bare `-x`. But `-x` alone is the standard pytest idiom.\n\n**Final: use `-x` with an inline comment** `# fail-fast: stop at first failure`. Comment makes intent clear without redundant flags.\n\n### LBP-3: `integration` job — REMOVE entirely, do NOT gate-behind\n\n**Decision:** Remove the `integration` job (ci.yml:235-311) and its stale comment (ci.yml:229-234).\n\n**Rationale:**\n- Discovery Q1: 29/29 success, 0 failures, max 5m51s << 15m timeout. The job is reliable but provides ZERO gate signal (not in `ci-gate` needs:).\n- Gate-behind (adding to ci-gate needs:) would make it block merges — but a job that never fails provides no value as a gate, and if it regresses, it blocks all merges. Net-negative.\n- The integration suite has real value as an E2E check — but it belongs in a properly-gated workflow (like PokeEdge backend's Stage-3), not as an unguarded false-success risk.\n- If/when the team wants E2E gating, the `e2e-integration.yml` workflow or a re-introduced `integration` job with proper `ci-gate` wiring is the right home. Removal now eliminates the false-success risk; reintroduction is a deliberate future decision.\n- The stale comment (ci.yml:229-234: \"currently exceeds the 15-minute budget and has not reliably completed\") is factually wrong per discovery data — delete it with the job.\n\n### LBP-4: dependency-review.yml concurrency — default group, cancel-in-progress\n\n**Decision:** Add:\n```yaml\nconcurrency:\n  group: ${{ github.workflow }}-${{ github.ref }}\n  cancel-in-progress: true\n```\n\n**Rationale:**\n- Default group (`workflow-ref`) scopes cancellation to the same workflow + same ref (branch/PR). Correct for PR-scoped cancellation.\n- `cancel-in-progress: true` cancels prior in-flight runs when a new push arrives. Exactly the behavior needed for `synchronize` triggers.\n- The other 3 helpers (pr_agent, pr-size-labeler, auto-merge) already exclude `synchronize` from their `types:` — no concurrency needed for them (A4 confirmed out of scope).\n\n### LBP-5: Docs structure — expand S2 with \"Fail-fast edges\" subsection\n\n**Decision:** Add a new subsection to `docs/ci-standard.md` §2 (Required-check contract) titled \"Fail-fast edges\" documenting:\n1. The recommended pattern: fast checks (security, lint, typecheck) in `needs:` of expensive downstream jobs.\n2. Two acceptable forms:\n   - **Direct:** `test: needs: [changes, lint, typecheck, security]` — for simple workflows (≤3 expensive downstream jobs).\n   - **Fast-gate join:** `fast-gate: needs: [changes, lint, typecheck, security]; test: needs: fast-gate` — for workflows with many expensive downstream jobs. Cross-reference PokeEdge backend pr-gate.yml as canonical example.\n3. The anti-pattern: security as pure leaf sibling (the gap this change fixes).\n4. Update S1 arrow notation to clarify it represents DAG ordering enforced via `needs:`, not just conceptual stages.\n\n**Rationale:**\n- S2 currently covers only the SUMMARY job's `needs:`. The fail-fast edge is a LEAF-job topology concern — natural fit under §2 (the required-check contract = the DAG shape).\n- S1's arrow notation implies sequencing that the YAML doesn't enforce. Clarifying this prevents the \"arrow = automatically enforced\" misunderstanding that led to the current gap.\n- Cross-referencing PokeEdge backend's fast-gate join gives readers a real-world canonical example for larger workflows.\n\n**Rejected alternative — new section S2.5:** Fragments the required-check contract across sections. Keeping fail-fast edges under §2 maintains cohesion (the contract = summary shape + leaf topology).\n\n### LBP-6: Examples — demonstrate DIRECT pattern with comment pointing to fast-gate alternative\n\n**Decision:** Both `examples/pokeedge-{web,python}/ci.yml` demonstrate direct `security` in `test`/`build` `needs:`. Add a comment:\n```yaml\n# Fail-fast edge: security gates test/build so a security failure\n# skips expensive downstream jobs. For workflows with many downstream\n# jobs, see the fast-gate join pattern (PokeEdge backend pr-gate.yml).\n```\n\n**Rationale:**\n- The examples model simple app CIs. Direct pattern is the right default for that shape.\n- Comment points readers to the fast-gate alternative for scale, without over-engineering the example.\n- A6 satisfied: the anti-example (security as leaf sibling) is eliminated.\n\n### LBP-7: Task breakdown — by surface, parallelizable across repos\n\n**Decision:** 7 tasks grouped by surface, with verification tasks:\n\n| Task | Surface | Repo | Blocked by |\n|---|---|---|---|\n| T1 | docs/ci-standard.md S2 fail-fast edge section | this repo | — |\n| T2 | examples/pokeedge-{web,python}/ci.yml edge demo | this repo | — |\n| T3 | PokeEdge-Web ci.yml security→test/build needs: | PokeEdge-Web | — |\n| T4 | PokeEdge-Web ci.yml remove integration + stale comment | PokeEdge-Web | — |\n| T5 | PokeEdge-Web pin bump (7 uses) | PokeEdge-Web | — |\n| T6 | PokeEdge pr-gate.yml -x on unit + api lanes | PokeEdge | — |\n| T7 | PokeEdge dependency-review.yml concurrency | PokeEdge | — |\n| T8 | actionlint verification (all 3 repos) | all | T1-T7 |\n\nT1-T2 (this repo) are independent of T3-T7 (app repos) and can proceed first. T3-T7 (app repos) require execution-gate approval (C7). T8 verifies all.\n\n**Rationale:** Surface-based grouping keeps each task cohesive. No cross-task dependencies within a repo (different files / different sections). Verification as a final task ensures all changes pass actionlint before acceptance.\n\n---\n\n## Implementation strategy\n\n### Phase 1 — This repo (docs + examples), no execution-gate approval needed beyond prep\n\n1. Resume/create ADV worktree `change/fixCiFailFastTopology`.\n2. Edit `docs/ci-standard.md` per LBP-5.\n3. Edit `examples/pokeedge-web/ci.yml` per LBP-6.\n4. Edit `examples/pokeedge-python/ci.yml` per LBP-6.\n5. Run actionlint on the example workflows.\n6. Commit to worktree branch.\n\n### Phase 2 — PokeEdge-Web (execution-gate approval required)\n\n1. Manual worktree in PokeEdge-Web repo: `git worktree add ../pokeedge-web-fixci -b change/fixCiFailFastTopology`.\n2. Edit `.github/workflows/ci.yml`:\n   - Add `security` to `test` needs: (line 163).\n   - Add `security` to `build` needs: (line 189).\n   - Remove `integration` job (lines 229-311, including stale comment).\n   - Bump 6 pin occurrences to `e241c12b542b2f338761228c8dd0bac72c51cc76 # v0.4.1`.\n3. Edit `.github/workflows/ci-quality.yml`:\n   - Bump 1 pin occurrence.\n4. Run actionlint.\n5. Commit, push, PR to PokeEdge-Web.\n\n### Phase 3 — PokeEdge (execution-gate approval required)\n\n1. Manual worktree in PokeEdge repo: `git worktree add ../pokeedge-fixci -b change/fixCiFailFastTopology`.\n2. Edit `.github/workflows/pr-gate.yml`:\n   - Add `-x` with comment to unit lane (line ~362-371).\n   - Add `-x` with comment to api lane (line ~373-382).\n3. Edit `.github/workflows/dependency-review.yml`:\n   - Add concurrency block.\n4. Run actionlint.\n5. Commit, push, PR to PokeEdge.\n\n### Phase 4 — Verification + evidence\n\n1. actionlint clean across all 3 repos (AC7).\n2. Sample post-change CI runs (after PRs merge) for AC3 evidence:\n   - PokeEdge-Web: security-failure run shows test/build SKIPPED.\n   - PokeEdge: pr-gate failure shows pytest exits at first failure.\n3. Collect run IDs + job conclusions for acceptance.\n\n### Risk register\n\n| Risk | Mitigation |\n|---|---|\n| xdist + `-x` unexpected behavior | Discovery confirmed documented pytest-xdist behavior. Validator to verify. |\n| Pin SHA wrong (annotated tag deref) | Discovery confirmed: `e241c12b542b2f338761228c8dd0bac72c51cc76`. Validator to re-verify. |\n| Removing `integration` breaks a hidden consumer | Discovery confirmed it's not in ci-gate needs:, no downstream depends on it. |\n| dependency-review.yml concurrency group too aggressive | Default group (workflow-ref) is PR-scoped — only cancels same-PR runs. Safe. |\n| Cross-repo worktree coordination | C7 + C8: execution-gate approval + manual worktrees per app repo. |\n\n### Validator questions for adv-researcher\n\n1. **GitHub Actions `needs:` skip semantics:** When job A has `needs: [B]` and B fails, does A get `skipped` (not `failure`)? Confirm with GitHub Actions docs.\n2. **pytest-xdist + `-x` interaction:** Confirm pytest-xdist documents that `-x`/`--maxfail` stop workers after first failure. Cite pytest-xdist docs.\n3. **GitHub Actions `concurrency.cancel-in-progress` semantics:** Confirm default group + cancel-in-progress cancels prior in-flight runs for same ref. Cite GitHub docs.\n4. **actionlint catch for reusable workflow pin:** Confirm actionlint accepts full 40-char SHA pin with trailing `# vX.Y.Z` comment.\n5. **Annotated tag deref for pinning:** Confirm the commit SHA (not tag object SHA) is the correct pin target for `uses:` in GitHub Actions.\n6. **`integration` job removal — any hidden GitHub Actions dependency:** Does removing a job that other jobs don't `needs:` have any side effects beyond the job not running?\n",
+    "executiveSummary": "# Executive Summary: Fix CI fail-fast topology\n\n## Outcome\nFixed CI fail-fast topology gaps across 3 repos that were burning GitHub Actions minutes on doomed runs. Security failures now skip expensive test/build jobs instead of running them to completion. PR-gate pytest lanes stop at first failure instead of running full suites end-to-end.\n\n## What shipped\n\n### sharperflow-security-gates (PR #20 — CI passed)\n- `docs/ci-standard.md` §1: clarified arrow notation = DAG stages, not serial chain.\n- `docs/ci-standard.md` §2: new \"Fail-fast edges\" subsection — direct pattern, fast-gate join, anti-pattern, choosing guidance.\n- `examples/pokeedge-{web,python}/ci.yml`: test/build now have `needs: [fast-checks, security]`. Anti-example eliminated.\n\n### PokeEdge-Web (PR #193 — CI running, security+lint+typecheck passed)\n- `ci.yml`: `test`/`build` `needs:` now includes `security` (fail-fast edge). Wall-clock penalty: median 0s, worst 2s (n=16).\n- `ci.yml`: removed advisory `integration` job (29/29 success, 0 failures, zero gate signal) + stale 15-min-budget comment.\n- `ci.yml` + `ci-quality.yml`: all pins bumped v0.2.1 → v0.4.1 (6 remaining after integration removal).\n\n### PokeEdge (PR #498 — CI Gate passed)\n- `pr-gate.yml`: `-x` (fail-fast) on unit + api pytest lanes. xdist-compatible.\n- `dependency-review.yml`: `concurrency: cancel-in-progress: true` (default PR trigger includes synchronize).\n\n## Estimated savings\n- PokeEdge-Web: ~5.7 hr / 200 runs (54% failure rate, security fails at +24-28s but test/build ran ~8 min anyway).\n- PokeEdge: ~7-9 hr/month on unit lane alone (227 failures/month × median 8m58s pre-fix).\n\n## Constraints honored\n- C1-C6 (carried from reduceActionsCost): all respected.\n- C7 (cross-repo execution approval): user-approved at execution gate.\n- C8 (worktree isolation): ADV worktree for this repo, manual worktrees for app repos.\n- DONT1-DONT6: all respected (0 failing review rows).\n\n## What was NOT changed (out of scope)\n- PokeEdge backend pin (stale v0.3.2, no topology gap — separate change).\n- Advance pilot floating @v0 (different gap class).\n- BuildKit cache cleanup, Renovate batch, Stage-3 serialization, deploy-chain.\n",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-17T01:42:17.477Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| DONT1 | avoidance | Do not serialize PokeEdge Stage-3 siblings (proven net-negative). | respected | PokeEdge pr-gate.yml diff: only -x added to unit+api lanes (lines 366, 378). Stage-3 sibling jobs (Integration, E2E, Acceptance, Migration Chain, Contract) untouched. No serialization introduced. |\n| DONT2 | avoidance | Do not touch PokeEdge backend pin (separate change). | respected | PokeEdge-Web pins bumped (926408c→e241c12b). PokeEdge backend pin (cb39edcd # v0.3.2 in pr-gate.yml:256) untouched. Diff verified: only PokeEdge-Web ci.yml + ci-quality.yml changed. |\n| DONT3 | avoidance | Do not bundle Advance pilot `@v0` (different gap class). | respected | No Advance repo changes. PRs created only for sharperflow-security-gates (#20), PokeEdge-Web (#193), PokeEdge (#498). Advance floating @v0 flagged in discovery but explicitly out of scope (A3). |\n| DONT4 | avoidance | No BuildKit, Renovate batch, or deploy-chain changes. | respected | Only dependency-review.yml concurrency added. pr_agent.yml, pr-size-labeler.yml, auto-merge.yml untouched (already exclude synchronize). No deploy-chain, BuildKit, or Renovate changes. |\n| DONT5 | avoidance | Do not split api-lane edit into a follow-up (bundle with unit lane). | respected | Both unit lane (pr-gate.yml:366) and api lane (pr-gate.yml:378) have -x flag. Not split into follow-up. Bundled per A5. |\n| DONT6 | avoidance | Do not preserve anti-example in examples \"for backward compatibility.\" | respected | examples/pokeedge-web/ci.yml + pokeedge-python/ci.yml: test/build now have needs: [fast-checks, security]. docs/ci-standard.md §2: Fail-fast edges subsection documents direct + fast-gate + anti-pattern. No anti-example preserved. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "updatedAt": "2026-06-16T23:14:03.124Z",
+      "contentHash": "bb4b829dd6d98a056a8f20eb41b9e147c1886b876da168571ddc7b5fd1b3975a",
+      "source": "temporal",
+      "readable": false
+    },
+    "problemStatement": {
+      "updatedAt": "2026-06-16T23:14:03.124Z",
+      "contentHash": "863d9db655dd204a328048fed9a9a2c3fe48f92ec0f8825793262f5c093cf155",
+      "source": "temporal",
+      "readable": false
+    },
+    "agreement": {
+      "updatedAt": "2026-06-17T00:56:35.015Z",
+      "contentHash": "e8d60bea5e56653bd839c84dfa9338293a5d9444c3c0bc07b55a7eb6f4657afd",
+      "source": "temporal",
+      "readable": false
+    },
+    "design": {
+      "updatedAt": "2026-06-17T00:58:48.096Z",
+      "contentHash": "dcebdae504e81ab46d419caf6a8f333f23327630b1ebb397988ec77504bf7603",
+      "source": "temporal",
+      "readable": false
+    },
+    "executiveSummary": {
+      "updatedAt": "2026-06-17T01:43:06.040Z",
+      "contentHash": "541d6775bbab42b151560850810fcb6dc3bbf662d97b2dfb23857be1adc12616",
+      "source": "temporal",
+      "readable": false
+    }
+  },
+  "lastSignalAt": "2026-06-17T01:52:29.597Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_SUBJECTIVE_LANGUAGE",
+      "severity": "warning",
+      "message": "Change title contains subjective term \"fast\": \"Fix CI fail-fast topology\". What specific, measurable criteria define \"fast\"?",
+      "recorded_at": "2026-06-17T00:35:44.881Z"
+    }
+  ]
+}
