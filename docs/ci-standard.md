@@ -20,6 +20,12 @@ Every app CI workflow follows the same stage order:
 setup → fast-checks (format/lint/types) → tests + coverage → build → security → summary
 ```
 
+This arrow notation describes **stage ordering**, not a serial execution chain.
+Stages run in parallel where the DAG allows: `fast-checks` and `security` start
+concurrently, and `tests`/`build` are gated by `needs:` on upstream jobs. See
+[Fail-fast edges](#fail-fast-edges) for the concrete `needs:` wiring that
+enforces this ordering.
+
 - **setup** — language toolchain + dependency install, via a shared composite
   action (§4).
 - **fast-checks** — formatting, linting, type-checking. Fail fast.
@@ -126,6 +132,81 @@ build:
 
 The expensive jobs skip on out-of-scope changes; the summary still runs and
 reports terminal status.
+
+### Fail-fast edges
+
+The arrow notation in §1 describes stage ordering, but GitHub Actions does NOT
+automatically enforce it — jobs run in parallel unless `needs:` connects them.
+Without explicit fail-fast edges, a `security` failure runs `test`/`build` to
+completion, wasting runner minutes on a doomed run.
+
+**Recommended pattern.** Expensive downstream jobs (`test`, `build`) MUST declare
+`needs:` on fast upstream checks (`fast-checks`, `security`) so that an upstream
+failure skips the expensive downstream jobs instead of running them to completion.
+
+Two acceptable forms:
+
+**Direct** — for simple workflows with few expensive downstream jobs:
+
+```yaml
+security:
+  needs: fast-checks
+  uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/...
+
+test:
+  needs: [fast-checks, security]      # security gates test
+
+build:
+  needs: [fast-checks, security]      # security gates build
+```
+
+**Fast-gate join** — for workflows with many expensive downstream jobs. Introduce
+a join job that fans in the fast checks, then every expensive job needs the join:
+
+```yaml
+fast-gate:
+  needs: [changes, commit-lint, quality-chain, security]
+  runs-on: ubuntu-latest
+  if: ${{ !cancelled() }}
+  steps:
+    - run: echo "Fast checks passed"
+
+pr-gate:                              # expensive
+  needs: fast-gate
+
+migration-chain:                      # expensive
+  needs: fast-gate
+
+contract:                             # expensive
+  needs: fast-gate
+```
+
+This pattern is used by PokeEdge backend (`pr-gate.yml`): `fast-gate` joins
+`security` + other fast checks, and all expensive Stage-3 jobs need `fast-gate`.
+
+**Anti-pattern.** Security as a pure leaf sibling — parallel to `test`/`build`
+with no `needs:` edge — provides zero fail-fast signal. A security failure runs
+expensive jobs to completion, and the summary gate reports the failure only
+after the full run finishes.
+
+```yaml
+# WRONG — security is a leaf sibling, not an upstream gate
+test:
+  needs: [fast-checks]               # security NOT listed
+
+build:
+  needs: [fast-checks]               # security NOT listed
+
+security:
+  needs: fast-checks                  # parallel to test/build, no edge
+```
+
+**Choosing a form.** Use **direct** when the workflow has a small number of
+expensive jobs (PokeEdge-Web: `test`, `build`). Use **fast-gate join** when
+many expensive jobs all need the same fast-check gates (PokeEdge backend:
+`pr-gate`, `migration-chain`, `contract`, `integration`, `e2e`, `acceptance`).
+The fast-gate join avoids repeating the same `needs:` list on every job and
+keeps the DAG readable.
 
 ---
 

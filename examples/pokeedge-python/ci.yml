@@ -31,8 +31,12 @@ jobs:
       - run: uv run ruff check .
       - run: uv run ruff format --check .
 
+  # Fail-fast edge: security gates test/build so a security failure
+  # skips expensive downstream jobs. For workflows with many downstream
+  # jobs, see the fast-gate join pattern (docs/ci-standard.md §2).
   test:
     name: Tests
+    needs: [fast-checks, security]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -44,6 +48,7 @@ jobs:
 
   build:
     name: Build
+    needs: [fast-checks, security]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
