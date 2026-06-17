@@ -1,0 +1,533 @@
+{
+  "id": "extendCiFailFastTopologyStage3",
+  "title": "Extend CI fail-fast topology (stage-3 gate, commit-lint)",
+  "status": "archived",
+  "created_at": "2026-06-17T18:09:49.854Z",
+  "tasks": [
+    {
+      "id": "tk-9fe458c41195",
+      "title": "Add \"Intra-stage sibling gating\" subsection to `docs/ci-standard.md`",
+      "type": "code",
+      "section": "This repo (docs)",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-17T18:24:59.028Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Documentation change; verified by review."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:28:49.005Z",
+      "verification": "docs/ci-standard.md § \"Intra-stage sibling gating\" added after §2 Fail-fast edges. 3 patterns documented: stage-3-gate join (with skip-cascade requirement), commit-lint always() (with behavior matrix), notification-gap. Cross-references PokeEdge backend pr-gate.yml and PokeEdge-Web ci.yml.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "docs/ci-standard.md"
+      ],
+      "touched_files": [
+        "docs/ci-standard.md"
+      ],
+      "checkpointSha": "c8400c6aa8fdf898c7f0dbf74339b44b79d28b92",
+      "completedAt": "2026-06-17T18:29:35.893Z",
+      "completed_at": "2026-06-17T18:29:35.893Z"
+    },
+    {
+      "id": "tk-da6752ca4b8c",
+      "title": "PokeEdge-Web ci.yml: notification gap fix (commit-lint in notify/heartbeat `needs:` + HEARTBEAT_STATUS)",
+      "type": "code",
+      "section": "PokeEdge-Web",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-17T18:25:16.567Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:30:30.777Z",
+      "verification": "PokeEdge-Web ci.yml: notify-failure/heartbeat needs: now include commit-lint. HEARTBEAT_STATUS expression includes needs.commit-lint.result == 'failure'. actionlint clean (EXIT:0). Committed 9fde4af1. PR #211.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "9fde4af116a115414d90f342ff156e44586b70e3",
+      "completedAt": "2026-06-17T18:31:52.582Z",
+      "completed_at": "2026-06-17T18:31:52.582Z"
+    },
+    {
+      "id": "tk-fc1eab2eda7a",
+      "title": "PokeEdge-Web ci.yml: add `commit-lint` to test/build `needs:` + `always()` `if:` (Fix C)",
+      "type": "code",
+      "section": "PokeEdge-Web",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-17T18:26:04.655Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint + CI evidence. Avoidance A8 (always() + result != 'failure' pattern, not direct add) is in the agreement text, not the contract."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:30:29.960Z",
+      "verification": "PokeEdge-Web ci.yml: test/build needs: now [changes, lint, typecheck, security, commit-lint]. if: uses always() + !cancelled() + needs.changes.outputs.code == 'true' + needs.commit-lint.result != 'failure'. Skip-cascade preserved on push/merge_group. actionlint clean (EXIT:0). Committed 9fde4af1. PR #211.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "9fde4af116a115414d90f342ff156e44586b70e3",
+      "completedAt": "2026-06-17T18:31:51.497Z",
+      "completed_at": "2026-06-17T18:31:51.497Z"
+    },
+    {
+      "id": "tk-4889be08988a",
+      "title": "PokeEdge pr-gate.yml: add `stage-3-gate` join job",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-17T18:26:11.124Z",
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint. Avoidance A2 (don't touch contract/api-compat) is in agreement text, not contract."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:31:59.182Z",
+      "verification": "PokeEdge pr-gate.yml: stage-3-gate job inserted at line 411. needs: [fast-gate, pr-gate], if: !cancelled(), case-loop on needs.*.result accepting success|skipped. Mirrors fast-gate pattern. actionlint clean (EXIT:0). Committed b943ea1c6. PR #512.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "b943ea1c6dedc5ae60129e88a040ae1a33d6d401",
+      "completedAt": "2026-06-17T18:33:22.618Z",
+      "completed_at": "2026-06-17T18:33:22.618Z"
+    },
+    {
+      "id": "tk-d06ebfe202cd",
+      "title": "PokeEdge pr-gate.yml: update 4 stage-3 lanes `needs:` to include `stage-3-gate`",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 4,
+      "created_at": "2026-06-17T18:26:22.041Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-4889be08988a"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint + CI evidence. Avoidances A2 (don't touch contract/api-compat) and A3 (don't touch pytest -x) in agreement text, not contract."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:31:59.578Z",
+      "verification": "PokeEdge pr-gate.yml: migration-chain, integration, e2e, acceptance needs: updated to [fast-gate, stage-3-gate]. fast-gate retained for path-scope outputs. contract and api-compat UNCHANGED. pytest -x preserved. actionlint clean (EXIT:0). Committed b943ea1c6. PR #512.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "b943ea1c6dedc5ae60129e88a040ae1a33d6d401",
+      "completedAt": "2026-06-17T18:33:23.746Z",
+      "completed_at": "2026-06-17T18:33:23.746Z"
+    },
+    {
+      "id": "tk-e21ce06eff0c",
+      "title": "PokeEdge pr-gate.yml: add `stage-3-gate` to `ci-gate` `needs:` list",
+      "type": "code",
+      "section": "PokeEdge",
+      "status": "done",
+      "priority": 5,
+      "created_at": "2026-06-17T18:26:26.450Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-4889be08988a"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Declarative YAML; verified by actionlint."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:31:59.581Z",
+      "verification": "PokeEdge pr-gate.yml: ci-gate needs: += stage-3-gate. Required Sharperflow CI Gate check now reports stage-3-gate failures (not just leaf). actionlint clean (EXIT:0). Committed b943ea1c6. PR #512.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "b943ea1c6dedc5ae60129e88a040ae1a33d6d401",
+      "completedAt": "2026-06-17T18:33:24.823Z",
+      "completed_at": "2026-06-17T18:33:24.823Z"
+    },
+    {
+      "id": "tk-35ad1a0f4b0a",
+      "title": "Verify all changes: actionlint clean across 3 repos + collect post-merge CI evidence",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 6,
+      "created_at": "2026-06-17T18:26:46.102Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-9fe458c41195"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-fc1eab2eda7a"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-da6752ca4b8c"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-4889be08988a"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-d06ebfe202cd"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-e21ce06eff0c"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "not_applicable"
+      },
+      "contract_refs": {
+        "not_applicable_reason": "Verification task (actionlint + CI evidence). Not a contract item implementation."
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-17T18:33:30.018Z",
+      "verification": "Actionlint verified across all 3 repos: docs/ci-standard.md (markdown, review-verified), PokeEdge-Web ci.yml (EXIT:0), PokeEdge pr-gate.yml (EXIT:0). CI status one-shot: PokeEdge #512 CI Gate ✓ + Stage 3 Gate passes in 3s (skip-cascade works for workflow-only PR); PokeEdge-Web #211 has pre-existing openapi.json drift in Type Check (unrelated to changes — would fail any PR against current main). Post-merge CI evidence (AC4: test/build skip on commit-lint fail, stage-3 siblings skip on pr-gate fail) deferred to acceptance.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [],
+      "touched_files": [],
+      "checkpointSha": "c8400c6aa8fdf898c7f0dbf74339b44b79d28b92",
+      "completedAt": "2026-06-17T18:39:05.916Z",
+      "completed_at": "2026-06-17T18:39:05.916Z"
+    }
+  ],
+  "subagent_reports": [],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-17T18:10:25.292Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved via Tier A \"approve\". Scope section added (16 file edits across 3 repos + 1 new doc subsection). Fast-follow of fixCiFailFastTopology. Strict rigor.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "content_hash": "c76708e94e9d9ac76be3f01790e1e6249839618b9e92c454eb958aae53509022",
+        "non_whitespace_chars": 6005,
+        "checked_at": "2026-06-17T18:09:49.894Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-17T18:13:56.705Z",
+      "completed_by": "agent",
+      "approval_evidence": "State-checked both app repos at main. Line numbers match scope table. Fix C mechanics validated against GitHub docs (always() + needs.*.result pattern preserves skip-cascade on push/merge_group). 5 open questions from proposal addressed: (1) wall-time penalty surfaced+accepted, (2) e2e cancellation propagates via needs: chain, (3) ci-gate case loop handles skipped commit-lint, (4) docs scope = design decision, (5) Fix B deferred. Contract minted strict (9 OOS items).",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "content_hash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "non_whitespace_chars": 6584,
+        "checked_at": "2026-06-17T18:09:49.895Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-17T18:24:41.456Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design.md persisted. 5 LBP decisions, 7 tasks, 3-repo fan-out architecture, risk register. Inline validator (adv-researcher unavailable): all 6 claims PASS against GitHub Actions docs (always() in if:, needs.*.result for skipped jobs, skip-cascade via !cancelled() + case-loop, actionlint-clean patterns all validated in parent diagnostic). Verdict READY. No CONFLICT, no collaborative checkpoint needed.",
+      "artifact_evidence": {
+        "kind": "design",
+        "content_hash": "26119e32ede26bd5c1065b77e27d4e62f21e4a594bae04a738d4db291e7e6ecf",
+        "non_whitespace_chars": 9412,
+        "checked_at": "2026-06-17T18:09:49.896Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-17T18:28:48.493Z",
+      "completed_by": "user",
+      "approval_evidence": "7 tasks created. Phase 1 (T1, this repo) starts on approval. Phase 2-3 (T2-T6, app repos) pause at execution gate for C7 cross-repo approval. T7 verification after all. All tasks tdd_intent=not_applicable."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-17T18:39:12.247Z",
+      "completed_by": "agent",
+      "approval_evidence": "All 7 tasks done. 2 PRs created: PokeEdge-Web #211 (commit-lint gate + notification fix), PokeEdge #512 (stage-3-gate + 4 sibling lanes). actionlint clean across all 3 repos. PokeEdge #512 CI Gate passes including new Stage 3 Gate. PokeEdge-Web #211 has pre-existing openapi.json drift in Type Check (unrelated to changes). Post-merge evidence deferred to acceptance."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-17T18:39:57.841Z",
+      "completed_by": "user",
+      "approval_evidence": "User approved via Tier A. Contract review matrix: 9 rows, 0 failing. Pre-existing openapi.json drift surfaced (NOT in scope). AC1-AC8 partially verified: AC1/AC2 deferred to post-merge (PR open); AC3 partially verified by PokeEdge CI (Stage 3 Gate passes in 3s, skip-cascade works); AC4 deferred; AC5-AC7 verified by diff/actionlint; AC8 verified by markdown review.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "content_hash": "696bbacb4e468a176115188bc25827a8cea6eff38f44c14f4e8e12c586e23cbc",
+        "non_whitespace_chars": 3622,
+        "checked_at": "2026-06-17T18:09:49.897Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "fast_follow_of": {
+    "parent_change_id": "fixCiFailFastTopology",
+    "linked_at": "2026-06-17T18:09:49.849Z"
+  },
+  "origin": {
+    "kind": "discovery",
+    "source_artifact": "session:2026-06-17 ci-budget-diagnostic"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "strict",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+      "approvedAt": "2026-06-17T18:13:49.491Z"
+    },
+    "items": [
+      {
+        "id": "OOS1",
+        "kind": "out_of_scope",
+        "text": "PokeEdge-Web full fast-gate join (Fix B) — separate change",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS2",
+        "kind": "out_of_scope",
+        "text": "Backend lane consolidation (Design C) — rejected",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS3",
+        "kind": "out_of_scope",
+        "text": "Push trigger changes — defensible post-merge verification",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS4",
+        "kind": "out_of_scope",
+        "text": "Path-scope expansion to commit-lint (low value)",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS5",
+        "kind": "out_of_scope",
+        "text": "Job ID renames — preserves cache hits",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS6",
+        "kind": "out_of_scope",
+        "text": "BuildKit cache cleanup, Stage-3 sibling isolation, deploy-chain — unchanged from prior changes",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS7",
+        "kind": "out_of_scope",
+        "text": "Adding new scanner or threshold changes — C1/C5",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS8",
+        "kind": "out_of_scope",
+        "text": "PokyEdge backend pin (stale v0.3.2) — separate change",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      },
+      {
+        "id": "OOS9",
+        "kind": "out_of_scope",
+        "text": "Advance pilot `@v0` floating tag — different gap class",
+        "sourceArtifact": "agreement",
+        "sourceHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+        "verificationRequired": false,
+        "evidencePolicy": "not_applicable",
+        "status": "approved",
+        "notRequiredReason": "Out-of-scope contract item"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-17T18:39:33.720Z",
+      "rows": [
+        {
+          "contractId": "OOS1",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge-Web ci.yml uses Fix C (always() + result != 'failure'), NOT Fix B (full fast-gate join). No new fast-gate job introduced; test/build needs: only added commit-lint. Verified by reviewing commit 9fde4af1."
+        },
+        {
+          "contractId": "OOS2",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Stage-3 lanes kept as separate jobs (migration-chain, integration, e2e, acceptance). NOT merged into one job. No consolidation introduced. Verified by reviewing commit b943ea1c6."
+        },
+        {
+          "contractId": "OOS3",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "ci.yml on: block (push, pull_request, merge_group) unchanged. Only test/build/notify/heartbeat needs: and if: changed. Verified by diff on 9fde4af1 — no on: changes."
+        },
+        {
+          "contractId": "OOS4",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "commit-lint job definition (line 230-289) unchanged. Only its result is referenced by test/build/notify/heartbeat. No path-scope expansion added to commit-lint itself. Verified by diff on 9fde4af1."
+        },
+        {
+          "contractId": "OOS5",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "All job IDs preserved: pr-gate, commit-lint, fast-gate, test, build, security, ci-gate, integration, e2e, acceptance, migration-chain, contract, api-compat, notify-failure, heartbeat. Only stage-3-gate is new. Diff verified."
+        },
+        {
+          "contractId": "OOS6",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No BuildKit cache changes. No deploy-chain changes. No Stage-3 sibling isolation (e.g., per-lane runners) added. The intra-stage gate is via needs: in the same workflow, not isolation."
+        },
+        {
+          "contractId": "OOS7",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No scanner removed, no severity threshold raised. security job unchanged on both repos (only the ci.yml pin was already bumped to v0.4.1 in the parent change)."
+        },
+        {
+          "contractId": "OOS8",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "PokeEdge backend pin (cb39edcd # v0.3.2) untouched. Diff verified — only pr-gate.yml changed on PokeEdge."
+        },
+        {
+          "contractId": "OOS9",
+          "kind": "out_of_scope",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Advance repo not touched. Only sharperflow-security-gates (docs), PokeEdge-Web (ci.yml), PokeEdge (pr-gate.yml) modified."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [],
+  "documents": {
+    "proposal": "# Proposal: Extend CI fail-fast topology (intra-stage gating + commit-lint gate)\n\n## Problem\n\n`fixCiFailFastTopology` (archived) added the stage-boundary fail-fast edge (`security → test/build`) on PokeEdge-Web. Diagnostic after that change shipped reveals the fix was **incomplete** in two ways:\n\n### 1. Web `test`/`build` don't gate on `commit-lint`\n\nA screenshot from PR #209 (`addTierGatingFoundation`) on 2026-06-17 showed: `Conventional Commit Check` failed in 12s while `Unit Tests & Coverage` (462s) and `Build` (68s) ran to completion. The required `Sharperflow CI Gate` was stuck waiting for the doomed runs.\n\nRun #27703014081: commit-lint failed at `16:11:52Z` (12s); unit tests (455s), build (74s), all 4 security scans (~137s), lint (75s), typecheck (60s) all ran to completion. **Waste: 826s (~13.8 min) per incident.**\n\n`test` and `build` declare `needs: [changes, lint, typecheck, security]` — `commit-lint` is missing.\n\n### 2. Backend stage-3 lanes don't gate on `pr-gate`\n\nPokeEdge backend `pr-gate.yml` has 6 stage-3 lanes all `needs: fast-gate`, all parallel. When `pr-gate` (median 924s) fails (33% of runs), `integration` (157s) + `e2e` (69s) + `acceptance` (124s) + `migration` (81s) all run to completion in parallel — burning 411 wasted runner-seconds per failure.\n\nRun #27699451611: pr-gate failed at `15:32:03Z` (892s); integration (260s), e2e (483s cancelled mid-flight), acceptance (121s), migration (97s) all started at `15:17:15-19Z` and burned 961s after the doomed state was already known. **Waste: 1,858s (~31 min).**\n\n### 3. Web `notify-failure` and `heartbeat` miss commit-lint-only failures\n\nBonus gap surfaced in discovery: `notify-failure` (ci.yml:334) and `heartbeat` (ci.yml:365) declare `needs: [lint, typecheck, test, build, security]` — `commit-lint` is not in the list. When only commit-lint fails, the leaf jobs succeed → `notify-failure` skips → Discord webhook never fires → team learns of the failure from the GitHub UI, not the configured alert. Heartbeat reports `up` (healthy) for a commit-lint-only failure.\n\n### 4. Standard doesn't cover intra-stage gating\n\n`docs/ci-standard.md` §2 (added in `fixCiFailFastTopology`) covers **stage boundaries** (fast-checks → expensive jobs). It does NOT cover **intra-stage sibling gating** (e.g., stage-3 lanes that share `fast-gate` but don't gate each other on pr-gate failure). Both repos have this gap; the backend's gap is larger because it has more siblings.\n\n## Scope\n\n### Repo 1: `Sharper-Flow/PokeEdge-Web` (direct target, execution-gated)\n\n| File | Line | Change |\n|---|---:|---|\n| `.github/workflows/ci.yml` | 163 | `test: needs: [changes, lint, typecheck, security, commit-lint]` |\n| `.github/workflows/ci.yml` | 164 | `test: if: ${{ always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure' }}` |\n| `.github/workflows/ci.yml` | 189 | `build: needs: [changes, lint, typecheck, security, commit-lint]` |\n| `.github/workflows/ci.yml` | 190 | `build: if: ${{ always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure' }}` |\n| `.github/workflows/ci.yml` | 334 | `notify-failure: needs: [lint, typecheck, test, build, security, commit-lint]` |\n| `.github/workflows/ci.yml` | 365 | `heartbeat: needs: [lint, typecheck, test, build, security, commit-lint]` |\n| `.github/workflows/ci.yml` | 375-388 | `HEARTBEAT_STATUS` expression: add `|| needs.commit-lint.result == 'failure'` |\n\n### Repo 2: `Sharper-Flow/PokeEdge` (direct target, execution-gated)\n\n| File | Line | Change |\n|---|---:|---|\n| `.github/workflows/pr-gate.yml` | 411 (insert after pr-gate) | NEW `stage-3-gate: needs: [fast-gate, pr-gate]`, `if: ${{ !cancelled() }}`, case-loop on `needs.*.result` (success\\|skipped only) |\n| `.github/workflows/pr-gate.yml` | 415 | `migration-chain: needs: [fast-gate, stage-3-gate]` (keep path-scope `if:`) |\n| `.github/workflows/pr-gate.yml` | 472-496 | `contract` unchanged (already path-scope-gated; key off `fast-gate.outputs.openapi`) |\n| `.github/workflows/pr-gate.yml` | 498 | `api-compat` unchanged (already chains off contract) |\n| `.github/workflows/pr-gate.yml` | 507 | `integration: needs: [fast-gate, stage-3-gate]` (keep path-scope `if:`) |\n| `.github/workflows/pr-gate.yml` | 557 | `e2e: needs: [fast-gate, stage-3-gate]` (keep path-scope `if:`) |\n| `.github/workflows/pr-gate.yml` | 579 | `acceptance: needs: [fast-gate, stage-3-gate]` (keep path-scope `if:`) |\n| `.github/workflows/pr-gate.yml` | 605 | `ci-gate: needs: [..., stage-3-gate, ...]` (add `stage-3-gate` to fan-in) |\n\n### Repo 3: `Sharper-Flow/sharperflow-security-gates` (this repo)\n\n| File | Line | Change |\n|---|---:|---|\n| `docs/ci-standard.md` | (after §2 Fail-fast edges) | NEW § \"Intra-stage sibling gating\" subsection: documents the stage-3-gate pattern, the commit-lint `always()` pattern, and the notification-gap fix pattern. Cross-refs PokeEdge backend `pr-gate.yml` and PokeEdge-Web `ci.yml` as canonical examples. |\n\n### Total: 16 file edits across 3 repos + 1 new subsection in 1 file. No new reusable workflows, no new GitHub Actions, no dependency changes.\n\n## Rigor\n\nStrict. Carrying forward from `fixCiFailFastTopology` (C1–C6 reduceActionsCost constraints).\n\n## Out of scope\n\n- PokeEdge-Web full fast-gate join (Fix B in diagnostic) — deferred; Fix C is the minimal-diff alternative\n- Backend stage-3 lane consolidation (Design C: merge integration+e2e+acceptance into one job) — strictly worse on failure-localization; rejected in diagnostic\n- Push trigger changes — defensible post-merge verification per diagnostic §4\n- Path-scope expansion to commit-lint (low-value, defer)\n- Renaming `pr-gate` or any job ID (preserves cache hits)\n- BuildKit cache cleanup, Stage-3 serialization, deploy-chain (unchanged from prior)\n\n## Open questions for discovery\n\n1. **Backend `stage-3-gate` wall-time penalty on success (+160s = +17%):** is the runner-cost win worth the developer-experience cost? Mitigation: the gate fires instantly (2-min timeout), so developer sees pr-gate failure + sibling skip within seconds of pr-gate completing.\n2. **Backend `e2e` cancellation lag:** the diagnostic shows e2e sometimes runs ~483s after pr-gate fails before cancellation propagates. Does `stage-3-gate` failure propagate to e2e fast enough? (Yes — same `needs:` chain that handles pr-gate failure handles stage-3-gate failure.)\n3. **Web `always()` pattern: any consumers** that read `needs.test.result` or `needs.build.result` in a way that breaks if test/build are skipped on commit-lint failure? (`ci-gate` already handles it via the case loop.)\n4. **Documentation scope:** is one § \"Intra-stage sibling gating\" enough, or do we need separate subsections for each pattern (stage-gate, commit-lint-always, notification gap)?\n5. **PokeEdge-Web Fix B (full fast-gate join) deferred:** confirm acceptable to ship Fix C and revisit if `pytest -x`-style unified patterns gain traction.\n",
+    "problemStatement": "# Problem Statement: Extend CI fail-fast topology\n\n## Evidence (5 findings, all from 2026-06-17 diagnostic)\n\n### Finding 1 — Web test/build don't gate on commit-lint (run #27703014081)\n\n```\nConventional Commit Check:  failure  (12s, 16:11:52Z)\nLint & Format:              success\nType Check & API Drift:     success\nSecurity / Gitleaks:        success\nSecurity / OSV:             success\nSecurity / Semgrep JS/TS:   success\nSecurity / Trivy:           success\nUnit Tests & Coverage:      success  (462s — wasted, doomed)\nBuild:                      success  (68s — wasted, doomed)\nSharperflow CI Gate:        failure\n```\n\nSource: `/tmp/ci-budget/jobs/web-27703014081.json`. ci.yml:163, 189 — `test`/`build` `needs:` do not include `commit-lint`.\n\n### Finding 2 — Backend stage-3 lanes don't gate on pr-gate (run #27699451611)\n\n```\nFast Gate:                  success  (4s, 15:17:18Z)\nPR Gate (unit+api+arch):    failure  (892s, 15:32:03Z)\nIntegration (Postgres):     success  (260s, 15:17:15Z — wasted, doomed)\nE2E Journeys:               cancelled mid-flight (483s, started 15:17:15Z)\nAcceptance:                 success  (121s, 15:17:19Z — wasted, doomed)\nMigration Chain Validation: success  (97s, 15:17:19Z — wasted, doomed)\nSharperflow CI Gate:        failure\n```\n\nSource: `/tmp/ci-budget/jobs/pe-27699451611.json`. pr-gate.yml:415, 507, 557, 579 — 4 stage-3 lanes `needs: fast-gate` only, no `pr-gate` in `needs:`.\n\n### Finding 3 — Web notify-failure/heartbeat skip on commit-lint-only failure\n\nci.yml:334 `notify-failure: needs: [lint, typecheck, test, build, security]` — no commit-lint. Run #27703014081: all 5 of these jobs succeeded → `notify-failure` `if: failure()` evaluates per-job-failure → no leaf failed → skipped → Discord webhook never fired.\n\nci.yml:365-388 `heartbeat: needs: [lint, typecheck, test, build, security]`, `HEARTBEAT_STATUS` expression does not include `needs.commit-lint.result`. Heartbeat reports `up` for a commit-lint-only failure.\n\n### Finding 4 — docs/ci-standard.md doesn't cover intra-stage gating\n\n§2 \"Fail-fast edges\" subsection (added in `fixCiFailFastTopology`) covers **stage boundaries** (fast-checks → expensive jobs). It does NOT cover **intra-stage sibling gating**. Pattern missing: when N expensive lanes share `fast-gate` but don't gate each other on the slowest lane's failure, the fast N-1 lanes waste time on doomed runs.\n\n### Finding 5 — Cost driver analysis (30d window)\n\nTotal Actions cost: ~$217.59/mo (PokeEdge $116 + PokeEdge-Web $96 + helpers $6). 92.8% of cost is time overhead; 7.2% is run count. Recoverable from intra-stage waste alone: $13.15/mo (backend) + $3.85/mo (web commit-lint) + $1.60/mo (web build-gates-on-test) = **$18.60/mo (8.6% of budget)**.\n\nSource: `/tmp/ci-budget/analysis/*.py`. Per-PR lifetime cost: $0.61 (Web) and $0.54 (Backend). +1 unique PR/day on both repos = +$34.52/mo. Cost growth outpaces savings if PR volume increases.\n\n## Strict \"done\" criteria (measurable)\n\n1. Backend `pr-gate.yml` declares a `stage-3-gate: needs: [fast-gate, pr-gate]` join job.\n2. Backend `integration`/`e2e`/`acceptance`/`migration-chain` jobs declare `needs: [fast-gate, stage-3-gate]` and retain path-scope `if:`.\n3. Web `ci.yml` `test`/`build` `needs:` includes `commit-lint`; `if:` uses `always() && ... && needs.commit-lint.result != 'failure'` pattern.\n4. Web `ci.yml` `notify-failure`/`heartbeat` `needs:` includes `commit-lint`; `HEARTBEAT_STATUS` includes `needs.commit-lint.result == 'failure'`.\n5. `docs/ci-standard.md` adds \"Intra-stage sibling gating\" subsection documenting the patterns from criteria 1-4.\n6. actionlint clean on all touched workflow files (EXIT:0).\n7. PR-triggered runs (the dominant cost class) on both repos post-change show: web commit-lint failure → test/build skipped in <60s; backend pr-gate failure → integration/e2e/acceptance/migration skipped in <5s.\n",
+    "agreement": "# Agreement: Extend CI fail-fast topology (stage-3 gate + commit-lint)\n\n## Objectives\n\n### O1 — PokeEdge-Web: `test`/`build` gate on `commit-lint` failure\nA `Conventional Commit Check` failure skips `test` and `build` instead of running them to completion. PR runs only — push/merge_group events unaffected (commit-lint doesn't run on those, `always()` pattern preserves skip-cascade).\n\n### O2 — PokeEdge-Web: notification gap fix\n`notify-failure` and `heartbeat` `needs:` include `commit-lint`. A commit-lint-only failure now fires the Discord webhook AND reports Uptime Kuma `down` (was silently `up`).\n\n### O3 — PokeEdge backend: stage-3-gate join\nNew `stage-3-gate: needs: [fast-gate, pr-gate]` join job. `integration`/`e2e`/`acceptance`/`migration-chain` declare `needs: [fast-gate, stage-3-gate]` (keep `fast-gate` for path-scope outputs). A `pr-gate` failure now skips the 4 sibling lanes within ~3s of pr-gate failing (vs 411s median waste currently).\n\n### O4 — `docs/ci-standard.md` documents intra-stage gating\nNew § \"Intra-stage sibling gating\" subsection documents:\n- The stage-3-gate pattern (cross-ref PokeEdge backend pr-gate.yml)\n- The commit-lint `always()` pattern (cross-ref PokeEdge-Web ci.yml)\n- The notification-gap pattern (commit-lint in notify/heartbeat needs:)\n\n## Acceptance criteria\n\n### AC1 — PokeEdge-Web ci.yml topology (commit-lint gate)\n- `test` `needs:` includes `commit-lint`.\n- `test` `if:` uses `always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure'`.\n- `build` `needs:` includes `commit-lint`.\n- `build` `if:` matches test pattern.\n- `ci-gate` `needs:` and case loop unchanged.\n- actionlint clean.\n- **Evidence:** sampled failed PR run on PokeEdge-Web shows test/build SKIPPED (not run-to-completion) when commit-lint fails.\n\n### AC2 — PokeEdge-Web ci.yml topology (notification gap)\n- `notify-failure` `needs:` includes `commit-lint`.\n- `heartbeat` `needs:` includes `commit-lint`.\n- `HEARTBEAT_STATUS` expression includes `|| needs.commit-lint.result == 'failure'`.\n- `notify-failure` and `heartbeat` still respect path-scope via `if:` (commit-lint SKIPPED on push → notify/heartbeat must still run if needed). Verify with actionlint.\n- actionlint clean.\n\n### AC3 — PokeEdge pr-gate.yml topology (stage-3-gate)\n- New `stage-3-gate` job exists, `needs: [fast-gate, pr-gate]`, `if: ${{ !cancelled() }}`, case-loop on `needs.*.result` accepting `success|skipped`.\n- `migration-chain`, `integration`, `e2e`, `acceptance` `needs: [fast-gate, stage-3-gate]` (keep path-scope `if:`).\n- `contract` and `api-compat` unchanged.\n- `ci-gate` `needs:` adds `stage-3-gate` to the fan-in.\n- actionlint clean.\n- **Evidence:** sampled failed pr-gate run on PokeEdge shows integration/e2e/acceptance/migration SKIPPED within ~3s of pr-gate failing.\n\n### AC4 — Measurable savings (post-merge)\n- PokeEdge-Web: post-change PR run with commit-lint failure shows test/build SKIPPED in <60s.\n- PokeEdge: post-change pr-gate failure shows integration/e2e/acceptance/migration SKIPPED in <5s.\n- Reported in acceptance evidence (run IDs + job conclusions).\n\n### AC5 — No security-posture weakening\n- No scanner removed or made advisory.\n- No severity threshold raised.\n- No skip-on-failure introduced on security scanners.\n\n### AC6 — Reusable job names and `Sharperflow CI Gate` context frozen\n- `Sharperflow CI Gate` job name unchanged in both app repos.\n- `pr-gate`, `commit-lint`, `fast-gate`, `test`, `build`, `security`, `ci-gate` job IDs unchanged (preserves cache hits, downstream references).\n\n### AC7 — actionlint clean\nAll touched workflow files pass `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` in their respective repos.\n\n### AC8 — Standard docs updated\n- `docs/ci-standard.md` § \"Intra-stage sibling gating\" subsection exists after §2 Fail-fast edges.\n- Documents stage-3-gate pattern, commit-lint `always()` pattern, notification-gap pattern.\n- Cross-references PokeEdge backend pr-gate.yml and PokeEdge-Web ci.yml as canonical examples.\n\n## Constraints\n\n### C1-C6 — Carried from reduceActionsCost / fixCiFailFastTopology\nC1 no security weakening · C2 no job-name rename · C3 no GHAS/CodeQL/SonarCloud · C4 no slow-check deletion · C5 no skipped-job-as-free assumption · C6 no app-repo/reusable-gate conflation.\n\n### C7 — Cross-repo execution requires explicit user approval at execution gate\nPokeEdge-Web and PokeEdge are direct-target repos. Execution gate requires explicit user approval before any edit to either remote repo.\n\n### C8 — Worktree isolation\nThis repo's docs edits go through ADV worktree. App repo edits go through their respective worktrees.\n\n### C9 — Trade-off surfaced and accepted\nBackend `stage-3-gate` introduces a +160s (+17%) wall-time penalty on success runs (critical path extends from 924s to 1,084s). This is the cost of the runner-cost win on failure. User explicitly accepted this trade-off at proposal gate. Implementation must not optimize away this trade-off without re-approval.\n\n### C10 — Skip-cascade preservation is mandatory\nEach modified stage-3 lane MUST keep `fast-gate` in its `needs:` so it can read path-scope `outputs.*` (verified by actionlint). The `stage-3-gate` failure must not bypass path-scope skip for docs-only PRs. Diagnostic §2 (skip-cascade correctness) must hold.\n\n## Avoidances\n\n### A1 — Do not change backend wall-time penalty decision without re-approval\nThe +160s/+17% trade-off was explicitly accepted. Implementation must not introduce additional serialization that worsens this without re-approval.\n\n### A2 — Do not touch `contract` or `api-compat` topology\nBoth are correctly path-scope-gated already. `contract: needs: fast-gate, if: openapi`. `api-compat: needs: contract`. Adding `stage-3-gate` to these would regress path-scope skip behavior.\n\n### A3 — Do not remove or weaken the `pytest -x` flag from parent change\n`pr-gate.yml` unit + api lanes have `-x` from `fixCiFailFastTopology`. Preserved unchanged.\n\n### A4 — Do not adopt PokeEdge-Web Fix B (full fast-gate join) in this change\nFix C (minimal-diff, `always()` pattern) ships first. Fix B is a bigger refactor — separate change if needed.\n\n### A5 — Do not consolidate stage-3 lanes into one job (Design C)\nDesign C (merge integration+e2e+acceptance into one job) is strictly worse on failure-localization per diagnostic §4. Rejected.\n\n### A6 — Do not rename `pr-gate` or other job IDs\nPreserves cache hits and downstream references (e.g., the `pr-gate` name appears in monitoring labels, branch protection contexts, etc.).\n\n### A7 — Do not touch `push` trigger on PokeEdge-Web ci.yml\nPush trigger is defensible post-merge verification per diagnostic §4. Don't remove.\n\n### A8 — Do not add `commit-lint` to the test/build `needs:` without the `always()` + `result != 'failure'` `if:` pattern\nDirect addition (no `always()`) would silently break push and merge_group events per diagnostic §3 (Fix A rejected).\n\n### A9 — Do not touch `pytest -x` or `concurrency: cancel-in-progress` on dependency-review.yml\nThose landed in `fixCiFailFastTopology` and are working. Preserve unchanged.\n\n## Out of scope\n\n- PokeEdge-Web full fast-gate join (Fix B) — separate change\n- Backend lane consolidation (Design C) — rejected\n- Push trigger changes — defensible post-merge verification\n- Path-scope expansion to commit-lint (low value)\n- Job ID renames — preserves cache hits\n- BuildKit cache cleanup, Stage-3 sibling isolation, deploy-chain — unchanged from prior changes\n- Adding new scanner or threshold changes — C1/C5\n- PokyEdge backend pin (stale v0.3.2) — separate change\n- Advance pilot `@v0` floating tag — different gap class\n",
+    "design": "# Design: Extend CI fail-fast topology (stage-3 gate + commit-lint)\n\n## Architecture\n\n### Three-repo change, fast-follow of `fixCiFailFastTopology`\n\n```\nextendCiFailFastTopologyStage3 (primary change in sharperflow-security-gates)\n├── Surface 1: THIS REPO (sharperflow-security-gates)\n│   └── docs/ci-standard.md § \"Intra-stage sibling gating\" subsection (NEW)\n│   └── Worktree: ADV change/extendCiFailFastTopologyStage3\n│\n├── Surface 2: PokeEdge-Web (direct target, execution-gated)\n│   ├── .github/workflows/ci.yml:163-164 (test commit-lint gate, Fix C)\n│   ├── .github/workflows/ci.yml:189-190 (build commit-lint gate, Fix C)\n│   ├── .github/workflows/ci.yml:334 (notify-failure needs += commit-lint)\n│   ├── .github/workflows/ci.yml:365 (heartbeat needs += commit-lint)\n│   └── .github/workflows/ci.yml:375-388 (HEARTBEAT_STATUS expression)\n│   └── Worktree: manual in PokeEdge-Web repo\n│\n└── Surface 3: PokeEdge (direct target, execution-gated)\n    ├── .github/workflows/pr-gate.yml:411 (NEW stage-3-gate job)\n    ├── .github/workflows/pr-gate.yml:415 (migration-chain needs)\n    ├── .github/workflows/pr-gate.yml:507 (integration needs)\n    ├── .github/workflows/pr-gate.yml:557 (e2e needs)\n    ├── .github/workflows/pr-gate.yml:579 (acceptance needs)\n    └── .github/workflows/pr-gate.yml:605 (ci-gate needs)\n    └── Worktree: manual in PokeEdge repo\n```\n\nInherits the parent change's branch model. New branch `change/extendCiFailFastTopologyStage3` for this repo; new branches in app repos.\n\n### Verification model\n\nPer-repo actionlint + post-change CI evidence. No shared test suite.\n\n---\n\n## LBP decisions\n\n### LBP-1: Backend `stage-3-gate` is Design B (gate join), NOT Design C (lane consolidation)\n\n**Decision:** New `stage-3-gate: needs: [fast-gate, pr-gate]` join job. 4 stage-3 lanes (`integration`, `e2e`, `acceptance`, `migration-chain`) update to `needs: [fast-gate, stage-3-gate]`. `contract` and `api-compat` unchanged.\n\n**Rationale (validated by diagnostic):**\n- Wall-time on success: 924s → 1,084s (+160s, +17%). User accepted this trade-off (C9).\n- Runner-seconds on success: 5,544s → 1,555s (−3,989s, −72%).\n- Runner-seconds on failure: 5,760s → 963s (−4,797s, −83%).\n- Skip-cascade: each lane keeps `fast-gate` in `needs:` to read `outputs.tests`/`migrations`/`openapi` for path-scope `if:` (C10 mandatory).\n- Design C (merge lanes) is dominated by Design B on every metric except per-lane failure localization, which C loses (diagnostic §4).\n\n**Skip-cascade correctness (per diagnostic §2):** when pr-gate is SKIPPED (path-scope clean), `stage-3-gate` accepts `skipped` via its case-loop, but each lane's `if: needs.fast-gate.outputs.X == 'true'` independently skips it. The case-loop alone is NOT sufficient — path-scope is preserved by the per-lane `if:`.\n\n**`stage-3-gate` job body (mirrors `fast-gate` pattern):**\n\n```yaml\nstage-3-gate:\n  needs: [fast-gate, pr-gate]\n  if: ${{ !cancelled() }}\n  name: Stage 3 Gate\n  runs-on: ubuntu-latest\n  timeout-minutes: 2\n  permissions: {}\n  steps:\n    - name: Verify stage 3 prerequisites\n      env:\n        FAST_GATE_RESULT: ${{ needs.fast-gate.result }}\n        PR_GATE_RESULT: ${{ needs.pr-gate.result }}\n      run: |\n        set -euo pipefail\n        for result in \\\n          \"fast-gate=${FAST_GATE_RESULT}\" \\\n          \"pr-gate=${PR_GATE_RESULT}\"; do\n          job=\"${result%%=*}\"\n          status=\"${result#*=}\"\n          echo \"${job}: ${status}\"\n          case \"${status}\" in\n            success|skipped) ;;\n            *)\n              echo \"::error::Stage 3 gate blocked by ${job} (${status}). Skipping remaining lanes.\"\n              exit 1\n              ;;\n          esac\n        done\n        echo \"Stage 3 gate passed — proceeding to remaining lanes.\"\n```\n\n### LBP-2: Web uses Fix C (`always()` + `result != 'failure'`), NOT Fix A or Fix B\n\n**Decision:** Add `commit-lint` to test/build `needs:`, change `if:` to use `always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure'`.\n\n**Rationale (validated by diagnostic §3):**\n- Fix A (direct add without `always()`) breaks push/merge_group events because `commit-lint` has `if: github.event_name == 'pull_request'` and gets SKIPPED on those events → test/build skip too.\n- Fix B (full fast-gate join) works but is bigger refactor. Deferred (A4).\n- Fix C is minimal-diff: 2 jobs touched (test, build), no new job, no rename. `always()` allows `if:` to evaluate when needs are skipped. `'skipped' != 'failure'` makes push/merge_group behave correctly.\n\n**Concrete edits:**\n\n```yaml\n# ci.yml:163-164 (test)\n    needs: [changes, lint, typecheck, security, commit-lint]\n    if: ${{ always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure' }}\n\n# ci.yml:189-190 (build)\n    needs: [changes, lint, typecheck, security, commit-lint]\n    if: ${{ always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure' }}\n```\n\n### LBP-3: Notification gap fix — add commit-lint to needs: AND to `HEARTBEAT_STATUS`\n\n**Decision:** Add `commit-lint` to:\n- `notify-failure: needs: [lint, typecheck, test, build, security, commit-lint]` (ci.yml:334)\n- `heartbeat: needs: [lint, typecheck, test, build, security, commit-lint]` (ci.yml:365)\n- `HEARTBEAT_STATUS` expression: add `|| needs.commit-lint.result == 'failure'` (ci.yml:375)\n\n**Rationale:** Without commit-lint in `needs:`, the leaf jobs succeed when only commit-lint fails → `notify-failure` skips → no Discord webhook. Heartbeat reports `up` (healthy). After this change, commit-lint failure propagates to both jobs.\n\n**Subtlety:** `notify-failure` has `if: failure() && github.ref == 'refs/heads/main'` — main-branch only. On PR, notify-failure never fires regardless. The change affects main-branch push runs that include commit-lint (currently commit-lint is PR-only, so this only matters if/when commit-lint is extended to push). Heartbeat affects all branches because of `if: always()`.\n\n### LBP-4: Docs — single § \"Intra-stage sibling gating\" covering all 3 patterns\n\n**Decision:** One subsection in `docs/ci-standard.md` after §2 \"Fail-fast edges\", covering:\n1. **Stage-3-gate pattern** (Backend's `stage-3-gate` join) — for many expensive lanes under `fast-gate` that need to gate on the slowest one.\n2. **Commit-lint `always()` pattern** (Web's Fix C) — for adding a PR-only fast lane to test/build `needs:` without breaking push events.\n3. **Notification-gap pattern** (commit-lint in notify/heartbeat `needs:`) — for ensuring summary-only failures still fire configured alerts.\n\n**Rationale:** All three patterns are intra-stage sibling gating concerns. One subsection keeps the standard cohesive (P04). Cross-reference backend pr-gate.yml and web ci.yml as canonical examples.\n\n### LBP-5: Task breakdown by surface, sequential within worktree\n\n| Task | Surface | Worktree | Blocked by |\n|---|---|---|---|\n| T1 | docs/ci-standard.md § \"Intra-stage sibling gating\" | this repo (ADV) | — |\n| T2 | PokeEdge-Web ci.yml test/build commit-lint gate (Fix C) | PokeEdge-Web | — |\n| T3 | PokeEdge-Web ci.yml notify-failure/heartbeat (commit-lint in needs + heartbeat expression) | PokeEdge-Web | — |\n| T4 | PokeEdge pr-gate.yml: add stage-3-gate job | PokeEdge | — |\n| T5 | PokeEdge pr-gate.yml: update 4 stage-3 lanes needs: | PokeEdge | T4 |\n| T6 | PokeEdge pr-gate.yml: update ci-gate needs: | PokeEdge | T4 |\n| T7 | actionlint verification (3 repos) + post-merge CI evidence | all | T1-T6 |\n\nT2/T3 same file (ci.yml), sequential in same worktree. T4→T5/T6 same file (pr-gate.yml), sequential.\n\n---\n\n## Implementation strategy\n\n### Phase 1 — This repo (no execution-gate approval)\n\n1. T1: Edit `docs/ci-standard.md` to add § \"Intra-stage sibling gating\" subsection (after §2).\n2. Run actionlint on the doc (no-op for markdown, just review).\n3. Commit + push to ADV worktree.\n\n### Phase 2 — PokeEdge-Web (execution-gate approval)\n\n1. Create worktree in PokeEdge-Web repo: `change/extendCiFailFastTopologyStage3` from main.\n2. T2: Edit ci.yml:163-164 (test) and ci.yml:189-190 (build).\n3. T3: Edit ci.yml:334 (notify-failure), ci.yml:365 (heartbeat), ci.yml:375 (HEARTBEAT_STATUS).\n4. Run actionlint on ci.yml.\n5. Commit, push, PR to PokeEdge-Web.\n\n### Phase 3 — PokeEdge (execution-gate approval)\n\n1. Create worktree in PokeEdge repo: `change/extendCiFailFastTopologyStage3` from main.\n2. T4: Insert `stage-3-gate` job after pr-gate (line 411).\n3. T5: Edit pr-gate.yml:415 (migration-chain), 507 (integration), 557 (e2e), 579 (acceptance) — add `stage-3-gate` to `needs:`.\n4. T6: Edit pr-gate.yml:605 (ci-gate) — add `stage-3-gate` to `needs:`.\n5. Run actionlint on pr-gate.yml.\n6. Commit, push, PR to PokeEdge.\n\n### Phase 4 — Verification\n\n1. actionlint clean on all 3 repos (touched files).\n2. Post-merge CI evidence:\n   - PokeEdge-Web: sample a commit-lint failure PR run → test/build SKIPPED in <60s.\n   - PokeEdge: sample a pr-gate failure run → integration/e2e/acceptance/migration SKIPPED in <5s.\n\n### Risk register\n\n| Risk | Mitigation |\n|---|---|\n| `always()` + `needs.commit-lint.result` evaluation order on undefined state | `commit-lint` is in `needs:`, runner always sets result to `success`/`failure`/`skipped`. actionlint verified. |\n| `stage-3-gate` regresses path-scope skip | Each lane keeps `fast-gate` in `needs:` for outputs. C10 mandatory. |\n| Backend +160s wall-time penalty degrades DX | User accepted (C9). Documented in standard. |\n| Notification fix has subtle interaction with path-scope skip | Heartbeat already handles skipped via `if: always()`. actionlint will catch any regression. |\n| e2e cancellation lag on backend | `stage-3-gate` failure propagates same as `pr-gate` failure via `needs:` chain. ~3s propagation, vs 411s median waste currently. |\n| `pytest -x` flag accidentally removed | A3 mandatory — preserved unchanged. Verified in T5 (only needs: change, not run body). |\n\n### Validator questions (inline validation)\n\nAll technical claims already validated by the parent change's diagnostic. Re-verifying for this change's specific patterns:\n\n1. **`always()` in `if:` overrides skip-cascade:** per [docs.github.com](https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow), `always()` allows the job to evaluate `if:` even when needs are skipped. Validated.\n2. **`needs.*.result` safe to reference for skipped jobs:** per docs, runner always sets result to one of `success`/`failure`/`skipped`/`cancelled`. Never undefined. Validated.\n3. **Skip-cascade via `!cancelled()` + case-loop on `needs.*.result`:** the `fast-gate` job in the same file already uses this pattern. `stage-3-gate` mirrors it. Validated.\n4. **`stage-3-gate` as a join with no `outputs:`:** downstream lanes key off `fast-gate.outputs.*`, not `stage-3-gate`. No outputs needed. Validated.\n5. **actionlint accepts all 3 patterns:** validated by parent change's diagnostic worker (Fix A/B/C all exit 0, full topology with skip-cascade retention validated).\n6. **`HEARTBEAT_STATUS` expression with `||` chain:** standard YAML. The `||` is in `${{ }}` expression, actionlint doesn't lint expressions but does check syntax. Validated.\n",
+    "executiveSummary": "# Executive Summary: Extend CI fail-fast topology (stage-3 gate + commit-lint)\n\n## Outcome\nClosed the intra-stage fail-fast gap that the parent change (`fixCiFailFastTopology`) missed: backend stage-3 lanes now skip when `pr-gate` fails; Web `test`/`build`/`notify-failure`/`heartbeat` now gate on `commit-lint`; standard documents all three patterns.\n\n## What shipped\n\n### sharperflow-security-gates (committed `c8400c6` in ADV worktree)\n- `docs/ci-standard.md` § \"Intra-stage sibling gating\" — 118 lines documenting:\n  - Stage-3-gate join pattern (with skip-cascade mandatory requirement)\n  - Commit-lint `always()` pattern (with full behavior matrix for pr/push/merge_group)\n  - Notification-gap pattern (notify/heartbeat needs: + HEARTBEAT_STATUS expression)\n  - Cross-references to backend pr-gate.yml and web ci.yml as canonical examples\n\n### PokeEdge-Web (PR #211, head `9fde4af1`)\n- `ci.yml:163-164, 189-190`: test/build `needs:` += `commit-lint`; `if:` uses `always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure'`\n- `ci.yml:334, 365`: notify-failure/heartbeat `needs:` += `commit-lint`\n- `ci.yml:380`: `HEARTBEAT_STATUS` expression includes `|| needs.commit-lint.result == 'failure'`\n- actionlint clean (EXIT:0)\n- CI: Lint ✓, Security all 4 ✓, Changes ✓, Commit Check ✓, **Type Check ✗ (pre-existing openapi.json drift)**, Build pending, Unit Tests pending\n\n### PokeEdge (PR #512, head `b943ea1c6`)\n- `pr-gate.yml:411` (new): `stage-3-gate: needs: [fast-gate, pr-gate]`, `if: !cancelled()`, case-loop on `needs.*.result` accepting `success|skipped`\n- `pr-gate.yml:415, 507, 557, 579`: migration-chain/integration/e2e/acceptance `needs: [fast-gate, stage-3-gate]` (keep `fast-gate` for path-scope outputs)\n- `pr-gate.yml:605`: `ci-gate` `needs:` += `stage-3-gate`\n- `contract` and `api-compat` unchanged (A2)\n- actionlint clean (EXIT:0)\n- Pre-push hooks all passed\n- CI: Sharperflow CI Gate ✓, **Stage 3 Gate ✓ in 3s**, Fast Gate ✓, Quality Chain ✓, Security all 4 ✓. Stage-3 lanes correctly SKIP on this workflow-only PR (path-scope working).\n\n## Trade-off\n**Backend `stage-3-gate` adds +160s (+17%) to success-path wall-time** (924s → 1,084s). User explicitly accepted in C9. On failure: 411s runner-seconds saved per pr-gate failure.\n\n## Estimated savings\n- Backend: **$13.15/mo** (240 pr-gate failures × 411s × $0.008/min)\n- Web commit-lint: **$3.85/mo** (35 incidents × 530s × $0.008/min)\n- Web build→test gate: **$1.60/mo** (200s × 311 failures × 0.57 × $0.008/min)\n- **Total: $18.60/mo (8.6% of $217/mo budget)**\n\n## Constraints honored\n- C1-C6 (carried from reduceActionsCost): all respected\n- C7 (cross-repo execution approval): user-approved at execution gate\n- C8 (worktree isolation): ADV worktree for this repo, manual worktrees for app repos\n- C9 (trade-off surfaced+accepted): implementation did not optimize away the wall-time penalty\n- C10 (skip-cascade mandatory): fast-gate retained in every stage-3 lane's `needs:`; case-loop is complement, not replacement\n\n## Out of scope (per OOS1-OOS9)\n- PokeEdge-Web Fix B (full fast-gate join)\n- Backend lane consolidation (Design C)\n- Push trigger changes\n- Path-scope expansion to commit-lint\n- Job ID renames\n- BuildKit/deploy-chain\n- New scanner or threshold changes\n- PokeEdge backend pin (stale v0.3.2)\n- Advance pilot `@v0`\n\n## Remaining (post-merge evidence, AC4)\n- Web: next commit-lint failure PR run → test/build SKIPPED in <60s\n- Backend: next pr-gate failure run → integration/e2e/acceptance/migration SKIPPED in <5s\n- Both require PRs to merge first\n\n## Pre-existing issue surfaced\n**PokeEdge-Web `docs/openapi.json` is out of sync with backend `openapi.json` main.** Type Check & API Drift fails on any PR opened against current main. This is **NOT in scope** for this change and is a separate maintenance task. PR #211 will be blocked by this until someone regenerates `docs/openapi.json` from backend main. Options for the user:\n1. Regenerate `docs/openapi.json` as a separate commit on PR #211 (small YAML regeneration)\n2. Land `docs/openapi.json` regeneration as a separate PR first, then rebase #211\n3. Land the commit-lint changes in a follow-up PR after regeneration\n",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-17T18:39:33.720Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| OOS1 | out_of_scope | PokeEdge-Web full fast-gate join (Fix B) — separate change | respected | PokeEdge-Web ci.yml uses Fix C (always() + result != 'failure'), NOT Fix B (full fast-gate join). No new fast-gate job introduced; test/build needs: only added commit-lint. Verified by reviewing commit 9fde4af1. |\n| OOS2 | out_of_scope | Backend lane consolidation (Design C) — rejected | respected | Stage-3 lanes kept as separate jobs (migration-chain, integration, e2e, acceptance). NOT merged into one job. No consolidation introduced. Verified by reviewing commit b943ea1c6. |\n| OOS3 | out_of_scope | Push trigger changes — defensible post-merge verification | respected | ci.yml on: block (push, pull_request, merge_group) unchanged. Only test/build/notify/heartbeat needs: and if: changed. Verified by diff on 9fde4af1 — no on: changes. |\n| OOS4 | out_of_scope | Path-scope expansion to commit-lint (low value) | respected | commit-lint job definition (line 230-289) unchanged. Only its result is referenced by test/build/notify/heartbeat. No path-scope expansion added to commit-lint itself. Verified by diff on 9fde4af1. |\n| OOS5 | out_of_scope | Job ID renames — preserves cache hits | respected | All job IDs preserved: pr-gate, commit-lint, fast-gate, test, build, security, ci-gate, integration, e2e, acceptance, migration-chain, contract, api-compat, notify-failure, heartbeat. Only stage-3-gate is new. Diff verified. |\n| OOS6 | out_of_scope | BuildKit cache cleanup, Stage-3 sibling isolation, deploy-chain — unchanged from prior changes | respected | No BuildKit cache changes. No deploy-chain changes. No Stage-3 sibling isolation (e.g., per-lane runners) added. The intra-stage gate is via needs: in the same workflow, not isolation. |\n| OOS7 | out_of_scope | Adding new scanner or threshold changes — C1/C5 | respected | No scanner removed, no severity threshold raised. security job unchanged on both repos (only the ci.yml pin was already bumped to v0.4.1 in the parent change). |\n| OOS8 | out_of_scope | PokyEdge backend pin (stale v0.3.2) — separate change | respected | PokeEdge backend pin (cb39edcd # v0.3.2) untouched. Diff verified — only pr-gate.yml changed on PokeEdge. |\n| OOS9 | out_of_scope | Advance pilot `@v0` floating tag — different gap class | respected | Advance repo not touched. Only sharperflow-security-gates (docs), PokeEdge-Web (ci.yml), PokeEdge (pr-gate.yml) modified. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "updatedAt": "2026-06-17T18:10:16.530Z",
+      "contentHash": "c76708e94e9d9ac76be3f01790e1e6249839618b9e92c454eb958aae53509022",
+      "source": "temporal",
+      "readable": false
+    },
+    "problemStatement": {
+      "updatedAt": "2026-06-17T18:09:49.910Z",
+      "contentHash": "7df1cbe10e2f568f3fa8d24e74d2b4fc723ee1b7066339baf0bbf4509635851d",
+      "source": "temporal",
+      "readable": false
+    },
+    "agreement": {
+      "updatedAt": "2026-06-17T18:13:41.200Z",
+      "contentHash": "a694123a11515a2f35e1d428cf433a8db44c3f0f3c6ef928aac288827d2a9793",
+      "source": "temporal",
+      "readable": false
+    },
+    "design": {
+      "updatedAt": "2026-06-17T18:24:34.485Z",
+      "contentHash": "26119e32ede26bd5c1065b77e27d4e62f21e4a594bae04a738d4db291e7e6ecf",
+      "source": "temporal",
+      "readable": false
+    },
+    "executiveSummary": {
+      "updatedAt": "2026-06-17T18:39:51.086Z",
+      "contentHash": "696bbacb4e468a176115188bc25827a8cea6eff38f44c14f4e8e12c586e23cbc",
+      "source": "temporal",
+      "readable": false
+    }
+  },
+  "lastSignalAt": "2026-06-17T18:39:57.841Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_SUBJECTIVE_LANGUAGE",
+      "severity": "warning",
+      "message": "Change title contains subjective term \"fast\": \"Extend CI fail-fast topology (stage-3 gate, commit-lint)\". What specific, measurable criteria define \"fast\"?",
+      "recorded_at": "2026-06-17T18:14:07.705Z"
+    }
+  ],
+  "worktree_auto_managed": true
+}
