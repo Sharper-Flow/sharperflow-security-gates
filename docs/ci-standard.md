@@ -208,6 +208,124 @@ many expensive jobs all need the same fast-check gates (PokeEdge backend:
 The fast-gate join avoids repeating the same `needs:` list on every job and
 keeps the DAG readable.
 
+### Intra-stage sibling gating
+
+The fail-fast edges above cover **stage boundaries** (fast-checks → expensive
+jobs). Once a stage is running, **siblings within a stage do not automatically
+gate each other** — if one expensive lane fails, parallel siblings run to
+completion unless explicitly connected via `needs:`. This section covers
+patterns for closing that intra-stage gap.
+
+Three patterns cover the common cases:
+
+**Stage-3-gate join (for many expensive lanes under one fast-gate).** When N
+expensive lanes share a fast-gate and one lane (typically the slowest, highest
+failure rate) is the canary, introduce a second join job that requires both
+`fast-gate` AND the canary lane. Sibling lanes depend on the second join.
+
+```yaml
+fast-gate:
+  needs: [changes, commit-lint, quality-chain, security]
+  if: ${{ !cancelled() }}
+  # ... case-loop on needs.*.result accepting success|skipped
+
+# pr-gate is the canary (slowest lane, highest failure rate)
+pr-gate:
+  needs: fast-gate
+  # ... runs 16 min median
+
+stage-3-gate:
+  needs: [fast-gate, pr-gate]
+  if: ${{ !cancelled() }}
+  # ... case-loop on needs.*.result accepting success|skipped
+
+integration:
+  needs: [fast-gate, stage-3-gate]   # keep fast-gate for path-scope outputs
+  if: ${{ needs.fast-gate.outputs.migrations == 'true' }}
+
+e2e:
+  needs: [fast-gate, stage-3-gate]
+  if: ${{ needs.fast-gate.outputs.tests == 'true' }}
+```
+
+Trade-off: success-path wall-time extends by the canary's duration
+(otherwise unchanged); failure-path runner-seconds drop by the siblings'
+total duration. On a 33% pr-gate failure rate, this saves ~411s runner-seconds
+per failure.
+
+**Skip-cascade requirement (mandatory).** Each modified sibling lane MUST keep
+`fast-gate` in its `needs:` so it can read path-scope `outputs.*` via its
+`if:` condition. The stage-3-gate's case-loop alone is NOT sufficient — when
+`pr-gate` is SKIPPED (path-scope clean PR), the stage-3-gate accepts `skipped`
+via its case-loop, but each lane's `if: needs.fast-gate.outputs.X == 'true'`
+independently skips it. actionlint enforces this (a lane that references
+`fast-gate.outputs` must declare `fast-gate` in `needs:`).
+
+Canonical example: `Sharper-Flow/PokeEdge/.github/workflows/pr-gate.yml` —
+`stage-3-gate: needs: [fast-gate, pr-gate]` joins pr-gate into
+integration/e2e/acceptance/migration. Pattern: `!cancelled()` + case-loop on
+`needs.*.result` accepting `success|skipped`.
+
+**Commit-lint `always()` pattern (for PR-only fast lanes gating test/build).**
+When a fast lane runs only on `pull_request` (skipping on push/merge_group),
+adding it to test/build `needs:` directly causes test/build to skip on non-PR
+events because GitHub Actions skips downstream jobs when their `needs:` is
+skipped (unless the `if:` overrides with `always()`).
+
+Use `always()` in the `if:` so the expression evaluates even when needs are
+skipped, and check `needs.X.result != 'failure'` (skipped is acceptable,
+failure is not):
+
+```yaml
+test:
+  needs: [changes, lint, typecheck, security, commit-lint]
+  if: ${{ always() && !cancelled() && needs.changes.outputs.code == 'true' && needs.commit-lint.result != 'failure' }}
+```
+
+Behavior matrix:
+- `pull_request` + commit-lint passes: `needs.commit-lint.result == 'success'` → test/build run.
+- `pull_request` + commit-lint fails: `needs.commit-lint.result == 'failure'` → test/build skip.
+- `push` / `merge_group`: commit-lint skipped (`if: github.event_name == 'pull_request'`) → `needs.commit-lint.result == 'skipped'` → `'skipped' != 'failure'` → test/build run normally.
+- workflow cancelled: `!cancelled()` is false → test/build skip.
+
+Canonical example: `Sharper-Flow/PokeEdge-Web/.github/workflows/ci.yml` —
+`commit-lint` has `if: github.event_name == 'pull_request'`; the `always()`
+pattern preserves push/merge_group behavior while skipping on PR commit-lint
+failure. The summary gate (`ci-gate`) already accepts `success|skipped` for
+commit-lint, so it is unaffected.
+
+**Notification-gap pattern (commit-lint in notify/heartbeat `needs:`).**
+Summary-only failures (ci-gate, commit-lint, future fast-gate joins) cause leaf
+jobs to succeed and notification/heartbeat jobs to skip on their
+`if: failure()` / `if: always()` conditions. Add summary-only jobs to the
+notify/heartbeat `needs:` so they fire on those failures. Also include the
+result in any `HEARTBEAT_STATUS` expression that gates the status report:
+
+```yaml
+notify-failure:
+  needs: [lint, typecheck, test, build, security, commit-lint]   # commit-lint included
+  if: failure() && github.ref == 'refs/heads/main'
+
+heartbeat:
+  needs: [lint, typecheck, test, build, security, commit-lint]   # commit-lint included
+  if: always() && github.ref == 'refs/heads/main'
+  env:
+    HEARTBEAT_STATUS: ${{ (needs.lint.result == 'failure' || needs.typecheck.result == 'failure' || needs.test.result == 'failure' || needs.build.result == 'failure' || needs.security.result == 'failure' || needs.commit-lint.result == 'failure') && 'down' || 'up' }}
+```
+
+Canonical example: `Sharper-Flow/PokeEdge-Web/.github/workflows/ci.yml` —
+`notify-failure` and `heartbeat` declare `needs: [lint, typecheck, test,
+build, security, commit-lint]`. `HEARTBEAT_STATUS` includes
+`|| needs.commit-lint.result == 'failure'`. Without these additions, a
+commit-lint-only failure causes the leaf jobs to succeed and the configured
+alerts never fire.
+
+**Why this section.** Without intra-stage gating, a fast-gate-protected
+failure cascades wasted runner-seconds across N-1 sibling lanes. The cost is
+proportional to the number of siblings × their median runtime. Wall-time
+penalty on success is proportional to the canary's duration; on failure, all
+siblings skip in seconds.
+
 ---
 
 ## 3. Security gate: permanent and required
