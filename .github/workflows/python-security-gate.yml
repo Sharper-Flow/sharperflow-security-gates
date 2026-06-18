@@ -35,7 +35,7 @@ on:
         description: Space-separated paths to exclude from Semgrep.
         required: false
         type: string
-        default: "tests scripts migrations"
+        default: "tests scripts migrations .sharperflow-security-gates"
       bandit-config:
         description: Optional Bandit config path in caller repository.
         required: false
