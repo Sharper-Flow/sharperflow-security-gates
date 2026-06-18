@@ -1,0 +1,83 @@
+rules:
+  - id: sharperflow-fastapi-tainted-process
+    mode: taint
+    languages: [python]
+    severity: ERROR
+    message: Direct FastAPI request input reaches a process execution sink in the same function. Semgrep CE tracks this intraprocedurally only; this rule does not claim cross-function or cross-file taint coverage.
+    metadata:
+      category: security
+      technology: [fastapi]
+      confidence: HIGH
+      likelihood: HIGH
+      impact: HIGH
+      subcategory: vuln
+      cwe: ["CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"]
+    options:
+      taint_assume_safe_functions: true
+    pattern-sources:
+      - patterns:
+          - pattern-inside: |
+              @$ROUTER.$METHOD(...)
+              def $FUNC(..., $SOURCE: $TYPE, ...):
+                ...
+          - focus-metavariable: $SOURCE
+      - patterns:
+          - pattern-inside: |
+              @$ROUTER.$METHOD(...)
+              async def $FUNC(..., $SOURCE: $TYPE, ...):
+                ...
+          - focus-metavariable: $SOURCE
+      - pattern: $REQUEST.query_params[...]
+      - pattern: $REQUEST.path_params[...]
+      - pattern: $REQUEST.headers[...]
+    pattern-sinks:
+      - patterns:
+          - pattern: subprocess.$METHOD($SINK, ...)
+          - metavariable-regex:
+              metavariable: $METHOD
+              regex: ^(run|call|check_call|check_output|Popen)$
+          - focus-metavariable: $SINK
+      - patterns:
+          - pattern: os.$METHOD($SINK, ...)
+          - metavariable-regex:
+              metavariable: $METHOD
+              regex: ^(system|popen|spawnl|spawnle|spawnlp|spawnlpe|spawnv|spawnve|spawnvp|spawnvpe|execl|execle|execlp|execlpe|execv|execve|execvp|execvpe)$
+          - focus-metavariable: $SINK
+  - id: sharperflow-fastapi-tainted-ssrf
+    mode: taint
+    languages: [python]
+    severity: ERROR
+    message: Direct FastAPI request input reaches an outbound HTTP URL sink in the same function. Semgrep CE tracks this intraprocedurally only; this rule does not claim cross-function or cross-file taint coverage.
+    metadata:
+      category: security
+      technology: [fastapi]
+      confidence: HIGH
+      likelihood: HIGH
+      impact: HIGH
+      subcategory: vuln
+      cwe: ["CWE-918: Server-Side Request Forgery (SSRF)"]
+    options:
+      taint_assume_safe_functions: true
+    pattern-sources:
+      - patterns:
+          - pattern-inside: |
+              @$ROUTER.$METHOD(...)
+              def $FUNC(..., $SOURCE: $TYPE, ...):
+                ...
+          - focus-metavariable: $SOURCE
+      - patterns:
+          - pattern-inside: |
+              @$ROUTER.$METHOD(...)
+              async def $FUNC(..., $SOURCE: $TYPE, ...):
+                ...
+          - focus-metavariable: $SOURCE
+      - pattern: $REQUEST.query_params[...]
+      - pattern: $REQUEST.path_params[...]
+      - pattern: $REQUEST.headers[...]
+    pattern-sinks:
+      - patterns:
+          - pattern: requests.$METHOD($URL, ...)
+          - metavariable-regex:
+              metavariable: $METHOD
+              regex: ^(get|post|put|patch|delete|head|options|request)$
+          - focus-metavariable: $URL
