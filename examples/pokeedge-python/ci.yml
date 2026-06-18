@@ -25,9 +25,12 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      # Dependency group names are app-owned; choose the narrowest group that
+      # contains this lane's tools in the consuming repo's pyproject.toml.
       - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
         with:
           python-version: "3.13"
+          sync-args: "--only-group lint --frozen"
       - run: uv run ruff check .
       - run: uv run ruff format --check .
 
@@ -44,6 +47,8 @@ jobs:
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+        with:
+          sync-args: "--all-groups --frozen"
       - run: uv run pytest
 
   build:
@@ -56,6 +61,8 @@ jobs:
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+        with:
+          sync-args: "--all-groups --frozen"
       - run: uv build
 
   security:
