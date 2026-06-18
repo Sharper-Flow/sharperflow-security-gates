@@ -17,7 +17,7 @@ org branch-protection ruleset all live here.
 
 | Area | Tool | Purpose |
 |---|---|---|
-| SAST | Semgrep CE | Python/FastAPI (or JS/TS) security rules + repo custom rules |
+| SAST | Semgrep CE | Python/FastAPI (or JS/TS) security rules + repo custom rules; Python gate also ships bounded FastAPI taint rules for direct request input → process/network sinks |
 | Python security lint | Bandit | High-severity/high-confidence Python AST checks |
 | Dependencies | OSV Scanner | Known vulnerabilities from lockfiles |
 | Secrets | Gitleaks CLI | Hardcoded secret detection without GitHub Secret Protection |
@@ -26,6 +26,11 @@ org branch-protection ruleset all live here.
 The security gate is **permanent and required** under the standard — not a pilot.
 Apps invoke it as a job inside their CI workflow and require only the single
 `Sharperflow CI Gate` summary check (see the standard).
+
+The packaged FastAPI taint rules are intentionally narrow: Semgrep CE tracks these
+flows intraprocedurally, so the gate does **not** claim full cross-function or
+cross-file dataflow coverage. Opengrep remains advisory/revisit rather than a
+required gate.
 
 ## Reusable workflows
 

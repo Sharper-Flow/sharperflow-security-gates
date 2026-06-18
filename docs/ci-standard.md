@@ -943,11 +943,16 @@ Both are **isolated** from secret scanning, the dependency graph, and Dependabot
 (separate features). Any committed `.github/codeql/codeql-config.yml` is an inert
 orphan once Code Quality is off — delete it.
 
-CodeQL's genuine value was **interprocedural dataflow/taint** SAST, which the OSS
-gate does not replace (Semgrep CE is intraprocedural — single-function /
-single-file; cross-function taint is Pro-only). That gap is **consciously
-deferred**, tracked as `deepenSastDataflow` in the followup table below — not
-silently dropped, and explicitly **not** a reason to buy GHAS.
+CodeQL's genuine value was **interprocedural dataflow/taint** SAST. Sharper Flow
+does **not** recreate full CodeQL-style cross-function/cross-file taint coverage
+in the blocking OSS gate: Semgrep CE remains intraprocedural, and Semgrep's
+cross-function/cross-file engine is Pro-only. The adopted replacement is a
+bounded improvement, not an overclaim: the Python gate ships packaged Semgrep CE
+taint rules for high-confidence FastAPI request-input flows that reach process
+execution or outbound HTTP URL sinks within the same function. Cross-file /
+interprocedural taint remains explicitly uncovered by the blocking gate, and
+Opengrep remains an advisory/revisit candidate until its cross-file support and
+CI ergonomics are proven stable enough for the standard.
 
 **SonarCloud is retired.** Sharper Flow no longer uses SonarCloud (no hosted
 dashboard, no `sonar-project.properties`, no `SONAR_TOKEN`). The required path is
@@ -962,7 +967,7 @@ deliberate research→decision followup rather than silently dropped:
 | Duplication detection | `addDuplicationDetection` | jscpd/CPD advisory, or accept-drop |
 | Maintainability/reliability ratings + tech-debt | `addMaintainabilityMetrics` | bounded complexity gate, or rely on review |
 | Coverage-on-new-code | `addDiffCoverageGate` | `diff-cover` on existing coverage artifacts |
-| Deep dataflow/taint SAST | `deepenSastDataflow` | Semgrep taint-mode / Opengrep, or accept CE ceiling |
+| Deep dataflow/taint SAST | `deepenSastDataflow` | Decided: packaged Semgrep CE intraprocedural FastAPI taint rules; cross-file taint remains uncovered; Opengrep advisory/revisit |
 
 Coverage **trends**, the **dashboard**, and **PR decoration** are intentionally
 out of scope (no-hosted-dashboard posture).

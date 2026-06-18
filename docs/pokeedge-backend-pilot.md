@@ -71,7 +71,11 @@ jobs:
 
 ## Known tradeoffs
 
-- No CodeQL taint/dataflow equivalent without GitHub Code Security.
+- No full CodeQL-style cross-function/cross-file taint/dataflow equivalent without
+  GitHub Code Security.
 - No hosted security dashboard by default.
 - Gitleaks is CLI-based; GitHub Secret Protection push blocking is not replaced.
-- Semgrep CE is mostly intra-file/intra-function compared with paid engines.
+- Semgrep CE is intraprocedural compared with paid engines. The Python gate now
+  adds bounded FastAPI taint rules for direct request input reaching process
+  execution or outbound network sinks in the same function; broader cross-file
+  taint remains uncovered by the blocking gate.
