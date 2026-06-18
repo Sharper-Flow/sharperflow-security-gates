@@ -1,0 +1,8 @@
+paths:
+  .github/workflows/python-security-gate.yml:
+    ignore:
+      # actionlint 1.7.7 predates GitHub's job.workflow_* reusable-workflow
+      # context fields. GitHub documents these fields as the supported way for
+      # a reusable workflow to check out files co-located with its own workflow.
+      - 'property "workflow_repository" is not defined in object type .+'
+      - 'property "workflow_sha" is not defined in object type .+'
