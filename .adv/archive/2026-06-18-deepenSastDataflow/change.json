@@ -1,0 +1,988 @@
+{
+  "id": "deepenSastDataflow",
+  "title": "Deepen SAST dataflow",
+  "status": "archived",
+  "created_at": "2026-06-09T02:37:53.014Z",
+  "tasks": [
+    {
+      "id": "tk-1daaa4d1645b",
+      "title": "Add packaged FastAPI Semgrep CE taint rules and rule fixtures",
+      "type": "code",
+      "section": "Semgrep rules",
+      "status": "done",
+      "priority": 0,
+      "created_at": "2026-06-18T05:43:47.714Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "inline",
+        "delegation_hint": "delegate_allowed"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2",
+          "AC5"
+        ],
+        "verifies": [
+          "AC5"
+        ],
+        "respects": [
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "DONT1",
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-18T05:50:10.805Z",
+      "verification": "TDD evidence: red `uvx semgrep --test configs/semgrep/python` failed with 2 missed rules (run tr_mqj30wvv_eb94475a); green same command passed 2/2 tests (run tr_mqj31pe5_5b0f3342). Added narrow Semgrep CE FastAPI taint rules and fixtures for direct request input to process/network sinks; rule messages state intraprocedural CE scope and avoid cross-file/interprocedural claims.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "configs/semgrep/python/fastapi-taint.py",
+        "configs/semgrep/python/fastapi-taint.yml"
+      ],
+      "touched_files": [
+        "configs/semgrep/python/fastapi-taint.py",
+        "configs/semgrep/python/fastapi-taint.yml"
+      ],
+      "checkpointSha": "1ad32aac2eae368e833f2bb9d19dbf34df3adf86",
+      "completedAt": "2026-06-18T05:52:16.424Z",
+      "completed_at": "2026-06-18T05:52:16.424Z"
+    },
+    {
+      "id": "tk-ee0c85444c8d",
+      "title": "Wire additive Semgrep configs into Python reusable gate",
+      "type": "code",
+      "section": "Workflow wiring",
+      "status": "done",
+      "priority": 1,
+      "created_at": "2026-06-18T05:44:02.806Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1daaa4d1645b"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "inline",
+        "delegation_hint": "delegate_allowed"
+      },
+      "contract_refs": {
+        "implements": [
+          "AC2"
+        ],
+        "verifies": [
+          "AC2",
+          "AC4"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C5",
+          "C6",
+          "DONT3",
+          "DONT4",
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-18T05:52:45.437Z",
+      "verification": "TDD evidence: red static check failed because additive config/self-checkout wiring was absent (run tr_mqj32p1n); green static check passed after wiring semgrep-additional-configs, packaged-rules checkout, and preserved p/python p/fastapi (run tr_mqj34m5y); actionlint passed (run tr_mqj34sq1).",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/workflows/python-security-gate.yml"
+      ],
+      "touched_files": [
+        ".github/workflows/python-security-gate.yml"
+      ],
+      "checkpointSha": "0e02d7e243d3acdfe51f3975f58cbb8f8b99e5d2",
+      "completedAt": "2026-06-18T05:54:40.430Z",
+      "completed_at": "2026-06-18T05:54:40.430Z"
+    },
+    {
+      "id": "tk-8683301bc272",
+      "title": "Update SAST dataflow posture documentation",
+      "type": "code",
+      "section": "Documentation",
+      "status": "done",
+      "priority": 2,
+      "created_at": "2026-06-18T05:44:16.621Z",
+      "deps": [],
+      "metadata": {
+        "tdd_intent": "not_applicable",
+        "delegation_hint": "delegate_allowed"
+      },
+      "contract_refs": {
+        "implements": [
+          "SC1",
+          "SC2",
+          "AC1"
+        ],
+        "verifies": [
+          "AC1"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "DONT1",
+          "DONT2",
+          "DONT4",
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-18T05:55:03.891Z",
+      "verification": "Documentation verification passed (run tr_mqj36ph1): docs/ci-standard.md now states packaged Semgrep CE posture, cross-file taint uncovered, and Opengrep advisory/revisit; README and pokeedge backend pilot mention bounded FastAPI taint rules. Earlier overly-strict grep failed (run tr_mqj36bqs) due exact phrase mismatch, then corrected verification command passed.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        "README.md",
+        "docs/ci-standard.md",
+        "docs/pokeedge-backend-pilot.md"
+      ],
+      "touched_files": [
+        "README.md",
+        "docs/ci-standard.md",
+        "docs/pokeedge-backend-pilot.md"
+      ],
+      "checkpointSha": "dc5ae653ef966368db4089dfb279739aeeee525a",
+      "completedAt": "2026-06-18T05:56:11.403Z",
+      "completed_at": "2026-06-18T05:56:11.403Z"
+    },
+    {
+      "id": "tk-22b85e541760",
+      "title": "Verify gate behavior, runtime bound, and contract invariants",
+      "type": "code",
+      "section": "Verification",
+      "status": "done",
+      "priority": 3,
+      "created_at": "2026-06-18T05:44:29.674Z",
+      "deps": [
+        {
+          "type": "blocked_by",
+          "target": "tk-1daaa4d1645b"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-ee0c85444c8d"
+        },
+        {
+          "type": "blocked_by",
+          "target": "tk-8683301bc272"
+        }
+      ],
+      "metadata": {
+        "tdd_intent": "separate_verification",
+        "delegation_hint": "inline_required"
+      },
+      "contract_refs": {
+        "implements": [],
+        "verifies": [
+          "SC1",
+          "SC2",
+          "SC3",
+          "AC1",
+          "AC2",
+          "AC3",
+          "AC4",
+          "AC5",
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "DONT1",
+          "DONT2",
+          "DONT3",
+          "DONT4",
+          "DONT5"
+        ],
+        "respects": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "DONT1",
+          "DONT2",
+          "DONT3",
+          "DONT4",
+          "DONT5"
+        ]
+      },
+      "assignedTo": "agent",
+      "started_at": "2026-06-18T05:56:38.944Z",
+      "verification": "Review remediation from adv-reviewer READY report: restored documented reusable-workflow self-checkout via job.workflow_repository/job.workflow_sha and added scoped actionlint ignore for actionlint 1.7.7 context-schema lag. Verification passed: actionlint tr_mqj3k5k5, Semgrep tests tr_mqj3k774, static job.workflow/actionlint/exclude checks tr_mqj3k51k.",
+      "summary": "Task checkpoint completed",
+      "implementation_summary": "Task checkpoint completed",
+      "filesTouched": [
+        ".github/actionlint.yaml",
+        ".github/workflows/python-security-gate.yml"
+      ],
+      "touched_files": [
+        ".github/actionlint.yaml",
+        ".github/workflows/python-security-gate.yml"
+      ],
+      "checkpointSha": "a057e78c7807e1c373eb275f2e1525ecd298b62a",
+      "completedAt": "2026-06-18T06:06:38.174Z",
+      "completed_at": "2026-06-18T06:06:38.174Z"
+    }
+  ],
+  "subagent_reports": [
+    {
+      "schema_version": "1.0",
+      "change_id": "deepenSastDataflow",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:discovery-opportunity-scout"
+      },
+      "agent": "adv-researcher",
+      "topic": "Discovery opportunity scout — SAST dataflow posture after CodeQL retirement (Semgrep CE taint vs Opengrep vs accept ceiling)",
+      "sources": [
+        {
+          "label": "Semgrep docs — Perform cross-file analysis (CE = intraprocedural only)",
+          "locator": "https://docs.semgrep.dev/semgrep-code/semgrep-pro-engine-intro",
+          "summary": "Authoritative: Semgrep CE (OSS) analyzes only interactions within a single function (intraprocedural). Cross-function (interprocedural) and cross-file (interfile) are Semgrep Code/Pro. Confirms CE ceiling claim exactly."
+        },
+        {
+          "label": "Semgrep docs — Taint analysis overview (Pro flags --pro-intrafile / --pro)",
+          "locator": "https://docs.semgrep.dev/writing-rules/data-flow/taint-mode/overview",
+          "summary": "Custom taint propagators are Pro. Interprocedural taint is Pro. --pro-intrafile = cross-function single-file; --pro = cross-file. CE taint-mode rules run but stay intraprocedural. No Pro flag works under CE."
+        },
+        {
+          "label": "Opengrep OPENGREP.md (current feature list, main branch)",
+          "locator": "https://github.com/opengrep/opengrep/blob/main/OPENGREP.md",
+          "summary": "Current shipped taint feature is --taint-intrafile (cross-function, single-file, HOF support), explicitly 'similar to Semgrep --pro-intrafile'. No cross-file/interfile taint flag documented as shipped. Apache-2.0/LGPL OSS fork of Semgrep CE."
+        },
+        {
+          "label": "Opengrep intrafile tainting tutorial + LinkedIn benchmark",
+          "locator": "https://github.com/opengrep/opengrep/wiki/Intrafile-tainting-tutorial",
+          "summary": "--taint-intrafile proven live with worked Python examples; benchmark 7/9 multi-hop taint cases vs Semgrep --pro-intrafile 4/9 (v1.139.0). Self-contained binaries per release (v1.22.0 May 2026), Semgrep-rule compatible, SARIF/JSON output."
+        },
+        {
+          "label": "Opengrep issue #88 — interprocedural/cross-file status",
+          "locator": "https://github.com/opengrep/opengrep/issues/88",
+          "summary": "Maintainer @dimitris-m on 2026-01-11 estimated cross-file (interfile) 'Next 3 months'. As of v1.22.0 (2026-05-19) OPENGREP.md still lists only --taint-intrafile shipped — cross-file remains roadmap, NOT proven shipped. Treat cross-file as unverified."
+        }
+      ],
+      "architecture_assessment": "Local gate confirmed: .github/workflows/python-security-gate.yml:98-117 invokes `python -m pipx run semgrep --config p/python p/fastapi --error` — registry rulesets only, no repo-owned rules dir, no taint config, no custom-rules input. configs/ has only trivy.yaml; no configs/python/ Semgrep rules dir. The `semgrep-configs` input REPLACES defaults (caller override), so there is no extension point that adds repo-owned taint rules while keeping p/python+p/fastapi. CANDIDATES (sorted payoff/risk): [1] Add Semgrep CE taint-mode source-to-sink rules for top FastAPI sinks (SQL/ORM, shell, SSRF) as a repo-owned ruleset wired alongside registry configs. Evidence: docs confirm CE runs taint-mode rules intraprocedurally; gate currently ships zero custom taint rules so any high-signal intraprocedural rule is net-new coverage. Payoff high, risk low — fits existing gate shape, no new dependency. contract_tie: AC 'validate whether Semgrep CE taint-mode rules are enough'; route adopt_now/design_around (needs a config-path extension so custom rules co-exist with registry configs rather than replacing them). [2] Treat Opengrep as a NON-blocking advisory step (not the failing gate) until cross-file ships. Evidence: --taint-intrafile is proven + benchmarked-superior but cross-file is unshipped per OPENGREP.md/v1.22.0; high-signal-by-default constraint forbids a noisy new failing tool. Payoff medium, risk medium. contract_tie: constraint 'high-signal by default / avoid bypass culture' + AC 'validate Opengrep maturity'; route surface_to_user (involves tool-adoption + maintenance tradeoff). [3] Opengrep as the FAILING taint scanner now. Evidence: only intrafile shipped; cross-file (the actual CodeQL gap) not delivered; adopting blocking now adds dependency without closing the interprocedural-cross-file gap. Payoff low, risk high. route reject — does not close the deferred gap it claims to, violates no-noisy-adoption. [4] Re-frame docs posture: the lost CodeQL capability was cross-FILE interprocedural taint; NO OSS no-dashboard option (CE or Opengrep) currently delivers cross-file. Evidence: Semgrep cross-file = Pro; Opengrep cross-file = unshipped roadmap. Payoff high, risk low — documentation honesty. contract_tie: User Outcome 'app teams can tell what gate does/doesn't claim' + Out-of-Scope 'do not claim full interprocedural coverage'. route adopt_now (docs/ci-standard.md must state cross-file taint remains uncovered regardless of chosen path). [5] Add a `semgrep-rules` input (additive local rules dir) distinct from `semgrep-configs` (replace) so taint rules extend rather than displace registry coverage. Evidence: current gate has no additive extension point (line 100-108 loops configs only). Payoff medium, risk low. contract_tie: 'avoid app-level duplication / reusable gate shape'; route design_around.",
+      "validation": {
+        "status": "caution",
+        "blockers": [],
+        "notes": "No hard blocker. Key correction to scope framing: the CodeQL gap being replaced is cross-FILE interprocedural taint. Neither Semgrep CE nor current Opengrep delivers that under repo constraints (Semgrep cross-file = Pro; Opengrep cross-file = roadmap, unshipped as of v1.22.0 / 2026-05-19). Opengrep --taint-intrafile (cross-function single-file) IS shipped and benchmarks ABOVE Semgrep --pro-intrafile, but single-file cross-function is a partial, not full, gap closure. Best high-signal posture under constraints: repo-owned Semgrep CE taint rules for confident FastAPI sinks (closes intraprocedural gap, zero new dependency) + explicit docs honesty that cross-file taint remains uncovered + Opengrep evaluated as advisory/optional, revisit when its cross-file lands. Auto-adopt limited to docs-honesty (candidate 4) and the additive-rules extension point (candidate 5); tool adoption (candidates 1 blocking-vs-advisory, 2) must surface to user."
+      },
+      "recommendation": "Surface to user a 3-way posture decision, but pre-narrow with evidence: (a) AUTO-ADOPT now regardless of path — docs/ci-standard.md must state that cross-file interprocedural taint (the lost CodeQL capability) remains uncovered by any OSS no-dashboard option (Semgrep cross-file=Pro; Opengrep cross-file=unshipped). (b) RECOMMENDED path: add repo-owned Semgrep CE taint-mode rules for top FastAPI sinks via a NEW additive `semgrep-rules` input (distinct from the replace-semantics `semgrep-configs`), closing the intraprocedural gap with zero new dependency and full gate-shape fit. (c) Opengrep: adopt only as a NON-failing advisory step now (proven --taint-intrafile, but no cross-file); revisit as the blocking taint engine once Opengrep ships cross-file (roadmap est. was 'next 3 months' from 2026-01-11; verify against OPENGREP.md before relying). Reject Opengrep-as-blocking-now: it adds a dependency without closing the cross-file gap and risks bypass culture.",
+      "follow_ups": [
+        "Before design, confirm Opengrep cross-file/interfile taint shipped status against OPENGREP.md HEAD (was unshipped at v1.22.0 / 2026-05-19); if it shipped, candidate 2/3 fates change materially.",
+        "Domain input needed from user: which FastAPI source->sink classes to prioritize first (request input -> SQL/ORM, shell/process, SSRF, template, filesystem, authz) to bound the custom taint ruleset.",
+        "If additive `semgrep-rules` input is adopted, ensure examples/pokeedge-python and docs/ci-standard.md show it without duplicating registry coverage (no-duplication constraint)."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "deepenSastDataflow",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:design-leverage-scout"
+      },
+      "agent": "adv-researcher",
+      "topic": "Design leverage scout: post-CodeQL FastAPI taint SAST posture (Semgrep CE blocking + packaged rules via job.workflow_repository checkout; Opengrep advisory)",
+      "sources": [
+        {
+          "label": "GitHub Actions docs — job context workflow identity (job.workflow_repository / job.workflow_sha)",
+          "locator": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts",
+          "summary": "Canonical, documented pattern: reusable workflow checks out its OWN source via actions/checkout with repository=job.workflow_repository, ref=job.workflow_sha. Exactly the design's mechanism. CAVEAT: job.workflow_* properties are NOT available on GitHub Enterprise Server."
+        },
+        {
+          "label": "Semgrep docs — Taint mode advanced / CE vs Pro",
+          "locator": "https://github.com/semgrep/semgrep-docs/blob/main/docs/writing-rules/data-flow/taint-mode/advanced.mdx",
+          "summary": "Semgrep CE taint is intraprocedural; ALL function calls are opaque. Cross-function/cross-file is Pro-only (--pro / --pro-intrafile). Validates design's single-function-only scoping and the no-cross-file claim (DONT1)."
+        },
+        {
+          "label": "Semgrep docs — running multiple --config (registry + local file)",
+          "locator": "https://github.com/semgrep/semgrep-docs/blob/main/docs/running-rules.mdx",
+          "summary": "Multiple --config flags (registry packs + local rule path) combine additively in one scan: `--config p/python --config PATH/TO/RULE.yaml`. Existing workflow loop (lines 105-108) already emits one --config per space-separated token, so merging semgrep-additional-configs needs no engine change and preserves p/python p/fastapi (C5)."
+        },
+        {
+          "label": "Opengrep README + Intrafile Tainting Tutorial (official wiki)",
+          "locator": "https://github.com/opengrep/opengrep/wiki/Intrafile-tainting-tutorial",
+          "summary": "--taint-intrafile = cross-function taint WITHIN A SINGLE FILE (intrafile), explicitly NOT cross-file. Self-contained binaries, Semgrep-compatible rules. Beats Semgrep --pro-intrafile on 7/9 same-file examples. Confirms Opengrep gives single-file cross-function but does NOT prove cross-file closure — matches agreement DONT2 advisory stance."
+        },
+        {
+          "label": "Local: .github/workflows/python-security-gate.yml",
+          "locator": ".github/workflows/python-security-gate.yml:87-117",
+          "summary": "Semgrep job checks out CALLER repo at root (line 87-88), single semgrep invocation iterating space-separated SEMGREP_CONFIGS (105-108). Design's added checkout of workflow repo into .sharperflow-security-gates is a 2nd checkout step; must NOT overwrite caller root (checkout path: input)."
+        },
+        {
+          "label": "Local: docs/ci-standard.md deferred gap + agreement contract",
+          "locator": "docs/ci-standard.md:946-965",
+          "summary": "Deferred note states CodeQL value was interprocedural taint; Semgrep CE intraprocedural. AC1 requires replacing this note with selected posture + coverage truth. Contract has 19 approved items incl C5 (preserve p/python p/fastapi), DONT2 (Opengrep advisory)."
+        }
+      ],
+      "architecture_assessment": "Design is sound, boring, and contract-aligned. Three load-bearing claims all verified against official docs: (1) job.workflow_repository/job.workflow_sha is THE documented way for a reusable workflow to check out co-located rule files — not a hack; (2) Semgrep CE taint is strictly intraprocedural with opaque function calls, so the single-function-only scoping is honest and required (cross-function = Pro); (3) multiple --config flags combine registry + local additively, so semgrep-additional-configs merge preserves p/python p/fastapi with no engine rewrite — the existing loop already supports it. One GHES portability caveat on job.workflow_* (Sharper Flow runs on github.com per existing pinned org refs, so non-blocking but worth a doc line). Opengrep --taint-intrafile is genuinely stronger (single-file cross-function) but proves only intrafile, not cross-file closure — advisory/revisit is the correct fate, matching DONT2.",
+      "validation": {
+        "status": "pass",
+        "blockers": [],
+        "notes": "No anti-patterns. Mechanism (job.workflow_* checkout), engine scoping (Semgrep CE intraprocedural), and additive config merge are all canonical and documented. Coverage truth claims match Semgrep/Opengrep official evidence. Minor: add a doc note that job.workflow_* is github.com-only (not GHES); ensure 2nd checkout uses `path:` so caller repo stays root."
+      },
+      "recommendation": "Proceed with the draft design. Scout candidates (5, sorted payoff/risk):\n\n| # | title | observation | evidence | payoff | risk | fate | contract_tie | route |\n|---|---|---|---|---|---|---|---|---|\n| 1 | Additive merge needs no engine change | Existing loop (py-gate.yml:105-108) already emits one --config per token; semgrep-additional-configs just prepends packaged path. Semgrep docs confirm registry+local --config combine additively. | running-rules.mdx; py-gate.yml:105-117 | high | low | adopt_now | C5, AC2 | auto-adopt: reuse loop, no rewrite |\n| 2 | 2nd checkout must not clobber caller root | Existing checkout puts CALLER at root (line 87). Adding workflow-repo checkout REQUIRES actions/checkout `path: .sharperflow-security-gates`; omitting path overwrites caller src and breaks scan. | actions/checkout docs; py-gate.yml:87-88 | high | low | design_around | C5, AC2 | auto-adopt w/ note: pin path: input on 2nd checkout |\n| 3 | GHES portability caveat on job.workflow_* | GH docs: job.workflow_repository/sha NOT available on GitHub Enterprise Server. Sharper Flow uses github.com (org SHA-pinned refs), so non-blocking — but doc the github.com assumption. | github_en_actions contexts | medium | low | follow_up | AC1, SC2 | record one-line doc note in ci-standard coverage-truth section |\n| 4 | Opengrep --taint-intrafile = single-file cross-function uplift on SAME rule investment | Official: catches 2-funcs-in-one-file source->sink Semgrep CE misses, Semgrep-compatible rules, self-contained binary. But proves intrafile only, NOT cross-file. | opengrep wiki Intrafile tutorial | medium | medium | surface_to_user | DONT2, AC5 | surface: keep advisory this change; note as concrete revisit lever (user-value/scope tradeoff) |\n| 5 | Pin packaged rule taint sinks to high-confidence only | C3 demands fail-only-on-confident. CE intraproc + 'opaque calls assumed to propagate taint' => FP risk on broad sinks. Scope sinks to direct request-input -> subprocess/exec + outbound-net/SSRF within one function; severity HIGH. | taint-mode/advanced.mdx (opaque-call FP note) | high | low | adopt_now | C3, AC5 | auto-adopt: narrow sink set, HIGH severity, keep high-signal |\n\nNet: design validated. Auto-adopt #1, #2, #5; follow_up #3 (doc line); surface #4 to user as advisory-now/revisit-later lever.",
+      "follow_ups": [
+        "Design must specify actions/checkout `path:` on the workflow-repo checkout so the caller repo remains at root (else scan target is clobbered).",
+        "Add one-line ci-standard note that job.workflow_* checkout is github.com-only (not GHES) — Sharper Flow runs github.com so non-blocking.",
+        "Surface Opengrep --taint-intrafile to user as the concrete future revisit lever (single-file cross-function), keeping it advisory this change per DONT2."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "deepenSastDataflow",
+      "attempt": 1,
+      "workdir_used": "/home/jon/dev/sharperflow-security-gates",
+      "scope": {
+        "kind": "change",
+        "scope_key": "researcher:design-validation"
+      },
+      "agent": "adv-researcher",
+      "topic": "Design validation — deepen SAST dataflow (Semgrep CE taint, additive configs, reusable-workflow self-checkout)",
+      "sources": [
+        {
+          "label": "Semgrep CE vs Code analysis scope (official)",
+          "locator": "https://semgrep.dev/docs/semgrep-code/overview",
+          "summary": "Semgrep CE analyzes interactions ONLY within a single function (intraprocedural). Cross-function (interprocedural) and cross-file (interfile) are Pro-only. Confirms design KD1/coverage-truth claim that CE recreates no CodeQL-style cross-file taint."
+        },
+        {
+          "label": "Semgrep taint mode overview (official)",
+          "locator": "https://semgrep.dev/docs/writing-rules/data-flow/taint-mode/overview",
+          "summary": "Taint propagators work intraprocedurally only; interprocedural taint is a Pro feature; --pro-intrafile = across-functions-within-one-file, --pro = inter-file. Confirms CE intraprocedural ceiling and that the first rule slice (direct request-input→sink within one function) fits CE."
+        },
+        {
+          "label": "Semgrep taint advanced — opaque functions / FP risk (official)",
+          "locator": "https://semgrep.dev/docs/writing-rules/data-flow/taint-mode/advanced",
+          "summary": "In CE all function calls are opaque; by default CE assumes opaque calls propagate taint, which 'can generate false positives... high level of noise.' Relevant to C3 high-signal constraint: narrow direct-flow sinks mitigate but rule authors must mind opaque-call FP behavior."
+        },
+        {
+          "label": "GitHub Actions contexts — job.workflow_repository/_sha (official docs source)",
+          "locator": "https://github.com/github/docs/blob/main/content/actions/reference/workflows-and-actions/contexts.md",
+          "summary": "Official example: a reusable workflow uses repository: ${{ job.workflow_repository }} + ref: ${{ job.workflow_sha }} with actions/checkout to check out its OWN source 'co-located with the workflow definition.' Confirms KD4 mechanism is by-the-book, not a workaround."
+        },
+        {
+          "label": "actions/checkout reusable-workflow ref + private-repo token caveat",
+          "locator": "https://github.com/jenseng/get-job-workflow/blob/main/README.md",
+          "summary": "Confirms self-checkout pattern AND warns: if the ref is from a private repo other than github.repository (cross-repo reusable call), you must set up a token/deploy key — default GITHUB_TOKEN is scoped to the caller repo only."
+        },
+        {
+          "label": "DevOps.dev — checking out a reusable workflow's repository",
+          "locator": "https://blog.devops.dev/github-actions-checking-out-and-utilizing-a-reusable-workflows-repository-992adbe7b3ae",
+          "summary": "Real-world pattern confirms second checkout REQUIRES path: to avoid clobbering caller repo at GITHUB_WORKSPACE root, and that GITHUB_TOKEN cannot be reused for cross-repo checkout of the workflow repo. Corroborates KD4 path: mandate and the token gap."
+        },
+        {
+          "label": "Local: python-security-gate.yml (executable truth)",
+          "locator": "/home/jon/dev/sharperflow-security-gates/.github/workflows/python-security-gate.yml:98-117",
+          "summary": "Semgrep step splits semgrep-configs into a --config loop and runs `semgrep --error`. Confirms KD3: semgrep-configs is replacement-oriented; an additive input merged into the same loop is the minimal correct change. No token currently passed to any checkout; only one checkout step exists today."
+        },
+        {
+          "label": "Local: docs/ci-standard.md (normative contract)",
+          "locator": "/home/jon/dev/sharperflow-security-gates/docs/ci-standard.md:946-965",
+          "summary": "Docs already state 'Semgrep CE is intraprocedural — single-function/single-file; cross-function taint is Pro-only' and track deepenSastDataflow followup. Design coverage-truth claim aligns with existing normative prose; AC1 edit is a posture replacement, not a contradiction."
+        }
+      ],
+      "architecture_assessment": "Design is sound, boring, and contract-preserving. Core technical claims are verified against official sources: (1) Semgrep CE taint is strictly intraprocedural/single-function (semgrep.dev) — so KD1 (CE blocking base) and the explicit no-cross-file coverage claim are accurate, satisfying DONT1 and AC1 coverage-truth; (2) KD2 first slice (direct FastAPI request input → process/network sinks within one function) is exactly what CE taint can express, the right high-impact/low-FP starting class; (3) KD3 additive semgrep-additional-configs is confirmed correct against the executable workflow — semgrep-configs is replacement-oriented (env-split --config loop), so an additive input preserving p/python p/fastapi is the minimal change satisfying C5/AC2; (4) KD4 self-checkout via job.workflow_repository + job.workflow_sha with mandatory path: is the GitHub-documented canonical mechanism (github/docs example), not a hack, satisfying P35. Stays inside single Sharperflow CI Gate (C1/C6) — Semgrep job remains in python-security-gate.yml. Opengrep advisory/revisit (KD5) respects DONT2. No GHAS/CodeQL/SARIF/SonarCloud revival (C2/AC4/DONT5). One material gap and two cautions below.",
+      "validation": {
+        "status": "caution",
+        "blockers": [],
+        "notes": "Verdict CAUTION (non-blocking). (A) PRIVATE-REPO TOKEN GAP: the design's KD4 self-checkout does not address authentication. Default GITHUB_TOKEN passed into a reusable workflow is scoped to the CALLER repo; if sharperflow-security-gates is private (its public GitHub path 404s on guess), `actions/checkout` of job.workflow_repository@job.workflow_sha will fail without a PAT/deploy-key/GitHub App token — breaking the gate for all callers. Design must state: assume public reusable-workflow repo, OR add a token input + document the permission requirement. This is a correctness gap, not a contract conflict. (B) RUNTIME ≤180s (AC3/C3/C4): design says 'expected added blocking runtime <=180s' but provides no measurement or sized basis; CE intraprocedural taint over a narrow ruleset is fast, but AC3 demands measured-or-documented evidence — planning/execution must capture a timing number or a documented expectation, not leave it asserted. (C) CE OPAQUE-CALL FALSE POSITIVES (C3 high-signal): Semgrep CE treats every function call as opaque and by default assumes taint propagates through it, which Semgrep's own docs flag as a noise source; the 'narrow sinks' mitigation is correct but rules should use ERROR severity only on direct same-function flows and consider taint_assume_safe_functions where appropriate to hold the high-signal line."
+      },
+      "recommendation": "VALIDATED-WITH-CAUTIONS. Proceed to planning with three design clarifications captured before execution: (1) Resolve the reusable-workflow self-checkout AUTH question explicitly — confirm the gate repo is public (so GITHUB_TOKEN/anonymous checkout of job.workflow_repository@job.workflow_sha works) or add a documented token input + contents:read permission note; this is the only correctness risk that can break the gate for callers. (2) Bind AC3 to evidence — record a measured or sized expected runtime for the added Semgrep --config pass (CE narrow taint is cheap, but the number must exist, not just be asserted). (3) Keep rules ERROR-only on direct intra-function source→sink and lean on CE's narrow-sink design to counter opaque-call FP noise. The chosen approach is the boring, proven, additive option — no simpler equivalent achieves the dataflow objective while preserving the single-check, no-GHAS contract; Opengrep-as-required would add dependency/runtime risk without proven cross-file closure, so its advisory/revisit treatment is correct.",
+      "follow_ups": [
+        "Confirm sharperflow-security-gates repo visibility (public vs private) to settle the self-checkout token requirement; public GitHub path guessed as sharperflow/sharperflow-security-gates returned 404.",
+        "Planning: add a task to measure or document the Semgrep additional-config pass runtime to satisfy AC3 with evidence.",
+        "Execution: when authoring fastapi-taint.yml, set severity ERROR and constrain to same-function direct flows; evaluate taint_assume_safe_functions to limit CE opaque-call false positives (C3)."
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "change_id": "deepenSastDataflow",
+      "attempt": 1,
+      "workdir_used": "/home/jon/.local/share/opencode/worktree/d5d80b9521a34fb6944cc363dee739e8ecabb54d/change/deepenSastDataflow",
+      "scope": {
+        "kind": "change",
+        "scope_key": "review:acceptance"
+      },
+      "agent": "adv-reviewer",
+      "phase": "review",
+      "verdict": "READY",
+      "blocking_findings": [],
+      "nonblocking_findings": [
+        {
+          "id": "review-praise-1",
+          "label": "praise",
+          "file": "docs/ci-standard.md",
+          "line": 946,
+          "what": "Post-CodeQL posture now states bounded Semgrep CE intraprocedural coverage and explicit cross-function/cross-file non-coverage.",
+          "why": "This satisfies AC1 and DONT1 by replacing the deferred note without overstating OSS blocking-gate dataflow capability.",
+          "fix": "n/a"
+        },
+        {
+          "id": "review-praise-2",
+          "label": "praise",
+          "file": ".github/workflows/python-security-gate.yml",
+          "line": 26,
+          "what": "Default Semgrep registry coverage remains in semgrep-configs while packaged FastAPI taint rules are additive via semgrep-additional-configs.",
+          "why": "This satisfies AC2/C5 and avoids callers dropping p/python p/fastapi when adopting packaged rules.",
+          "fix": "n/a"
+        }
+      ],
+      "changes_made": [
+        {
+          "file": ".github/workflows/python-security-gate.yml",
+          "summary": "Fixed packaged-rules self-checkout to use GitHub's documented reusable-workflow source context (`job.workflow_repository` + `job.workflow_sha`) instead of caller-associated `github.workflow_sha`, which would check out the wrong SHA for cross-repo callers.",
+          "verification": "`docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed; `/usr/bin/time -p uvx semgrep --test configs/semgrep/python` passed 2/2 in real 1.78s; static invariant script passed."
+        },
+        {
+          "file": ".github/actionlint.yaml",
+          "summary": "Added narrow actionlint 1.7.7 ignores for the newly documented `job.workflow_*` context fields only in `.github/workflows/python-security-gate.yml`, preserving repo-standard actionlint while allowing correct reusable-workflow checkout semantics.",
+          "verification": "`docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed with the scoped config."
+        }
+      ],
+      "wisdom_candidates": [
+        {
+          "type": "gotcha",
+          "content": "Reusable workflows that need files from their own repository should use `job.workflow_repository` and `job.workflow_sha`; `github` context remains associated with the caller workflow. actionlint 1.7.7 does not yet know these `job.workflow_*` fields, so a scoped `.github/actionlint.yaml` ignore may be needed until actionlint updates."
+        }
+      ],
+      "verification": {
+        "tests_run": [
+          "test -e for all scoped files",
+          "git status --short && git branch --show-current && git diff --stat main...HEAD && git diff --name-only main...HEAD",
+          "docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7",
+          "uvx semgrep --test configs/semgrep/python",
+          "/usr/bin/time -p uvx semgrep --test configs/semgrep/python",
+          "python static invariant check for additive Semgrep defaults, packaged-rule checkout, no forbidden GHAS/CodeQL/SARIF/Sonar surfaces, docs coverage truth"
+        ],
+        "results": "pass",
+        "evidence": "Path preflight OK for all scoped files. Branch diff initially matched listed six files. GitHub docs evidence confirmed reusable workflow self-checkout should use job.workflow_repository/job.workflow_sha; actionlint config docs confirmed path-scoped ignores. Final actionlint exited 0 with no output. Semgrep tests passed 2/2; measured runtime real 1.78s, below 180s. Static invariant check passed for default p/python p/fastapi, additive semgrep-additional-configs, .sharperflow-security-gates exclusion, no forbidden executable surfaces in workflow, and docs cross-file/interprocedural truth."
+      },
+      "scope_drift": null,
+      "risks": [
+        "`.github/actionlint.yaml` is a compatibility shim for actionlint 1.7.7; remove the scoped ignores once the pinned actionlint version recognizes GitHub's `job.workflow_*` context fields.",
+        "The new reviewer remediation is uncommitted in the worktree (`.github/workflows/python-security-gate.yml` modified and `.github/actionlint.yaml` untracked) and must be included in the final acceptance/release path."
+      ],
+      "required_main_agent_actions": [
+        "Include reviewer remediation files in final change: `.github/workflows/python-security-gate.yml` and `.github/actionlint.yaml`.",
+        "After final acceptance, consider promoting the reusable-workflow `job.workflow_*` / actionlint compatibility gotcha to project wisdom."
+      ],
+      "required_follow_ups": [],
+      "consumer_warnings": []
+    }
+  ],
+  "deltas": {},
+  "wisdom": [],
+  "gates": {
+    "proposal": {
+      "status": "done",
+      "completed_at": "2026-06-18T05:26:19.616Z",
+      "completed_by": "agent",
+      "approval_evidence": "Proposal approved by user command-as-approval: user invoked /adv-discover deepenSastDataflow while proposal approval checkpoint was pending.",
+      "artifact_evidence": {
+        "kind": "proposal",
+        "content_hash": "9829f74bf01c5dcac7abc2ca31d6d9cb4f8e9cb70da517ed61d57f237b71043e",
+        "non_whitespace_chars": 6324,
+        "checked_at": "2026-06-09T02:37:53.044Z"
+      }
+    },
+    "discovery": {
+      "status": "done",
+      "completed_at": "2026-06-18T05:35:43.009Z",
+      "completed_by": "agent",
+      "approval_evidence": "Discovery complete. User approved criteria/agreement via inline checkpoint (`approve`). Agreement persisted and ChangeContract minted with 19 items. Key decisions: lineage confirmed; first source→sink class delegated to design; added blocking SAST must be ≤180s expected runtime; Semgrep CE likely blocking base; Opengrep advisory/revisit unless design proves stronger current fit.",
+      "artifact_evidence": {
+        "kind": "agreement",
+        "content_hash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "non_whitespace_chars": 3545,
+        "checked_at": "2026-06-09T02:37:53.045Z"
+      }
+    },
+    "design": {
+      "status": "done",
+      "completed_at": "2026-06-18T05:42:28.735Z",
+      "completed_by": "agent",
+      "approval_evidence": "Design complete. Architecture: Semgrep CE remains blocking SAST; add packaged additive FastAPI taint rules for direct request input to process/network sinks; checkout reusable workflow repo via job.workflow_repository/job.workflow_sha into .sharperflow-security-gates; Opengrep advisory/revisit. Mandatory design scout complete. Independent validator returned CAUTION, no conflict. Cautions incorporated: public repo self-checkout assumption, runtime evidence requirement, CE opaque-call FP controls.",
+      "artifact_evidence": {
+        "kind": "design",
+        "content_hash": "d96d92a3fdb667e9afe76eaa952e7f72cbd3ab027cba0c3480d80718785d1991",
+        "non_whitespace_chars": 10096,
+        "checked_at": "2026-06-09T02:37:53.046Z"
+      }
+    },
+    "planning": {
+      "status": "done",
+      "completed_at": "2026-06-18T05:49:14.346Z",
+      "completed_by": "agent",
+      "approval_evidence": "User approved prep plan via inline checkpoint: `approve`. Task graph has 4 tasks with TDD intent, dependencies, and contract refs covering AC/SC/constraints/avoidances. Note: adv_change_validate reported stale NO_TASKS/CONTRACT_AC_UNCOVERED despite adv_task_list showing 4 tasks; proceeding to machine planning gate for authoritative validation."
+    },
+    "execution": {
+      "status": "done",
+      "completed_at": "2026-06-18T05:57:55.949Z",
+      "completed_by": "agent",
+      "approval_evidence": "Execution complete. 4/4 tasks done. Built packaged Semgrep CE FastAPI taint rules + fixtures, additive Python gate wiring, documentation updates, and final verification. Verification evidence: actionlint pass tr_mqj383ft/tr_mqj34sq1; Semgrep tests pass 2/2 tr_mqj31pe5/tr_mqj384ju; added rule test runtime 1.872s < 180s; invariant checks pass tr_mqj3834o and forbidden executable-surface scan tr_mqj38bjo. adv_change_validate passed with only NO_DELTAS warning, expected because no ADV specs exist."
+    },
+    "acceptance": {
+      "status": "done",
+      "completed_at": "2026-06-18T06:10:12.877Z",
+      "completed_by": "agent",
+      "approval_evidence": "User accepted delivered work via inline acceptance checkpoint: `approve`. Review matrix persisted with 19/19 pass/respected; reviewer verdict READY; 4/4 tasks done; verification passed.",
+      "artifact_evidence": {
+        "kind": "acceptance",
+        "content_hash": "559856655b77f0adc2e09cfc92575c8ccf76161f1b6b2ad359ea0e5ef24da105",
+        "non_whitespace_chars": 1702,
+        "checked_at": "2026-06-09T02:37:53.047Z"
+      }
+    },
+    "release": {
+      "status": "pending"
+    }
+  },
+  "reentry_history": [],
+  "fast_follow_of": {
+    "parent_change_id": "retireVestigialCodeql",
+    "linked_at": "2026-06-09T02:37:53.010Z"
+  },
+  "origin": {
+    "kind": "triage",
+    "source_artifact": "retireVestigialCodeql:dataflow-gap"
+  },
+  "contract": {
+    "version": 1,
+    "rigor": "standard",
+    "source": {
+      "artifact": "agreement",
+      "contentHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+      "approvedAt": "2026-06-18T05:35:33.631Z"
+    },
+    "items": [
+      {
+        "id": "SC1",
+        "kind": "success_criterion",
+        "text": "Sharper Flow has explicit post-CodeQL dataflow/taint SAST posture.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC2",
+        "kind": "success_criterion",
+        "text": "Consumers can tell what gate catches, and what remains uncovered.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "SC3",
+        "kind": "success_criterion",
+        "text": "Any added blocking SAST stays high-signal and adds ≤3 minutes CI runtime.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "AC1",
+        "kind": "acceptance_criterion",
+        "text": "`docs/ci-standard.md` replaces the deferred `deepenSastDataflow` note with the selected posture and cross-file/interprocedural coverage truth.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC2",
+        "kind": "acceptance_criterion",
+        "text": "If blocking SAST is added, default Semgrep coverage remains active and new coverage is additive. If blocking SAST is not added, docs explicitly state no added blocking SAST.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC3",
+        "kind": "acceptance_criterion",
+        "text": "Any new blocking SAST path has measured or documented expected added runtime ≤180 seconds.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC4",
+        "kind": "acceptance_criterion",
+        "text": "No GHAS, CodeQL, SARIF upload, SonarCloud, hosted dashboard, or second required check is introduced.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "AC5",
+        "kind": "acceptance_criterion",
+        "text": "Design records the first FastAPI source→sink priority decision; user delegated this choice to design. If no rule implementation is selected, design records why.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "test",
+        "status": "approved"
+      },
+      {
+        "id": "C1",
+        "kind": "constraint",
+        "text": "Preserve the exact single required check context: `Sharperflow CI Gate`.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C2",
+        "kind": "constraint",
+        "text": "Do not require GitHub Advanced Security, GitHub Code Security, CodeQL, SARIF upload, SonarCloud, or hosted dashboards.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C3",
+        "kind": "constraint",
+        "text": "Keep new blocking scanner behavior high-signal by default; fail only on confident findings.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C4",
+        "kind": "constraint",
+        "text": "Keep any added blocking SAST runtime within ≤180 seconds expected added CI time.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C5",
+        "kind": "constraint",
+        "text": "Preserve default Semgrep registry coverage (`p/python p/fastapi`) if adding repo-owned Semgrep rules.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "C6",
+        "kind": "constraint",
+        "text": "Keep the security gate as a job in the same app CI workflow as the summary gate.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "static_check",
+        "status": "approved"
+      },
+      {
+        "id": "DONT1",
+        "kind": "avoidance",
+        "text": "Do not claim full cross-file/interprocedural taint coverage unless the selected OSS path demonstrably provides it in this repo's CI shape.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT2",
+        "kind": "avoidance",
+        "text": "Do not make Opengrep a required blocking gate during this change unless design finds stronger current proof than discovery found.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT3",
+        "kind": "avoidance",
+        "text": "Do not add app-level duplicated generic scanner jobs for coverage already owned by the reusable gate.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT4",
+        "kind": "avoidance",
+        "text": "Do not introduce a second branch-protection required check.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      },
+      {
+        "id": "DONT5",
+        "kind": "avoidance",
+        "text": "Do not revive CodeQL/GHAS/SARIF/SonarCloud as the answer to this gap.",
+        "sourceArtifact": "agreement",
+        "sourceHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+        "verificationRequired": true,
+        "evidencePolicy": "review",
+        "status": "approved"
+      }
+    ],
+    "amendments": [],
+    "reviewMatrix": {
+      "reviewedAt": "2026-06-18T06:07:30.000Z",
+      "rows": [
+        {
+          "contractId": "SC1",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "docs/ci-standard.md now states selected posture: packaged Semgrep CE FastAPI taint rules; README and backend pilot updated. Reviewer verdict READY.",
+          "notes": "Explicit post-CodeQL posture present."
+        },
+        {
+          "contractId": "SC2",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "docs/ci-standard.md and README state intraprocedural CE scope and cross-file/interprocedural taint remains uncovered; Opengrep advisory/revisit.",
+          "notes": "Coverage and gaps visible to consumers."
+        },
+        {
+          "contractId": "SC3",
+          "kind": "success_criterion",
+          "status": "pass",
+          "evidencePolicy": "review",
+          "evidence": "Semgrep rule test duration 2.820s in latest verification tr_mqj3k774; earlier full verification 1.872s tr_mqj384ju. Both <180s.",
+          "notes": "Blocking SAST addition stays within runtime boundary."
+        },
+        {
+          "contractId": "AC1",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Static docs check tr_mqj36ph1/tr_mqj3834o passed; docs/ci-standard.md replaces deferred row with decided posture and coverage truth.",
+          "notes": "Follow-up row now says decided packaged Semgrep CE intraprocedural FastAPI taint rules; cross-file taint uncovered."
+        },
+        {
+          "contractId": "AC2",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Workflow static checks tr_mqj34m5y/tr_mqj3k51k passed: default `p/python p/fastapi` remains; `semgrep-additional-configs` defaults to packaged rule path; Semgrep configs are additive.",
+          "notes": "Default registry coverage preserved."
+        },
+        {
+          "contractId": "AC3",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Semgrep rule tests passed 2/2 in 2.820s (tr_mqj3k774), below 180s. No new scanner process beyond existing Semgrep job; added config only.",
+          "notes": "Runtime bound evidenced."
+        },
+        {
+          "contractId": "AC4",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "actionlint passed tr_mqj3k5k5; forbidden executable-surface scan tr_mqj38bjo found no CodeQL/SARIF/Sonar/GHAS terms in changed executable surfaces; no new check/job outside existing security job.",
+          "notes": "No forbidden platform dependency or second required check introduced."
+        },
+        {
+          "contractId": "AC5",
+          "kind": "acceptance_criterion",
+          "status": "pass",
+          "evidencePolicy": "test",
+          "evidence": "Design KD2 records first source→sink priority: direct FastAPI request input to process execution and outbound network/SSRF sinks. Implemented in configs/semgrep/python/fastapi-taint.yml and tests pass 2/2.",
+          "notes": "User delegated priority to design; design decision implemented."
+        },
+        {
+          "contractId": "C1",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "No branch-protection or summary check context changed; actionlint passed. Existing `Sharperflow CI Gate` contract untouched.",
+          "notes": "Single required check preserved."
+        },
+        {
+          "contractId": "C2",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Changed executable surfaces contain no CodeQL/SARIF/Sonar/GHAS additions (tr_mqj38bjo). Docs keep no-hosted-dashboard posture.",
+          "notes": "Forbidden services not required."
+        },
+        {
+          "contractId": "C3",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Rules are severity ERROR, metadata confidence HIGH, narrow direct FastAPI request input to process/network sinks; Semgrep tests include safe ok cases.",
+          "notes": "High-signal default preserved."
+        },
+        {
+          "contractId": "C4",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Latest Semgrep rule-test runtime 2.820s (tr_mqj3k774) <180s.",
+          "notes": "Runtime boundary respected."
+        },
+        {
+          "contractId": "C5",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "python-security-gate.yml keeps `semgrep-configs` default `p/python p/fastapi` and adds separate `semgrep-additional-configs`; static checks passed.",
+          "notes": "Default Semgrep registry coverage preserved."
+        },
+        {
+          "contractId": "C6",
+          "kind": "constraint",
+          "status": "respected",
+          "evidencePolicy": "static_check",
+          "evidence": "Only `.github/workflows/python-security-gate.yml` changed inside existing reusable security job; no app workflow topology or summary requirements changed.",
+          "notes": "Security gate remains same workflow-call job surface."
+        },
+        {
+          "contractId": "DONT1",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "Rule messages and docs explicitly say Semgrep CE tracks intraprocedurally only and does not claim cross-function/cross-file coverage.",
+          "notes": "No full dataflow overclaim."
+        },
+        {
+          "contractId": "DONT2",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No Opengrep workflow/config added. Docs say Opengrep remains advisory/revisit.",
+          "notes": "Opengrep not required/blocking."
+        },
+        {
+          "contractId": "DONT3",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No app-level scanner jobs added. Coverage ships inside reusable Python gate as packaged additive Semgrep config.",
+          "notes": "No duplicated generic app scanner."
+        },
+        {
+          "contractId": "DONT4",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No second job/check context added; existing `Semgrep + Bandit` job remains within reusable workflow and app summary unchanged.",
+          "notes": "No second branch-protection check."
+        },
+        {
+          "contractId": "DONT5",
+          "kind": "avoidance",
+          "status": "respected",
+          "evidencePolicy": "review",
+          "evidence": "No CodeQL/GHAS/SARIF/SonarCloud workflow or dependency introduced; docs continue rejecting them as the answer to this gap.",
+          "notes": "Forbidden answer not revived."
+        }
+      ]
+    }
+  },
+  "acceptanceCriteria": [
+    "`docs/ci-standard.md` replaces the deferred `deepenSastDataflow` note with the selected posture and cross-file/interprocedural coverage truth.",
+    "If blocking SAST is added, default Semgrep coverage remains active and new coverage is additive. If blocking SAST is not added, docs explicitly state no added blocking SAST.",
+    "Any new blocking SAST path has measured or documented expected added runtime ≤180 seconds.",
+    "No GHAS, CodeQL, SARIF upload, SonarCloud, hosted dashboard, or second required check is introduced.",
+    "Design records the first FastAPI source→sink priority decision; user delegated this choice to design. If no rule implementation is selected, design records why."
+  ],
+  "documents": {
+    "proposal": "# Deepen SAST dataflow\n\n## Why\n\nRetiring CodeQL removed its one material capability that the current OSS Sharperflow security gate does not replace: interprocedural dataflow/taint SAST. `docs/ci-standard.md` already records the gap: CodeQL's value was cross-function/cross-file taint analysis; Semgrep CE is intraprocedural; cross-function taint is Pro-only; the gap is deferred to this change rather than silently dropped.\n\nThe repo posture remains frozen: no GHAS, no SARIF upload, no hosted security/code-quality dashboard, no SonarCloud, and no branch-protection checks beyond the single `Sharperflow CI Gate` summary context.\n\n## What Changes\n\nThis change turns the deferred SAST dataflow gap into an explicit decision and, if warranted, concrete gate wiring.\n\nDecision options to evaluate in discovery/design:\n\n| Option | Buys | Known cost / ceiling |\n|---|---|---|\n| Semgrep CE taint-mode custom rules | High-signal source-to-sink rules that fit current reusable Python gate shape | Intraprocedural ceiling; misses cross-function/cross-file flows |\n| Opengrep | OSS path intended to deepen dataflow coverage beyond Semgrep CE | New dependency; maturity/stability and gate-noise risk must be vetted |\n| Accept CE ceiling | No new tooling or CI cost; explicit posture | Deep interprocedural taint remains uncovered by automated gate |\n\n## User Outcomes\n\n- Sharper Flow has an explicit, documented posture for the dataflow/taint coverage lost when CodeQL was retired.\n- App teams can tell what the reusable security gate does and does not claim to catch.\n- The chosen posture stays inside the existing `Sharperflow CI Gate` contract and avoids hidden hosted-dashboard or GHAS dependencies.\n- If a tool/rule path is selected, consuming apps get a clear, reusable gate shape rather than ad-hoc per-repo scanner duplication.\n\n## Affected Code\n\nLikely affected repo surfaces:\n\n- `docs/ci-standard.md` — normative posture and follow-up table update.\n- `.github/workflows/python-security-gate.yml` — only if the chosen path changes reusable Python gate behavior.\n- `configs/python/` and/or a local Semgrep rules directory — only if custom taint rules become part of the standard.\n- `examples/pokeedge-python/ci.yml` and `docs/pokeedge-backend-pilot.md` — only if example app wiring or guidance must show the chosen path.\n- `README.md` / release notes — only if the public usage contract changes.\n\nNo current ADV specs exist for this repo; executable workflow/action/docs contracts are the governing law.\n\n## Related Repositories\n\nPrimary repo: `sharperflow-security-gates`.\n\nPotential consumer repos affected by the decision but not directly modified unless discovery/design proves necessary:\n\n- FastAPI/Python app repos consuming `.github/workflows/python-security-gate.yml`.\n- PokeEdge backend example/docs as representative Python consumer guidance.\n\n## Constraints\n\n- Must preserve the single required check context: `Sharperflow CI Gate`.\n- Must not require GHAS, GitHub Code Security, CodeQL code scanning, SARIF upload, SonarCloud, or any hosted dashboard.\n- Must remain high-signal by default: fail only on confident findings; avoid noisy scanner adoption that causes bypass culture.\n- Must avoid app-level duplication of generic scanner coverage already supplied by the reusable gate.\n- Must keep security gate as a job in the same app CI workflow as the summary gate.\n- Must respect current scanner responsibility partition: source-code gates use Semgrep + Bandit + OSV + Gitleaks + optional Trivy filesystem.\n\n## Impact\n\n- If Semgrep CE custom rules are chosen, impact is likely small and local but coverage remains bounded by CE's intraprocedural limit.\n- If Opengrep is chosen, impact may include new install/runtime cost, failure-mode handling, cache/dependency decisions, and maintenance ownership.\n- If the CE ceiling is accepted, impact is documentation-only but must be explicit enough that future users do not mistake the gate for deep interprocedural SAST.\n\n## Context\n\nThis is a fast-follow from `retireVestigialCodeql`. The parent change removed CodeQL because GitHub Code Quality / Code Security paths do not fit the Sharper Flow posture: hosted dashboard, current or future billing/cost, and no fit with the `Sharperflow CI Gate` required-check contract. This change does not revisit that decision; it addresses only the real capability gap left behind.\n\n## Scope\n\n### In Scope\n\n- Decide the Sharper Flow posture for deep dataflow/taint SAST after CodeQL retirement.\n- Validate whether Semgrep CE taint-mode rules are enough for the intended FastAPI/Python attack-surface coverage.\n- Validate whether Opengrep is mature, maintainable, and high-signal enough for the reusable gate.\n- Update `docs/ci-standard.md` so the chosen posture is explicit.\n- Implement concrete reusable gate/config/example changes only if the selected decision requires them.\n\n### Out of Scope\n\n- Re-enabling GitHub CodeQL, GHAS Code Security, SARIF upload, GitHub Code Quality, SonarCloud, or hosted dashboards.\n- Reworking unrelated CI cost, workflow hygiene, dependency-update, branch-protection, or release behavior.\n- Adding broad app-specific scanner jobs outside the reusable standard.\n- Claiming full interprocedural taint coverage unless the selected tool path demonstrably provides it under this repo's constraints.\n\n### Must Not\n\n- Must not add a second required branch-protection check.\n- Must not introduce scanner noise that blocks routine app work without confident security signal.\n- Must not silently broaden the reusable security gate's contract without docs/examples matching executable behavior.\n- Must not depend on private-plan GitHub features unavailable without GHAS.\n\n## Discovery Agenda\n\nCodebase unknowns to resolve:\n\n- Current Semgrep invocation, rule sources, and extension points in `python-security-gate.yml`.\n- Whether repo-owned config paths already support caller-supplied custom Semgrep rules or need a new input.\n- Which docs/examples mention the deferred dataflow gap and must change after the decision.\n\nEcosystem unknowns to resolve:\n\n- Current Semgrep CE taint-mode capabilities and exact cross-function/cross-file limits from authoritative docs.\n- Current Opengrep maturity, license, install path, CI ergonomics, rule compatibility, and known false-positive/false-negative risks.\n- Whether any other OSS, no-dashboard SAST option is clearly better than Semgrep CE custom rules or Opengrep for this narrow FastAPI/Python use case.\n\nDomain unknowns to resolve:\n\n- Which FastAPI source→sink patterns Sharper Flow actually cares about first: request input to SQL/ORM, shell/process, SSRF/network calls, template rendering, filesystem, authz boundaries, or secret exposure.\n- Acceptable CI runtime/cost ceiling for adding deeper SAST, if a new tool is proposed.\n\nIntegration unknowns to resolve:\n\n- Whether selected changes affect only this repo or require follow-up PRs in consuming app repos.\n- How the decision interacts with app-owned gates and the no-duplication rule for reusable scanner coverage.\n\n## Proposal Quality Scan\n\nB/F/S scan result: no critical findings.\n\n- Boundaries: `## Scope` includes `### In Scope`, `### Out of Scope`, and `### Must Not`.\n- Functional scope: `## User Outcomes` states user-visible outcomes without engineering acceptance criteria.\n- Completion signals: Discovery agenda carries unresolved evidence questions forward instead of assuming answers.\n\n## Discovery Findings\n\n### Discovery Checklist\n\n| Step | Status | Result |\n|---|---|---|\n| Skill Discovery | PASS | Considered `adv-comp-research` and `adv-improve`; both useful for external-option evidence. No reviewed skill gap requiring creation. Pending-review scan found no pending frontmatter matches. |\n| Prior Research Extension | PASS | No `temp/*.md` or `docs/*-prep.md` research packs found. Extended parent `retireVestigialCodeql` evidence and added new finding: current Opengrep proves intrafile cross-function taint, not full cross-file closure. |\n| Conflict & Related-Work Scan | PASS | Active list has only this change. Relevant archived parent: `retireVestigialCodeql`. Validation passed with expected pre-planning warnings (`NO_TASKS`, `NO_DELTAS`). Agenda has one directly related item: `ag-4qnEiLF6`; scout added three follow-up agenda items. |\n| Edge Case Investigation | PASS | Edge cases captured for CE taint rules, Opengrep adoption, and documentation-only acceptance. |\n| Design Question Depth | PASS | Open questions annotated with trust model, blast radius, and alternatives. |\n| Draft Spec Delta Shapes | PASS | No ADV specs exist; draft executable-contract deltas listed with `rq-*` IDs and Given/When/Then shapes. |\n| Related Pattern Scan | PASS | Similar dataflow/CodeQL posture references found in `README.md`, `docs/ci-standard.md`, `docs/pokeedge-backend-pilot.md`, `ROADMAP.md`, `project.md`; no contradictory current contract found. |\n| LBP Check | PASS | LBP: add repo-owned Semgrep CE taint rules for narrow FastAPI sinks plus additive rule input; document that cross-file taint remains uncovered. Treat Opengrep as advisory/revisit until cross-file support is proven stable. |\n\n### Skills Considered\n\n- `adv-comp-research` — matched external tool comparison; loaded and applied evidence table/source-citation discipline.\n- `adv-improve` — matched current-state + external landscape scan; loaded and applied bounded alternatives/applicability rubric.\n- `adv-opportunity-scout` — used through `adv-researcher` worker for trigger-based scout; worker reported five candidates.\n- No skill creation: core domains already covered by existing skills and direct research tools.\n\n### Extends\n\n- Parent change `retireVestigialCodeql`: established that CodeQL/Code Quality stays retired; deep dataflow gap was intentionally deferred here. New finding: the current OSS options do not fully recreate CodeQL-style cross-file taint under this repo's constraints.\n- `docs/ci-standard.md` § Code quality beyond the security gate: already states Semgrep CE is intraprocedural and points to this follow-up. New finding: current workflow has a replace-style `semgrep-configs` input, so repo-owned taint rules need additive rule wiring or callers risk dropping default registry coverage.\n- `docs/pokeedge-backend-pilot.md` § Known tradeoffs: records no CodeQL taint/dataflow equivalent and Semgrep CE mostly intra-file/intra-function. New finding: this remains accurate; discovery should sharpen it into explicit acceptance criteria.\n- No reusable `docs/*-prep.md` research pack found. External-solution findings are inline; a future `/adv-improve SAST dataflow` pack would be useful only if this comparison recurs.\n\n### Conflict Scan\n\n- Active changes: only `deepenSastDataflow`; no active collision.\n- Archived related work: `retireVestigialCodeql` is valid parent, archived, and explicitly deferred this decision.\n- Validation: passed. Warnings `NO_TASKS` and `NO_DELTAS` are expected before planning/spec deltas.\n- Agenda overlaps:\n  - `ag-4qnEiLF6`: scope Semgrep CE intraprocedural-taint adoption vs Opengrep cross-file candidates.\n  - Scout-created follow-ups: additive Semgrep rules input, docs honesty for cross-file gap, and Opengrep advisory posture.\n\n### Current State\n\n- `.github/workflows/python-security-gate.yml` exposes `semgrep-configs` defaulting to `p/python p/fastapi`, then runs `python -m pipx run semgrep --config ... --error ...` over caller `scan-paths`.\n- No repo-owned Python taint rule directory is part of the current workflow contract.\n- `semgrep-configs` is replacement-oriented: caller can pass configs, but that changes the full config list. There is no separate additive `semgrep-rules` input for local/repo-owned rules while retaining defaults.\n- README describes SAST as `Semgrep CE` with Python/FastAPI or JS/TS rules plus repo custom rules.\n- `docs/ci-standard.md` keeps one required check, forbids CodeQL/GHAS/SARIF/hosted dashboards, and names `deepenSastDataflow` as the dataflow follow-up.\n- `docs/pokeedge-backend-pilot.md` says no CodeQL taint/dataflow equivalent exists without GitHub Code Security and Semgrep CE is mostly intra-file/intra-function.\n\n### External-Solution Findings\n\n- Semgrep docs: CE taint mode is intraprocedural. Taint propagators work within a function/method. Interprocedural taint is a Semgrep Pro feature. `--pro-intrafile` tracks across functions within one file. `--pro` can do interfile analysis for supported languages and requires rules with `options: interfile: true`; docs warn interfile scans need more memory, minimum 4 GB/core and recommended 8 GB/core.\n- Opengrep official site/repo: fork of Semgrep 1.100.0, LGPL-2.1, Semgrep rule compatibility, JSON/SARIF output support, signed self-contained binaries, active releases. Current `OPENGREP.md` lists `--taint-intrafile` as shipped support for intrafile cross-function taint, similar to Semgrep `--pro-intrafile`.\n- Opengrep cross-file claim: official site frames cross-file/interprocedural as an intended unlocked/provided direction, but current repo feature list proves intrafile cross-function; it does not prove stable cross-file taint closure for this gate today.\n- Other OSS alternatives surfaced by Exa (`dr_source`, `tainter`, `PyAegis`, `opentaint`, `code-pathfinder`) look less mature or less aligned than Semgrep-compatible paths for this reusable gate. They add more rule/model ownership, language focus mismatch, or immature release/adoption risk.\n\n### Edge Cases\n\n1. Semgrep CE taint custom rules:\n   - Rule catches request-input-to-sink within one function but misses helper-function sanitation/propagation; docs must not imply cross-function coverage.\n   - Opaque function calls can create noise or blind spots; custom rules need safe defaults and focused sinks, not broad generic source→any-sink patterns.\n   - If callers override `semgrep-configs`, they can unintentionally drop default `p/python p/fastapi` unless additive input is added.\n2. Opengrep adoption:\n   - Blocking gate adoption before cross-file support is proven can add new dependency/runtime and still not close the original cross-file gap.\n   - SARIF output support is irrelevant or harmful if it nudges toward GitHub Code Scanning/SARIF upload, which remains out of scope.\n   - Fork/version drift against Semgrep rule syntax could break existing registry/custom rule assumptions if adopted as replacement.\n3. Accepted CE ceiling / documentation-only path:\n   - App teams may overestimate coverage unless docs explicitly say cross-file/interprocedural taint remains uncovered by automated gate.\n   - Future contributors may re-add CodeQL/GHAS/SARIF to close the gap unless the avoidances are explicit.\n\n### Open Design Questions\n\n1. Add additive Semgrep rule input vs repurpose existing `semgrep-configs`.\n   - Trust model: agent-only technical decision.\n   - Blast radius: wrong choice can make callers drop default Semgrep registry configs or duplicate scanner jobs.\n   - Alternatives: keep replacement input only; add additive input; hard-code repo rules. Recommendation: add additive input if rules are implemented.\n2. Make Opengrep blocking, advisory, or deferred.\n   - Trust model: agent technical decision with user-value implications if CI cost/noise changes.\n   - Blast radius: wrong choice can introduce bypass-culture risk or miss an available coverage win.\n   - Alternatives: blocking gate now; advisory non-blocking experiment; defer. Recommendation: do not make blocking now; at most advisory/revisit.\n3. Prioritize first FastAPI source→sink classes.\n   - Trust model: joint — security-risk preference affects delivered scope.\n   - Blast radius: wrong priority yields rules that are technically correct but low-value for actual app attack surface.\n   - Alternatives: shell/process + SSRF first, SQL/ORM first, filesystem/template first, or documentation-only no rules.\n4. CI runtime/cost ceiling for extra SAST.\n   - Trust model: user-owned budget posture; agent can estimate impact after design.\n   - Blast radius: too strict blocks useful low-cost rules; too loose risks Actions waste.\n   - Alternatives: no added runtime, <=1 minute expected, <=3 minutes expected, advisory-only until measured.\n5. Fast-follow lineage confirmation.\n   - Trust model: user-only lineage validation.\n   - Blast radius: if lineage is stale, agreement can optimize for wrong parent decision.\n   - Alternatives: confirm parent, relink/supersede, or stop.\n\n### Draft Spec Deltas\n\nNo ADV capability specs exist. Draft executable-contract delta shapes:\n\n- `rq-sastPosture01` — document coverage truth.\n  - Given `docs/ci-standard.md` describes Sharper Flow SAST posture,\n  - When the dataflow follow-up is complete,\n  - Then the doc states what automated gate catches, what cross-file/interprocedural taint remains uncovered, and why CodeQL/GHAS/SARIF/dashboard remain rejected.\n- `rq-semgrepTaintRules01` — optional Semgrep CE taint rules are additive and high-signal.\n  - Given Python security gate runs default Semgrep configs,\n  - When repo-owned taint rules are added,\n  - Then default configs remain active and additional rules fail only on confident source→sink findings.\n- `rq-opengrepPosture01` — Opengrep not blocking without proof.\n  - Given Opengrep is evaluated for deeper taint,\n  - When discovery/design finds only intrafile cross-function support proven stable,\n  - Then Opengrep is documented as advisory/revisit, not a required blocking gate.\n\n### Related Pattern Scan\n\n- `README.md`: Semgrep CE is named as SAST with repo custom rules; compatible with adding custom taint rules if workflow supports them.\n- `docs/ci-standard.md`: CodeQL retirement and follow-up table already name the gap.\n- `docs/pokeedge-backend-pilot.md`: Known tradeoffs already say no CodeQL taint/dataflow equivalent and Semgrep CE is mostly intra-file/intra-function.\n- `ROADMAP.md`: lists `deepenSastDataflow` and excludes CodeQL/SARIF assumptions.\n- `project.md`: preserves no external dashboards and high-signal defaults.\n- No contradictory pattern found in active workflows. Main related gap: no additive Semgrep rule input.\n\n### LBP Check\n\nLikely LBP under current constraints:\n\n1. Keep Semgrep CE as the blocking SAST engine.\n2. Add a small repo-owned Semgrep CE taint-rule set only for high-confidence FastAPI source→sink flows, if user priorities select rule implementation over documentation-only posture.\n3. Add additive rule wiring instead of overloading replacement-style `semgrep-configs`.\n4. Document honestly that this improves intraprocedural coverage only; cross-file/interprocedural taint remains uncovered by the OSS blocking gate.\n5. Treat Opengrep as advisory/revisit until stable cross-file support and CI ergonomics are proven. Do not make it required now.\n\nExternal-solution check: performed. Top alternatives were Semgrep CE, Opengrep, and smaller OSS Python/taint projects. Smaller projects are less suitable for reusable org gate adoption due maturity/adoption/maintenance risk. No hosted or paid alternative fits constraints.\n\n### Discovery Opportunity Scout\n\n- Trigger decision: run — strategic/external-option/security-posture change.\n- Worker: `adv-researcher`, `researcher:discovery-opportunity-scout`.\n- Candidates considered: 5.\n- Auto-adopted: 2 — docs honesty that cross-file taint remains uncovered; additive Semgrep rules input if rules are implemented.\n- Surfaced to user: 2 — first source→sink priority; whether Opengrep should be advisory only.\n- Rejected: 1 — Opengrep as failing required gate now.\n- Inconclusive: 0.\n\n### Recommended Objectives\n\n1. Decide and document Sharper Flow's post-CodeQL dataflow/taint SAST posture.\n2. Preserve the no-GHAS/no-SARIF/no-hosted-dashboard/single-`Sharperflow CI Gate` contract.\n3. If implementing rules, add high-signal Semgrep CE taint coverage for selected FastAPI source→sink classes without dropping default Semgrep configs.\n4. Explicitly state that full cross-file/interprocedural taint remains uncovered unless a future OSS engine proves stable enough for the gate.\n5. Treat Opengrep as advisory/revisit, not a required blocking gate, unless design finds stronger current proof than discovery found.\n\n### AMBIGUITY ANALYSIS\n\nM1  MEDIUM  Missing Information  First FastAPI source→sink class is not yet user-prioritized.\n  Evidence: \"Which FastAPI source→sink patterns Sharper Flow actually cares about first: request input to SQL/ORM, shell/process, SSRF/network calls, template rendering, filesystem, authz boundaries, or secret exposure.\"\n  Reason: unclear because implementation scope can be docs-only, one narrow taint slice, or multiple rule classes.\n\nM2  MEDIUM  Missing Information  Added CI runtime/cost ceiling is not yet user-confirmed.\n  Evidence: \"Acceptable CI runtime/cost ceiling for adding deeper SAST, if a new tool is proposed.\"\n  Reason: unclear because extra blocking SAST can trade security signal for Actions cost.\n\nCoverage: B:C F:C S:C M:P\n\nTrigger evaluation: no CRITICAL findings and fewer than two HIGH findings. Continue to agreement question round.",
+    "problemStatement": "Retiring CodeQL removed its one material capability that the current OSS Sharperflow security gate does not replace: interprocedural dataflow/taint SAST. This change decides the Sharper Flow posture for that gap — Semgrep CE taint-mode custom rules, Opengrep adoption, or explicit acceptance of the CE ceiling — while preserving the frozen no-GHAS, no-SARIF, no-hosted-dashboard, single-`Sharperflow CI Gate` posture.",
+    "agreement": "# Agreement\n\n## Objectives\n\n1. Decide Sharper Flow's post-CodeQL dataflow/taint SAST posture.\n2. Preserve the frozen no-GHAS, no-CodeQL, no-SARIF-upload, no-SonarCloud, no-hosted-dashboard, single-`Sharperflow CI Gate` contract.\n3. If implementation adds blocking SAST, keep it high-signal, additive to existing default Semgrep coverage, and bounded to ≤180 seconds expected added CI runtime.\n4. Make coverage limits explicit: cross-file/interprocedural taint must not be implied unless a selected OSS path demonstrably provides it under this repo's constraints.\n5. Leave first FastAPI source→sink class to design, per user decision.\n\n## Success Criteria\n\n1. Sharper Flow has explicit post-CodeQL dataflow/taint SAST posture.\n2. Consumers can tell what gate catches, and what remains uncovered.\n3. Any added blocking SAST stays high-signal and adds ≤3 minutes CI runtime.\n\n## Acceptance Criteria\n\n1. `docs/ci-standard.md` replaces the deferred `deepenSastDataflow` note with the selected posture and cross-file/interprocedural coverage truth.\n2. If blocking SAST is added, default Semgrep coverage remains active and new coverage is additive. If blocking SAST is not added, docs explicitly state no added blocking SAST.\n3. Any new blocking SAST path has measured or documented expected added runtime ≤180 seconds.\n4. No GHAS, CodeQL, SARIF upload, SonarCloud, hosted dashboard, or second required check is introduced.\n5. Design records the first FastAPI source→sink priority decision; user delegated this choice to design. If no rule implementation is selected, design records why.\n\n## Constraints\n\n1. Preserve the exact single required check context: `Sharperflow CI Gate`.\n2. Do not require GitHub Advanced Security, GitHub Code Security, CodeQL, SARIF upload, SonarCloud, or hosted dashboards.\n3. Keep new blocking scanner behavior high-signal by default; fail only on confident findings.\n4. Keep any added blocking SAST runtime within ≤180 seconds expected added CI time.\n5. Preserve default Semgrep registry coverage (`p/python p/fastapi`) if adding repo-owned Semgrep rules.\n6. Keep the security gate as a job in the same app CI workflow as the summary gate.\n\n## Avoidances\n\n1. Do not claim full cross-file/interprocedural taint coverage unless the selected OSS path demonstrably provides it in this repo's CI shape.\n2. Do not make Opengrep a required blocking gate during this change unless design finds stronger current proof than discovery found.\n3. Do not add app-level duplicated generic scanner jobs for coverage already owned by the reusable gate.\n4. Do not introduce a second branch-protection required check.\n5. Do not revive CodeQL/GHAS/SARIF/SonarCloud as the answer to this gap.\n\n## Preview Applicability\n\nvisual_surface: false\n\nRationale: this change affects CI workflows, scanner configuration, and documentation. It does not affect frontend, browser-visible output, or visual rendering.\n\n## Decisions\n\n### User Decisions\n\n1. Lineage confirmed: this is a fast-follow from archived `retireVestigialCodeql`, scoped to the dataflow/taint SAST gap left by CodeQL retirement.\n2. First FastAPI source→sink class: user delegated selection to design (`design decides`).\n3. CI cost boundary: any added blocking SAST must stay within ≤3 minutes expected added runtime.\n\n### Agent Decisions (LBP)\n\n1. Semgrep CE remains the likely blocking SAST base because it fits the existing reusable gate, avoids new dependency risk, and supports high-signal custom taint rules within its intraprocedural ceiling.\n2. If repo-owned Semgrep rules are added, the workflow should add them additively rather than requiring callers to replace `semgrep-configs` and risk dropping `p/python p/fastapi`.\n3. Opengrep should be treated as advisory/revisit unless design proves stable cross-file support and acceptable CI ergonomics. Discovery found current official repo evidence for intrafile cross-function taint (`--taint-intrafile`), not full cross-file closure.\n4. Documentation must state coverage truth: cross-file/interprocedural taint remains uncovered by the current OSS blocking gate unless a proven tool path changes that.\n\n## Deferred Questions\n\nNone.",
+    "design": "# Design\n\n## Architecture Overview\n\nAdopt a bounded Semgrep CE design as the blocking path, with explicit documentation that it improves intraprocedural FastAPI taint coverage only and does not recreate CodeQL-style cross-file/interprocedural taint.\n\nArchitecture shape:\n\n1. Keep the existing Python reusable gate's Semgrep job and default registry configs (`p/python p/fastapi`).\n2. Add a small packaged Semgrep taint ruleset in this repo for high-confidence FastAPI source→sink flows.\n3. Make packaged rules additive to existing configs, not a replacement.\n4. In the reusable workflow, checkout the caller repository at the workspace root as today, then checkout this reusable workflow repository into a subdirectory using the documented reusable-workflow identity context:\n   - `repository: ${{ job.workflow_repository }}`\n   - `ref: ${{ job.workflow_sha }}`\n   - `path: .sharperflow-security-gates`\n5. Add a new additional-config input, defaulting to the packaged rule file path under `.sharperflow-security-gates`, and merge it with existing `semgrep-configs` in the existing `--config` loop.\n6. Treat Opengrep as advisory/revisit only. Discovery found current official evidence for `--taint-intrafile` single-file cross-function taint, but not stable cross-file closure suitable for a required gate now.\n\nThis design stays inside the single `Sharperflow CI Gate` because the Semgrep job remains inside `python-security-gate.yml`; app workflows still aggregate through their existing `security` job and summary gate.\n\nSelf-checkout authentication assumption: this repository is public per `project.md` domain knowledge, so caller `GITHUB_TOKEN` access to the reusable workflow repository is not an added private-repo dependency. If this repo ever becomes private, design must be revisited with a token input or different packaging path.\n\n## Key Decisions\n\n### KD1 — Semgrep CE remains the blocking SAST engine\n\nDecision: keep Semgrep CE as the required SAST engine and add narrow Semgrep taint rules.\n\nRationale:\n\n- Existing workflow already runs Semgrep and exposes config inputs.\n- Semgrep CE taint mode is intraprocedural, which is a real but bounded coverage improvement for direct request-input-to-sink flows.\n- No new scanner dependency, hosted service, SARIF upload, or required check is needed.\n- Opengrep currently provides a stronger same-file story (`--taint-intrafile`) but does not yet prove stable cross-file closure for this gate.\n\n### KD2 — First FastAPI source→sink priority: direct request input to external-effect sinks\n\nDecision: first packaged rule slice targets direct FastAPI request-derived values flowing within one function into external-effect sinks:\n\n- process execution / shell-command sinks (`subprocess`, `os.system`-class patterns), and\n- outbound network URL sinks where request input controls destination (`requests`/HTTP client URL patterns), i.e. SSRF-shaped flows.\n\nRationale:\n\n- High impact if exploitable.\n- Lower false-positive risk than broad ORM/query modeling without app-specific schema knowledge.\n- Fits Semgrep CE's intraprocedural ceiling: direct handler-level taint from path/query/body parameters to a sink in the same function.\n- SQL/ORM, filesystem, template rendering, and authz taint classes remain future candidates after concrete consumer patterns are inspected.\n\n### KD3 — Packaged rules are additive, not replacement\n\nDecision: introduce `semgrep-additional-configs` (name can be finalized during implementation) and combine it with existing `semgrep-configs`.\n\nRationale:\n\n- Existing `semgrep-configs` is replacement-oriented. If callers put custom rules there, they can accidentally drop `p/python p/fastapi`.\n- Additive configs preserve default registry coverage and satisfy AC2/C5.\n- Multiple Semgrep `--config` arguments are the intended additive model; no Semgrep engine rewrite required.\n\n### KD4 — Reusable workflow self-checkout is structural, not a workaround\n\nDecision: checkout the reusable workflow repository into `.sharperflow-security-gates` using `job.workflow_repository` and `job.workflow_sha` before Semgrep runs.\n\nRationale:\n\n- GitHub Actions docs identify `job.workflow_repository` and `job.workflow_sha` as the reusable-workflow self-checkout mechanism for accessing files co-located with the workflow definition.\n- `path: .sharperflow-security-gates` is mandatory so the second checkout does not clobber the caller repository at workspace root.\n- This lets rules ship with the released workflow SHA that callers already pin.\n- Public-repo assumption is satisfied by current project context; private conversion would require re-design.\n\n### KD5 — Opengrep is documented as advisory/revisit\n\nDecision: do not make Opengrep a required blocking gate in this change.\n\nRationale:\n\n- Discovery found current Opengrep evidence for intrafile cross-function taint, not a proven cross-file replacement for CodeQL.\n- Adding a new required scanner without closing the original cross-file gap risks runtime/noise/dependency cost without satisfying the main objective.\n- Opengrep remains a useful future candidate once cross-file support and CI ergonomics are proven.\n\n## ADR Drafts\n\nNo ADR drafted. Decisions are important, but not hard to reverse: rule defaults and docs can be changed in a later release, and Opengrep remains explicitly revisit-able.\n\n## Implementation Strategy\n\n1. Add packaged Semgrep taint rules:\n   - proposed path: `configs/semgrep/python/fastapi-taint.yml`.\n   - rule severity: `ERROR` only for high-confidence direct request-input-to-sink flows.\n   - scope: direct FastAPI handler values to process/network sinks in same function.\n   - use Semgrep taint options such as `taint_assume_safe_functions: true` where appropriate to avoid opaque-call noise.\n   - exclude broad helper/cross-function claims.\n2. Update `.github/workflows/python-security-gate.yml`:\n   - add `semgrep-additional-configs` input with default packaged config path,\n   - checkout caller repo as today,\n   - checkout reusable workflow repo to `.sharperflow-security-gates` using `job.workflow_repository` / `job.workflow_sha` / `path`,\n   - build `config_args` from both default configs and additional configs,\n   - keep existing excludes and scan paths.\n3. Update docs:\n   - `docs/ci-standard.md`: replace deferred follow-up language with chosen posture and coverage truth.\n   - `README.md`: mention packaged FastAPI taint rules and CE ceiling.\n   - `docs/pokeedge-backend-pilot.md`: replace stale tradeoff note with the new posture.\n4. Verification design:\n   - `actionlint` over workflows.\n   - Add or use a small fixture/example if feasible to prove Semgrep config syntax and rule behavior locally.\n   - Capture measured or explicitly sized runtime evidence for AC3. The design expectation is ≤180 seconds because there is no new scanner process, only one self-checkout plus one small additional config inside the existing Semgrep invocation; execution must record evidence, not rely on assertion alone.\n\n## LBP Analysis\n\n| Option | Assessment | Outcome |\n|---|---|---|\n| Semgrep CE additive taint rules | Lowest operational risk, fits current scanner, improves coverage honestly within CE ceiling | Chosen blocking path |\n| Opengrep required gate | Interesting future path; current proof strongest for intrafile cross-function, not cross-file; new dependency/runtime/noise risk | Advisory/revisit |\n| Documentation-only acceptance | Safe and cheap, but leaves no incremental automated coverage despite a low-risk CE improvement path | Rejected for now |\n| GHAS/CodeQL/SARIF/Sonar | Violates agreement and org posture | Rejected |\n\nLong-term best practice for this repo is incremental, high-signal, repo-owned scanner coverage that ships with the reusable workflow and stays transparent about limits. This design improves what can be improved cheaply while refusing to overclaim full dataflow SAST.\n\n## Affected Components\n\n- `.github/workflows/python-security-gate.yml`\n- `configs/semgrep/python/fastapi-taint.yml` or equivalent new rule path\n- `docs/ci-standard.md`\n- `README.md`\n- `docs/pokeedge-backend-pilot.md`\n- Possibly `examples/pokeedge-python/ci.yml` only if example comments need to mention defaults; no app workflow change should be required for default-on packaged rules.\n\n## Design-Derived Criteria\n\n1. Packaged Semgrep taint rules must be additive to `p/python p/fastapi`; default registry coverage must remain active.\n2. Reusable workflow self-checkout must use `path: .sharperflow-security-gates` so caller repo scan paths remain valid.\n3. Rule messages/docs must state intraprocedural/same-function scope where relevant; no cross-file/interprocedural claim.\n4. Expected added blocking runtime must be ≤180 seconds; execution must capture measured or explicitly sized evidence.\n5. Rule set must start narrow: process execution and outbound network/SSRF-shaped sinks only.\n6. Rule implementation must control Semgrep CE opaque-call noise; prefer direct same-function flows and safe-function assumptions over broad propagation.\n\n## Risks / Mitigations\n\n| Risk | Mitigation |\n|---|---|\n| Second checkout overwrites caller repo | Always set checkout `path: .sharperflow-security-gates`; preserve caller checkout at workspace root. |\n| Self-checkout auth fails if repo private | Current repo is public by project context. If visibility changes, add token input or redesign packaging before release. |\n| New taint rules produce false positives | Keep first slice to direct handler input → process/network sinks; use `taint_assume_safe_functions` where appropriate; avoid broad ORM/filesystem/template rules until app patterns are known. |\n| Users think cross-file taint is solved | Docs and rule comments explicitly state CE intraprocedural ceiling. |\n| Callers override config and lose defaults | Add separate additional-config input; do not require callers to replace `semgrep-configs`. |\n| Opengrep matures after this change | Keep it documented as revisit/advisory, not rejected permanently. |\n\n## Design Leverage Scout\n\n- Candidates considered: 5.\n- Auto-adopted: 3.\n  - Existing config loop can combine multiple `--config` values additively; no engine rewrite required.\n  - Second checkout must use `path:` to avoid clobbering caller repo.\n  - Narrow high-confidence sinks are the correct false-positive control.\n- Surfaced/revisit: 1.\n  - Opengrep `--taint-intrafile` gives same-file cross-function uplift; revisit as advisory or future gate when cross-file support is proven.\n- Follow-up: 1.\n  - Note GitHub Enterprise Server caveat for `job.workflow_*` contexts if this standard later targets GHES. Current Sharper Flow target is github.com.\n- Inconclusive/skipped: 0.\n\n## Validator Result\n\nValidator: CAUTION.\n\nFindings:\n\n1. Info: design solves stated objectives; Semgrep CE ceiling, additive configs, and reusable workflow self-checkout pattern were validated against source/docs.\n2. Caution: self-checkout authentication can fail if this repository is private. Resolution: current `project.md` says this repo is public to avoid private reusable-workflow friction; design now records public-repo assumption and private-repo redesign trigger.\n3. Caution: AC3 runtime bound must be evidenced, not asserted. Resolution: design-derived criteria now require measured or explicitly sized runtime evidence during execution.\n4. Info: no spec/contract conflict; no ADV specs exist and design aligns with `docs/ci-standard.md` posture.\n5. Info: no materially simpler equivalent; additive Semgrep config is the boring path.\n6. Caution: CE opaque-call behavior can create noise. Resolution: implementation strategy now requires direct same-function flows and safe-function assumptions where appropriate.\n\nRecommendation: proceed to planning with cautions captured as design-derived criteria.",
+    "executiveSummary": "# Executive Summary\n\n## Outcome\n\nSharper Flow now has a concrete post-CodeQL dataflow SAST posture: the Python reusable gate keeps Semgrep CE as the blocking engine and adds packaged, high-confidence FastAPI taint rules for direct request input reaching process execution or outbound HTTP URL sinks in the same function. The docs explicitly state the remaining ceiling: full cross-function/cross-file taint remains uncovered by the blocking OSS gate, and Opengrep stays advisory/revisit.\n\n## Verdict\n\nAPPROVED\n\n## What Was Built\n\n1. Packaged Semgrep CE FastAPI taint rules and rule fixtures at `configs/semgrep/python/fastapi-taint.yml` / `.py`.\n2. Python reusable workflow wiring for additive Semgrep configs while preserving `p/python p/fastapi` default coverage.\n3. Reusable-workflow self-checkout for packaged rules using documented `job.workflow_repository` / `job.workflow_sha`, plus scoped actionlint compatibility ignore for actionlint 1.7.7 context-schema lag.\n4. Documentation updates in `docs/ci-standard.md`, `README.md`, and `docs/pokeedge-backend-pilot.md` explaining selected posture, coverage, and gaps.\n5. Default Semgrep excludes now include `.sharperflow-security-gates` so packaged rule fixtures are not scanned as caller app code.\n\n## What Was Verified\n\n- Verdict: READY / APPROVED. Independent reviewer reported no blocking findings.\n- Tests: `uvx semgrep --test configs/semgrep/python` passed 2/2; latest runtime 2.820s (<180s).\n- Workflow syntax: `docker run --rm -v \"$PWD:/repo\" --workdir /repo rhysd/actionlint:1.7.7` passed.\n- Static invariants: default `p/python p/fastapi` preserved, packaged config additive, `.sharperflow-security-gates` excluded, no CodeQL/GHAS/SARIF/SonarCloud executable-surface addition.\n- Preview URL: not_applicable — CI workflow/config/docs change only; no frontend/browser-visible output.\n- Contract matrix: 19/19 required rows passed/respected; 0 failing/unknown.\n\n## Remaining Concerns\n\nNone.",
+    "acceptance": "# Acceptance\n\nReviewed at: 2026-06-18T06:07:30.000Z\n\n## Contract Review Matrix\n\n| ID | Kind | Requirement | Status | Evidence |\n|---|---|---|---|---|\n| SC1 | success_criterion | Sharper Flow has explicit post-CodeQL dataflow/taint SAST posture. | pass | docs/ci-standard.md now states selected posture: packaged Semgrep CE FastAPI taint rules; README and backend pilot updated. Reviewer verdict READY. |\n| SC2 | success_criterion | Consumers can tell what gate catches, and what remains uncovered. | pass | docs/ci-standard.md and README state intraprocedural CE scope and cross-file/interprocedural taint remains uncovered; Opengrep advisory/revisit. |\n| SC3 | success_criterion | Any added blocking SAST stays high-signal and adds ≤3 minutes CI runtime. | pass | Semgrep rule test duration 2.820s in latest verification tr_mqj3k774; earlier full verification 1.872s tr_mqj384ju. Both <180s. |\n| AC1 | acceptance_criterion | `docs/ci-standard.md` replaces the deferred `deepenSastDataflow` note with the selected posture and cross-file/interprocedural coverage truth. | pass | Static docs check tr_mqj36ph1/tr_mqj3834o passed; docs/ci-standard.md replaces deferred row with decided posture and coverage truth. |\n| AC2 | acceptance_criterion | If blocking SAST is added, default Semgrep coverage remains active and new coverage is additive. If blocking SAST is not added, docs explicitly state no added blocking SAST. | pass | Workflow static checks tr_mqj34m5y/tr_mqj3k51k passed: default `p/python p/fastapi` remains; `semgrep-additional-configs` defaults to packaged rule path; Semgrep configs are additive. |\n| AC3 | acceptance_criterion | Any new blocking SAST path has measured or documented expected added runtime ≤180 seconds. | pass | Semgrep rule tests passed 2/2 in 2.820s (tr_mqj3k774), below 180s. No new scanner process beyond existing Semgrep job; added config only. |\n| AC4 | acceptance_criterion | No GHAS, CodeQL, SARIF upload, SonarCloud, hosted dashboard, or second required check is introduced. | pass | actionlint passed tr_mqj3k5k5; forbidden executable-surface scan tr_mqj38bjo found no CodeQL/SARIF/Sonar/GHAS terms in changed executable surfaces; no new check/job outside existing security job. |\n| AC5 | acceptance_criterion | Design records the first FastAPI source→sink priority decision; user delegated this choice to design. If no rule implementation is selected, design records why. | pass | Design KD2 records first source→sink priority: direct FastAPI request input to process execution and outbound network/SSRF sinks. Implemented in configs/semgrep/python/fastapi-taint.yml and tests pass 2/2. |\n| C1 | constraint | Preserve the exact single required check context: `Sharperflow CI Gate`. | respected | No branch-protection or summary check context changed; actionlint passed. Existing `Sharperflow CI Gate` contract untouched. |\n| C2 | constraint | Do not require GitHub Advanced Security, GitHub Code Security, CodeQL, SARIF upload, SonarCloud, or hosted dashboards. | respected | Changed executable surfaces contain no CodeQL/SARIF/Sonar/GHAS additions (tr_mqj38bjo). Docs keep no-hosted-dashboard posture. |\n| C3 | constraint | Keep new blocking scanner behavior high-signal by default; fail only on confident findings. | respected | Rules are severity ERROR, metadata confidence HIGH, narrow direct FastAPI request input to process/network sinks; Semgrep tests include safe ok cases. |\n| C4 | constraint | Keep any added blocking SAST runtime within ≤180 seconds expected added CI time. | respected | Latest Semgrep rule-test runtime 2.820s (tr_mqj3k774) <180s. |\n| C5 | constraint | Preserve default Semgrep registry coverage (`p/python p/fastapi`) if adding repo-owned Semgrep rules. | respected | python-security-gate.yml keeps `semgrep-configs` default `p/python p/fastapi` and adds separate `semgrep-additional-configs`; static checks passed. |\n| C6 | constraint | Keep the security gate as a job in the same app CI workflow as the summary gate. | respected | Only `.github/workflows/python-security-gate.yml` changed inside existing reusable security job; no app workflow topology or summary requirements changed. |\n| DONT1 | avoidance | Do not claim full cross-file/interprocedural taint coverage unless the selected OSS path demonstrably provides it in this repo's CI shape. | respected | Rule messages and docs explicitly say Semgrep CE tracks intraprocedurally only and does not claim cross-function/cross-file coverage. |\n| DONT2 | avoidance | Do not make Opengrep a required blocking gate during this change unless design finds stronger current proof than discovery found. | respected | No Opengrep workflow/config added. Docs say Opengrep remains advisory/revisit. |\n| DONT3 | avoidance | Do not add app-level duplicated generic scanner jobs for coverage already owned by the reusable gate. | respected | No app-level scanner jobs added. Coverage ships inside reusable Python gate as packaged additive Semgrep config. |\n| DONT4 | avoidance | Do not introduce a second branch-protection required check. | respected | No second job/check context added; existing `Semgrep + Bandit` job remains within reusable workflow and app summary unchanged. |\n| DONT5 | avoidance | Do not revive CodeQL/GHAS/SARIF/SonarCloud as the answer to this gap. | respected | No CodeQL/GHAS/SARIF/SonarCloud workflow or dependency introduced; docs continue rejecting them as the answer to this gap. |\n\n"
+  },
+  "artifacts": {
+    "proposal": {
+      "updatedAt": "2026-06-18T05:31:16.542Z",
+      "contentHash": "bb1d9bce212d4cd31e4f503e57d77eea1ceba46685dde4bdf90c4d9076ef02a6",
+      "source": "temporal",
+      "readable": false
+    },
+    "problemStatement": {
+      "updatedAt": "2026-06-18T05:19:54.303Z",
+      "contentHash": "0d63226ffdd9d7a831abc26ab4237c7922d80fceb860e254074bdf9f47158d25",
+      "source": "temporal",
+      "readable": false
+    },
+    "agreement": {
+      "updatedAt": "2026-06-18T05:35:26.879Z",
+      "contentHash": "5aa07d6776de4d56aa1739e196a79c177824def9e22f8f05824b2bdb46e5bbda",
+      "source": "temporal",
+      "readable": false
+    },
+    "design": {
+      "updatedAt": "2026-06-18T05:42:22.860Z",
+      "contentHash": "d96d92a3fdb667e9afe76eaa952e7f72cbd3ab027cba0c3480d80718785d1991",
+      "source": "temporal",
+      "readable": false
+    },
+    "executiveSummary": {
+      "updatedAt": "2026-06-18T06:07:45.832Z",
+      "contentHash": "559856655b77f0adc2e09cfc92575c8ccf76161f1b6b2ad359ea0e5ef24da105",
+      "source": "temporal",
+      "readable": false
+    }
+  },
+  "lastSignalAt": "2026-06-18T06:10:12.877Z",
+  "adv_project_id": "d5d80b9521a34fb6944cc363dee739e8ecabb54d",
+  "clarify_findings": [
+    {
+      "code": "CLARIFY_UNCLEAR_SCOPE",
+      "severity": "warning",
+      "message": "Proposal has no Scope section. What files and modules will be affected?",
+      "recorded_at": "2026-06-18T05:16:11.763Z",
+      "resolved": true,
+      "resolved_at": "2026-06-18T05:26:33.312Z"
+    },
+    {
+      "code": "CLARIFY_MISSING_ERROR_HANDLING",
+      "severity": "warning",
+      "message": "Proposal describes behavior that could fail but doesn't mention error handling or rollback. What happens when things go wrong?",
+      "recorded_at": "2026-06-18T05:16:11.763Z",
+      "resolved": true,
+      "resolved_at": "2026-06-18T05:26:33.312Z"
+    }
+  ]
+}
