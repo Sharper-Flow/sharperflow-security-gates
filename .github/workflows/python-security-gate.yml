@@ -23,6 +23,14 @@ on:
         required: false
         type: string
         default: "p/python p/fastapi"
+      semgrep-additional-configs:
+        description: |
+          Space-separated Semgrep configs added to the defaults. The default
+          ships Sharperflow's packaged FastAPI taint rules alongside
+          `semgrep-configs`, preserving `p/python p/fastapi` coverage.
+        required: false
+        type: string
+        default: ".sharperflow-security-gates/configs/semgrep/python/fastapi-taint.yml"
       semgrep-excludes:
         description: Space-separated paths to exclude from Semgrep.
         required: false
@@ -87,6 +95,13 @@ jobs:
       - name: Checkout caller repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
+      - name: Checkout Sharperflow packaged rules
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: Sharper-Flow/sharperflow-security-gates
+          ref: ${{ github.workflow_sha }}
+          path: .sharperflow-security-gates
+
       - name: Set up Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
@@ -98,12 +113,16 @@ jobs:
       - name: Semgrep security scan
         env:
           SEMGREP_CONFIGS: ${{ inputs.semgrep-configs }}
+          SEMGREP_ADDITIONAL_CONFIGS: ${{ inputs.semgrep-additional-configs }}
           SEMGREP_EXCLUDES: ${{ inputs.semgrep-excludes }}
           SCAN_PATHS: ${{ inputs.scan-paths }}
         run: |
           set -euo pipefail
           config_args=()
           for config in ${SEMGREP_CONFIGS}; do
+            config_args+=(--config "${config}")
+          done
+          for config in ${SEMGREP_ADDITIONAL_CONFIGS}; do
             config_args+=(--config "${config}")
           done
 
