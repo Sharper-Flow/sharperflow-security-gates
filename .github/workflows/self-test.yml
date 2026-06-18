@@ -81,6 +81,11 @@ jobs:
           print("ruleset JSON valid:", types, ctxs, "merge=squash-only strict=off")
           '
 
+      - name: Validate Python uv setup guidance
+        run: |
+          set -euo pipefail
+          python3 scripts/check-python-uv-guidance.py
+
   shellcheck:
     name: Shellcheck scripts
     runs-on: ubuntu-latest
