@@ -85,8 +85,24 @@ Setup is defined once and consumed cross-repo (never copy-pasted):
 - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
   with:
     python-version: "3.13"
-    sync-args: "--all-groups"
+    # Lightweight lane: repo-owned group names; install only what this job needs.
+    sync-args: "--only-group lint --frozen"
+
+- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+  with:
+    python-version: "3.13"
+    # Full test/build lane: broad install is explicit, not implicit.
+    sync-args: "--all-groups --frozen"
+
+- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+  with:
+    python-version: "3.13"
+    # Setup-only lane: install Python + uv, restore cache, skip dependency sync.
+    sync-enabled: "false"
 ```
+
+`sync-args` keeps the compatibility default `--all-groups`; new workflows should
+set explicit repo-owned groups and use `--frozen` for CI determinism.
 
 | Composite | Path |
 |---|---|

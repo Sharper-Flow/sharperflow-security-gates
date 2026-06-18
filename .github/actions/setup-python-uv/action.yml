@@ -9,9 +9,13 @@ inputs:
     required: false
     default: "3.13"
   sync-args:
-    description: Arguments passed to `uv sync` (e.g. "--all-groups", "--frozen").
+    description: Arguments passed to `uv sync` (e.g. "--only-group lint --frozen", "--all-groups --frozen").
     required: false
     default: "--all-groups"
+  sync-enabled:
+    description: Set to "false" to install Python + uv and restore cache without running `uv sync`.
+    required: false
+    default: "true"
   cache-key-suffix:
     description: Optional suffix to scope the uv cache (e.g. a lane name).
     required: false
@@ -32,6 +36,7 @@ runs:
         cache-suffix: ${{ inputs.cache-key-suffix }}
 
     - name: Sync dependencies
+      if: ${{ inputs.sync-enabled != 'false' }}
       shell: bash
       env:
         UV_SYNC_ARGS: ${{ inputs.sync-args }}

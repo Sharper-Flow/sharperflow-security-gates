@@ -386,17 +386,43 @@ Setup is defined once in this repo and consumed cross-repo, never copy-pasted.
 
 | Composite | Path | Inputs |
 |---|---|---|
-| Python + uv | `.github/actions/setup-python-uv` | `python-version` (def `3.13`), `sync-args` (def `--all-groups`), `cache-key-suffix` |
+| Python + uv | `.github/actions/setup-python-uv` | `python-version` (def `3.13`), `sync-args` (def `--all-groups` compatibility default), `sync-enabled` (def `true`), `cache-key-suffix` |
 | Bun + Node | `.github/actions/setup-bun-node` | `node-version` (def `24`), `bun-version`, `install-mode` (`ci`\|`install`) |
 
-Consumed from an app workflow:
+Consumed from an app workflow. Group names are repo-owned; pick the narrowest
+group set that satisfies the lane. Use `--frozen` so CI fails on stale lockfiles
+instead of resolving new dependencies during the run.
+
+Lightweight lint/type/security-style lane:
 
 ```yaml
 - uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
   with:
     python-version: "3.13"
-    sync-args: "--all-groups"
+    sync-args: "--only-group lint --frozen"
 ```
+
+Full test/build lane:
+
+```yaml
+- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+  with:
+    python-version: "3.13"
+    sync-args: "--all-groups --frozen"
+```
+
+Setup-only lane (Python + uv + cache, no dependency install):
+
+```yaml
+- uses: Sharper-Flow/sharperflow-security-gates/.github/actions/setup-python-uv@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+  with:
+    python-version: "3.13"
+    sync-enabled: "false"
+```
+
+`sync-args` retains `--all-groups` as a compatibility default for existing
+consumers. New workflows SHOULD set explicit per-job args instead of relying on
+the default; broad installs belong only in lanes that truly need every group.
 
 Cross-repo composite actions resolve by `owner/repo/.github/actions/<name>@<ref>`.
 Same-org private access works on the org's Team plan; no manual checkout of this
