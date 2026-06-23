@@ -152,7 +152,8 @@ jobs:
   dependencies:
     name: OSV dependency scan
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    # 12m (was 8m) to absorb a single transient-failure retry of the OSV scan.
+    timeout-minutes: 12
     steps:
       - name: Checkout caller repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -186,8 +187,27 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # OSV scan with a verdict-safe single retry. osv-scanner is deterministic
+      # against a lockfile snapshot, so a real vulnerability re-fails identically
+      # on the retry (the gate still blocks), while a transient osv.dev fetch /
+      # network error may clear. The first attempt swallows failure
+      # (continue-on-error); the retry's exit code governs the job result.
       - name: OSV Scanner
+        id: osv
         if: steps.lockfile.outputs.exists == 'true'
+        continue-on-error: true
+        uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2 # v2.3.8
+        with:
+          scan-args: |
+            --lockfile=${{ inputs.lockfile-path }}
+            --format=table
+
+      - name: Pause before OSV retry
+        if: steps.lockfile.outputs.exists == 'true' && steps.osv.outcome == 'failure'
+        run: sleep 10
+
+      - name: OSV Scanner (retry)
+        if: steps.lockfile.outputs.exists == 'true' && steps.osv.outcome == 'failure'
         uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2 # v2.3.8
         with:
           scan-args: |
