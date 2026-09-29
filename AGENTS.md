@@ -13,8 +13,8 @@
   docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.7
   ```
 - Ruleset invariant check mirrors `.github/workflows/self-test.yml`: target `branch`, enforcement `active`, `bypass_actors: []`, required check exactly `Sharperflow CI Gate`, strict checks off, squash-only.
-- Shell changes: run `shellcheck scripts/apply-ruleset.sh` when touching `scripts/apply-ruleset.sh`.
-- CI file-existence checks include `README.md`, `docs/ci-standard.md`, `docs/pokeedge-backend-pilot.md`, all three reusable workflows, both setup composites, configs, ruleset JSON, and `scripts/apply-ruleset.sh`.
+- Shell changes: run `shellcheck scripts/apply-ruleset.sh scripts/resolve-scan-range.sh scripts/gitleaks-scan.sh` for whichever of the three you touch.
+- CI file-existence checks include `README.md`, `docs/ci-standard.md`, `docs/pokeedge-backend-pilot.md`, all three reusable workflows, both setup composites, configs, ruleset JSON, and the scripts under `scripts/`.
 
 ## CI standard contracts to preserve
 
@@ -42,6 +42,7 @@
 - Missing `lockfile-path` skips OSV with a warning; it is not a gate failure.
 - `bandit-config` is optional and only used if the caller path exists. `gitleaks-config` is optional but fails if a non-empty caller path does not exist.
 - Trivy ignore files and Gitleaks config paths are resolved in the checked-out caller repository, not this repo.
+- PR diff scanning: both source gates take `scan-mode` (`auto` default, or `full`). `auto` scans only the PR diff — merge-ref parents (`HEAD^1..HEAD^2`) on `pull_request`, `merge_group.base_sha..HEAD` on merge groups, full tree on every other event or unresolvable base. Range logic lives in `scripts/resolve-scan-range.sh`; Gitleaks runs through `scripts/gitleaks-scan.sh` as the runner uid and fails closed when the scanned-commit count mismatches git's count (Gitleaks exits 0 with "0 commits scanned" on an empty or invalid range). Gitleaks counts only non-merge commits that change a file, so the expected count uses `git diff-tree`, not raw rev-list. Accepted trade-off: PRs stop failing on findings already on `main`; scheduled/release callers pass `scan-mode: full`.
 - Defaults are intentionally high-signal: fail on high-confidence/high-severity findings, `HIGH,CRITICAL`, `ignore-unfixed`, no GHAS/CodeQL/SonarCloud/dashboard dependency.
 
 ## Branch protection / release posture

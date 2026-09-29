@@ -66,6 +66,10 @@ jobs:
       scan-paths: "src scripts infra"
       lockfile-path: "bun.lock"
       semgrep-excludes: "src/lib/api/generated .svelte-kit build coverage playwright-report test-results node_modules"
+      # scan-mode defaults to auto: PR and merge_group runs scan only the PR
+      # diff; push/schedule runs scan the full tree. A scheduled job that must
+      # rescan the whole tree passes scan-mode: "full".
+      scan-mode: "auto"
 
   # Consumer-side half of the cross-repo API contract gate (see docs/ci-standard.md
   # "Cross-repo API contract gate"). The frontend's committed docs/openapi.json is

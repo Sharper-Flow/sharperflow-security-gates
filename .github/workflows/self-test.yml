@@ -50,6 +50,8 @@ jobs:
           test -f .github/actions/setup-bun-node/action.yml
           test -f rulesets/sharperflow-app-protection.json
           test -f scripts/apply-ruleset.sh
+          test -f scripts/resolve-scan-range.sh
+          test -f scripts/gitleaks-scan.sh
 
       - name: Validate ruleset JSON
         run: |
@@ -96,4 +98,131 @@ jobs:
       - name: Run shellcheck
         run: |
           set -euo pipefail
-          shellcheck scripts/apply-ruleset.sh
+          shellcheck scripts/apply-ruleset.sh scripts/resolve-scan-range.sh scripts/gitleaks-scan.sh
+
+  scan-mode-scripts:
+    name: Scan-mode resolver and Gitleaks diff behavior
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+
+      - name: Build synthetic pull-request repository
+        run: |
+          set -euo pipefail
+          repo="$(mktemp -d)/repo"
+          git init -q -b main "${repo}"
+          git -C "${repo}" config user.email test@example.com
+          git -C "${repo}" config user.name test
+          echo base > "${repo}/base.txt"
+          git -C "${repo}" add .
+          git -C "${repo}" commit -qm c1
+          echo more > "${repo}/more.txt"
+          git -C "${repo}" add .
+          git -C "${repo}" commit -qm c2
+          git -C "${repo}" checkout -qb feature
+          # Fabricated fixture: assembled at runtime so this repo's own files
+          # never contain a gitleaks-matchable token literal.
+          pat="ghp_""R9aLq3XzV7mK2pT8wN4yB6cD1fH5jS0uE3gA"
+          printf 'token = "%s"\n' "${pat}" > "${repo}/secret.txt"
+          git -C "${repo}" add .
+          git -C "${repo}" commit -qm secret
+          git -C "${repo}" commit -qm empty --allow-empty
+          git -C "${repo}" checkout -q main
+          git -C "${repo}" merge -q --no-ff feature -m "pr merge"
+          echo "REPO=${repo}" >> "${GITHUB_ENV}"
+
+      - name: Assert scan-range resolver outputs
+        run: |
+          set -euo pipefail
+          resolver="${PWD}/scripts/resolve-scan-range.sh"
+          out="$(mktemp)"
+          run_resolver() {
+            # usage: run_resolver [ENV=VAL ...]; runs inside the synthetic repo
+            (cd "${REPO}" && env GITHUB_OUTPUT="${out}" "$@" "${resolver}")
+          }
+          expect() {
+            grep -qx "$1" "${out}" || { echo "missing output: $1"; exit 1; }
+          }
+          pr_base="$(git -C "${REPO}" rev-parse HEAD^1)"
+          pr_head="$(git -C "${REPO}" rev-parse HEAD^2)"
+
+          # pull_request + auto -> diff over the merge-ref parents
+          run_resolver GITHUB_EVENT_NAME=pull_request SCAN_MODE=auto
+          expect "mode=diff"
+          expect "base=${pr_base}"
+          expect "head=${pr_head}"
+
+          # scan-mode=full forces a full scan
+          run_resolver GITHUB_EVENT_NAME=pull_request SCAN_MODE=full
+          expect "mode=full"
+
+          # push has no PR diff -> full
+          run_resolver GITHUB_EVENT_NAME=push SCAN_MODE=auto
+          expect "mode=full"
+
+          # merge_group -> diff from merge_group.base_sha
+          event="$(mktemp)"
+          printf '{"merge_group":{"base_sha":"%s"}}' "${pr_base}" > "${event}"
+          run_resolver GITHUB_EVENT_NAME=merge_group SCAN_MODE=auto GITHUB_EVENT_PATH="${event}"
+          expect "mode=diff"
+          expect "base=${pr_base}"
+          expect "head=$(git -C "${REPO}" rev-parse HEAD)"
+
+          # merge_group whose base does not resolve -> full
+          printf '{"merge_group":{"base_sha":"%s"}}' "0000000000000000000000000000000000000000" > "${event}"
+          run_resolver GITHUB_EVENT_NAME=merge_group SCAN_MODE=auto GITHUB_EVENT_PATH="${event}"
+          expect "mode=full"
+
+          # an unknown scan-mode value is a caller error
+          if run_resolver GITHUB_EVENT_NAME=push SCAN_MODE=bogus; then
+            echo "unknown scan-mode must fail"
+            exit 1
+          fi
+
+      - name: Gitleaks diff behavior and fail-closed paths
+        env:
+          GITLEAKS_IMAGE: zricethezav/gitleaks:v8.30.0
+        run: |
+          set -euo pipefail
+          script="${PWD}/scripts/gitleaks-scan.sh"
+          pr_base="$(git -C "${REPO}" rev-parse HEAD^1)"
+          pr_head="$(git -C "${REPO}" rev-parse HEAD^2)"
+          c1="$(git -C "${REPO}" rev-list --max-parents=0 HEAD)"
+          cd "${REPO}"
+
+          # a secret inside the range fails the gate (gitleaks exit 1)
+          set +e
+          MODE=diff BASE="${pr_base}" HEAD="${pr_head}" "${script}"
+          status=$?
+          set -e
+          [[ ${status} -eq 1 ]] || { echo "expected exit 1 on a leak, got ${status}"; exit 1; }
+
+          # a clean range passes
+          set +e
+          MODE=diff BASE="${c1}" HEAD="${pr_base}" "${script}"
+          status=$?
+          set -e
+          [[ ${status} -eq 0 ]] || { echo "expected exit 0 on a clean range, got ${status}"; exit 1; }
+
+          # an empty range fails closed instead of passing an empty scan
+          set +e
+          MODE=diff BASE="${pr_base}" HEAD="${pr_base}" "${script}"
+          status=$?
+          set -e
+          [[ ${status} -ne 0 ]] || { echo "empty range must fail closed"; exit 1; }
+
+          # full mode still fails on the leaked commit
+          set +e
+          MODE=full "${script}"
+          status=$?
+          set -e
+          [[ ${status} -eq 1 ]] || { echo "expected exit 1 in full mode, got ${status}"; exit 1; }
+
+          # an unavailable gitleaks binary fails closed (unparseable count)
+          set +e
+          MODE=diff BASE="${pr_base}" HEAD="${pr_head}" \
+            GITLEAKS_IMAGE=example.invalid/gitleaks:nope "${script}"
+          status=$?
+          set -e
+          [[ ${status} -ne 0 ]] || { echo "unavailable gitleaks must fail closed"; exit 1; }

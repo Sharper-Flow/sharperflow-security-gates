@@ -8,6 +8,14 @@ on:
         required: false
         type: string
         default: "."
+      scan-mode:
+        description: |
+          `auto` (default) scans only the pull_request or merge_group diff;
+          `full` scans the whole tree. Scheduled and release scans should pass
+          `full` so findings already on the target branch stay visible.
+        required: false
+        type: string
+        default: "auto"
       lockfile-path:
         description: Dependency lockfile for OSV scanning.
         required: false
@@ -22,7 +30,7 @@ on:
         description: Space-separated paths to exclude from Semgrep.
         required: false
         type: string
-        default: "node_modules .svelte-kit build dist coverage playwright-report test-results"
+        default: "node_modules .svelte-kit build dist coverage playwright-report test-results .sharperflow-security-gates"
       run-trivy-fs:
         description: Run Trivy filesystem scan for vulnerabilities, secrets, and IaC misconfig.
         required: false
@@ -77,6 +85,23 @@ jobs:
     steps:
       - name: Checkout caller repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          # Baseline diffing needs real history; shallow clones break Semgrep
+          # baseline git operations.
+          fetch-depth: 0
+
+      - name: Checkout Sharperflow packaged rules
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .sharperflow-security-gates
+
+      - name: Resolve scan range
+        id: scan-range
+        env:
+          SCAN_MODE: ${{ inputs.scan-mode }}
+        run: .sharperflow-security-gates/scripts/resolve-scan-range.sh
 
       - name: Set up Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
@@ -91,6 +116,7 @@ jobs:
           SEMGREP_CONFIGS: ${{ inputs.semgrep-configs }}
           SEMGREP_EXCLUDES: ${{ inputs.semgrep-excludes }}
           SCAN_PATHS: ${{ inputs.scan-paths }}
+          SCAN_DIFF_BASE: ${{ steps.scan-range.outputs.base }}
         run: |
           set -euo pipefail
           config_args=()
@@ -103,9 +129,14 @@ jobs:
             exclude_args+=(--exclude "${path}")
           done
 
+          baseline_args=()
+          if [[ -n "${SCAN_DIFF_BASE}" ]]; then
+            baseline_args+=(--baseline-commit "${SCAN_DIFF_BASE}")
+          fi
+
           # shellcheck disable=SC2153 # Provided by workflow env.
           read -r -a scan_paths <<< "${SCAN_PATHS}"
-          python -m pipx run semgrep "${config_args[@]}" --error "${exclude_args[@]}" "${scan_paths[@]}"
+          python -m pipx run semgrep "${config_args[@]}" --error "${exclude_args[@]}" "${baseline_args[@]}" "${scan_paths[@]}"
 
   dependencies:
     name: OSV dependency scan
@@ -166,29 +197,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Checkout Sharperflow packaged rules
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .sharperflow-security-gates
+
+      - name: Resolve scan range
+        id: scan-range
+        env:
+          SCAN_MODE: ${{ inputs.scan-mode }}
+        run: .sharperflow-security-gates/scripts/resolve-scan-range.sh
+
       - name: Run Gitleaks CLI
         env:
           GITLEAKS_IMAGE: ${{ inputs.gitleaks-image }}
           GITLEAKS_CONFIG: ${{ inputs.gitleaks-config }}
-        run: |
-          set -euo pipefail
-          config_args=()
-          if [[ -n "${GITLEAKS_CONFIG}" ]]; then
-            if [[ ! -f "${GITLEAKS_CONFIG}" ]]; then
-              echo "::error::gitleaks-config path '${GITLEAKS_CONFIG}' does not exist in caller repository"
-              exit 1
-            fi
-            echo "Using caller gitleaks config: ${GITLEAKS_CONFIG}"
-            config_args+=(--config "/repo/${GITLEAKS_CONFIG}")
-          fi
-          docker run --rm \
-            -v "$PWD:/repo" \
-            --workdir /repo \
-            "${GITLEAKS_IMAGE}" detect \
-            --source=/repo \
-            --redact \
-            --exit-code=1 \
-            "${config_args[@]}"
+          MODE: ${{ steps.scan-range.outputs.mode }}
+          BASE: ${{ steps.scan-range.outputs.base }}
+          HEAD: ${{ steps.scan-range.outputs.head }}
+        run: .sharperflow-security-gates/scripts/gitleaks-scan.sh
 
   trivy-fs:
     name: Trivy filesystem scan
