@@ -6,3 +6,9 @@ paths:
       # a reusable workflow to check out files co-located with its own workflow.
       - 'property "workflow_repository" is not defined in object type .+'
       - 'property "workflow_sha" is not defined in object type .+'
+  .github/workflows/javascript-security-gate.yml:
+    ignore:
+      # Same as above: both source gates check out this repository's packaged
+      # rules and scripts with job.workflow_repository / job.workflow_sha.
+      - 'property "workflow_repository" is not defined in object type .+'
+      - 'property "workflow_sha" is not defined in object type .+'

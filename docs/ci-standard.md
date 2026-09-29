@@ -370,13 +370,32 @@ pilot. The "measure before making it required" phase is over.
 
   | Gate type | Secret scanner | Rationale |
   |-----------|---------------|-----------|
-  | Source-code (python, javascript) | Gitleaks | Full git history, allowlists, redaction |
+  | Source-code (python, javascript) | Gitleaks | PR-diff scoped on PRs, full history on other events; allowlists, redaction |
   | Container image | Trivy `secret` | No git history in built images |
 
   Trivy in source-code gates runs `vuln,misconfig` only — Gitleaks owns secrets.
   Trivy in the container gate runs `vuln,secret` — it is the sole secret scanner
   for images. Callers that need additional secret scanning should add a local job,
   not re-enable Trivy `secret` in the reusable gate.
+
+- **PR diff scanning (`scan-mode`).** The Python and JavaScript gates accept a
+  `scan-mode` input: `auto` (default) or `full`. On `pull_request` events the
+  gate scans only the PR diff — Semgrep with `--baseline-commit` against the
+  merge-ref base parent, Gitleaks over `base..head` — and fails the gate on any
+  finding inside that diff. `merge_group` runs scan `merge_group.base_sha..HEAD`.
+  Push, schedule, workflow_dispatch, and any unresolvable base run full-tree,
+  the same as before `scan-mode` existed. The range logic lives in
+  `scripts/resolve-scan-range.sh`; Gitleaks runs through
+  `scripts/gitleaks-scan.sh`, which runs the container as the runner uid and
+  fails closed when the scanned-commit count does not match git's count for the
+  range (Gitleaks exits 0 with "0 commits scanned" on an empty or invalid
+  range). Both scripts are covered by the self-test workflow's
+  `scan-mode-scripts` job.
+
+  Callers that must see findings already on the target branch — scheduled and
+  release scans — pass `scan-mode: full`. Accepted trade-off: in `auto` mode a
+  PR stops failing on findings that are already on `main`; a scheduled
+  `scan-mode: full` scan keeps those findings visible.
 
 ---
 

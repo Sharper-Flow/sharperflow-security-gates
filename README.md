@@ -52,6 +52,22 @@ jobs:
       lockfile-path: "uv.lock"
 ```
 
+**PR diff scanning:** both source gates accept `scan-mode` (`auto` by default).
+On `pull_request` and `merge_group` runs the gate scans only the PR diff, so
+PRs stop failing on findings already on the target branch. Push, schedule, and
+workflow_dispatch runs always scan the full tree. A scheduled job that must
+rescan everything passes `scan-mode: "full"`:
+
+```yaml
+  security-full:
+    uses: Sharper-Flow/sharperflow-security-gates/.github/workflows/python-security-gate.yml@4606d0547f41ea7edacfd40ff90c7b71d3449e3f  # v0.4.0
+    permissions:
+      contents: read
+    with:
+      scan-mode: "full"   # keep findings already on main visible
+      lockfile-path: "uv.lock"
+```
+
 JavaScript/TypeScript:
 
 ```yaml

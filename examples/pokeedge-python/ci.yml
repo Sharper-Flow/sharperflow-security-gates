@@ -74,6 +74,10 @@ jobs:
       scan-paths: "api services clients models core common repositories integrations utils"
       lockfile-path: "uv.lock"
       bandit-config: "configs/security/bandit.yaml"
+      # scan-mode defaults to auto: PR and merge_group runs scan only the PR
+      # diff; push/schedule runs scan the full tree. A scheduled job that must
+      # rescan the whole tree passes scan-mode: "full".
+      scan-mode: "auto"
 
   # Producer-side cross-repo API contract gate (see docs/ci-standard.md
   # "Cross-repo API contract gate"). Path-filtered to openapi.json: non-spec PRs
