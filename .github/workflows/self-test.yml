@@ -52,6 +52,7 @@ jobs:
           test -f scripts/apply-ruleset.sh
           test -f scripts/resolve-scan-range.sh
           test -f scripts/gitleaks-scan.sh
+          test -f scripts/test-gitleaks-scan.py
 
       - name: Validate ruleset JSON
         run: |
@@ -226,3 +227,10 @@ jobs:
           status=$?
           set -e
           [[ ${status} -ne 0 ]] || { echo "unavailable gitleaks must fail closed"; exit 1; }
+
+      - name: Gitleaks wrapper regression harness
+        env:
+          GITLEAKS_IMAGE: zricethezav/gitleaks:v8.30.0
+        run: |
+          set -euo pipefail
+          python3 scripts/test-gitleaks-scan.py -v
