@@ -389,9 +389,11 @@ pilot. The "measure before making it required" phase is over.
    `scripts/gitleaks-scan.sh`, which runs the container as the runner uid and
    fails closed when the scanned-commit count does not match git's count for the
    range (Gitleaks exits 0 with "0 commits scanned" on an empty or invalid
-   range). Both counts are non-merge commits that change at least one file; in
-   full mode the expected count covers the same all-ref population Gitleaks
-   scans by default (`git log --full-history --all`). Both scripts are covered
+   range). Both counts cover non-merge commits that yield scanner fragments:
+   text hunks in surviving files, including removal-only hunks. Binary archives
+   yield none at the default archive depth of zero. The expected count parses
+   `git log -p -U0`; full mode uses the same all-ref population and filter as
+   Gitleaks (`--full-history --all --diff-filter=tuxdb`). Both scripts are covered
    by the self-test workflow's `scan-mode-scripts` job.
 
   Callers that must see findings already on the target branch — scheduled and
