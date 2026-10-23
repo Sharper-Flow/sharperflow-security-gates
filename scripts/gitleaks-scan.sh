@@ -3,7 +3,9 @@
 #
 # Runs the Gitleaks container as the runner uid (a container-uid mismatch makes
 # Gitleaks report ~0 bytes scanned with exit 0) and scans either the whole
-# history (MODE=full) or one commit range (MODE=diff with BASE..HEAD).
+# history of all refs (MODE=full; Gitleaks' default population is
+# git log --full-history --all) or one commit range (MODE=diff with
+# BASE..HEAD).
 #
 # Fails closed. Gitleaks exits 0 with "0 commits scanned" on an empty or
 # invalid range (observed on v8.30.0), so the exit code alone is not trusted:
@@ -54,7 +56,9 @@ case "${mode}" in
     fi
     ;;
   full)
-    expected="$(scannable_commits HEAD)"
+    # Full mode must count the same all-ref population Gitleaks scans by
+    # default, not only commits reachable from HEAD.
+    expected="$(scannable_commits --all)"
     ;;
   *)
     echo "::error::MODE must be 'diff' or 'full', got '${mode}'"

@@ -385,12 +385,14 @@ pilot. The "measure before making it required" phase is over.
   finding inside that diff. `merge_group` runs scan `merge_group.base_sha..HEAD`.
   Push, schedule, workflow_dispatch, and any unresolvable base run full-tree,
   the same as before `scan-mode` existed. The range logic lives in
-  `scripts/resolve-scan-range.sh`; Gitleaks runs through
-  `scripts/gitleaks-scan.sh`, which runs the container as the runner uid and
-  fails closed when the scanned-commit count does not match git's count for the
-  range (Gitleaks exits 0 with "0 commits scanned" on an empty or invalid
-  range). Both scripts are covered by the self-test workflow's
-  `scan-mode-scripts` job.
+   `scripts/resolve-scan-range.sh`; Gitleaks runs through
+   `scripts/gitleaks-scan.sh`, which runs the container as the runner uid and
+   fails closed when the scanned-commit count does not match git's count for the
+   range (Gitleaks exits 0 with "0 commits scanned" on an empty or invalid
+   range). Both counts are non-merge commits that change at least one file; in
+   full mode the expected count covers the same all-ref population Gitleaks
+   scans by default (`git log --full-history --all`). Both scripts are covered
+   by the self-test workflow's `scan-mode-scripts` job.
 
   Callers that must see findings already on the target branch — scheduled and
   release scans — pass `scan-mode: full`. Accepted trade-off: in `auto` mode a
