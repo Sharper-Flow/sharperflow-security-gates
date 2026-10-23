@@ -1,0 +1,19 @@
+{
+  "kind": "target_runner_v1",
+  "materializer": "none",
+  "runner": "check",
+  "root": ".",
+  "harness_files": ["scripts/test-gitleaks-scan.py"],
+  "support_files": [],
+  "cases": {
+    "case:full-history-population": ["gitleaks-scan-regressions"],
+    "case:security-guards": ["gitleaks-scan-regressions"]
+  },
+  "checks": [
+    {
+      "witness": "gitleaks-scan-regressions",
+      "argv": ["python3", "scripts/test-gitleaks-scan.py", "-v"]
+    }
+  ],
+  "pin": {"python": "3.13.7"}
+}
