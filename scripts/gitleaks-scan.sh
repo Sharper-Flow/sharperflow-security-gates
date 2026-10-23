@@ -9,11 +9,9 @@
 #
 # Fails closed. Gitleaks exits 0 with "0 commits scanned" on an empty or
 # invalid range (observed on v8.30.0), so the exit code alone is not trusted:
-# the scan must cover exactly the commits git reports as scannable. Merge
-# commits, merge-resolution commits, and --allow-empty commits carry no patch
-# and Gitleaks does not count them, so the expected count is the number of
-# non-merge commits that change at least one file (git diff-tree), not the raw
-# rev-list count.
+# the scan must cover exactly the commits that yield scanner fragments, not
+# every changed-file commit. The pinned scanner counts text hunks in surviving
+# files, even removal-only hunks; binary archives yield none at default depth 0.
 set -euo pipefail
 
 mode="${MODE:-full}"
@@ -23,14 +21,15 @@ image="${GITLEAKS_IMAGE:?GITLEAKS_IMAGE must be set}"
 config="${GITLEAKS_CONFIG:-}"
 
 scannable_commits() {
-  # Counts non-merge commits that change at least one file.
-  local count=0 commit
-  while IFS= read -r commit; do
-    if [[ -n "$(git diff-tree --no-commit-id --name-only -r --root "${commit}")" ]]; then
-      count=$((count + 1))
-    fi
-  done < <(git rev-list --no-merges "$@")
-  echo "${count}"
+  # Parse patch structure, not added-line counts: a surviving file can yield an
+  # empty addition fragment. Patch bodies stay in the pipe, never in gate logs.
+  git log -p -U0 --format='commit %H' --no-merges "$@" | awk '
+    /^commit [0-9a-f]+$/ { count += scannable; scannable = 0 }
+    /^diff --git / { deleted = 0 }
+    /^\+\+\+ \/dev\/null$/ { deleted = 1 }
+    /^@@ / && !deleted { scannable = 1 }
+    END { print count + scannable }
+  '
 }
 
 log_opts=()
@@ -58,7 +57,7 @@ case "${mode}" in
   full)
     # Full mode must count the same all-ref population Gitleaks scans by
     # default, not only commits reachable from HEAD.
-    expected="$(scannable_commits --all)"
+    expected="$(scannable_commits --full-history --all --diff-filter=tuxdb)"
     ;;
   *)
     echo "::error::MODE must be 'diff' or 'full', got '${mode}'"
