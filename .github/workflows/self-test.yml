@@ -10,6 +10,24 @@ permissions:
   contents: read
 
 jobs:
+  bun-package-manager:
+    name: Bun packageManager version
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Declare a Bun packageManager version
+        run: printf '%s\n' '{"packageManager":"bun@1.2.0"}' > package.json
+
+      - name: Set up Bun without a version input
+        uses: ./.github/actions/setup-bun-node
+        with:
+          install-mode: none
+
+      - name: Assert the declared version
+        run: test "$(bun --version)" = "1.2.0"
+
   actionlint:
     name: Actionlint reusable workflows
     runs-on: ubuntu-latest
