@@ -1,0 +1,44 @@
+name: Setup Trivy
+description: Install the shared Trivy executable using the upstream binary cache.
+
+inputs:
+  cache:
+    description: Enable the upstream Trivy executable cache.
+    required: false
+    default: "true"
+
+outputs:
+  cache-hit:
+    description: Whether the upstream binary cache key was present before setup.
+    value: ${{ steps.cache.outputs.cache-hit }}
+  version:
+    description: Installed Trivy version.
+    value: ${{ steps.version.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve Trivy binary path
+      id: path
+      shell: bash
+      run: echo "dir=$HOME/.local/bin/trivy-bin" >> "$GITHUB_OUTPUT"
+
+    - name: Check Trivy binary cache
+      id: cache
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+      with:
+        path: ${{ steps.path.outputs.dir }}
+        key: trivy-binary-v0.70.0-${{ runner.os }}-${{ runner.arch }}
+        lookup-only: true
+
+    - name: Install Trivy
+      uses: aquasecurity/setup-trivy@3fb12ec12f41e471780db15c232d5dd185dcb514 # v0.2.6
+      with:
+        version: v0.70.0
+        cache: ${{ inputs.cache }}
+
+    - name: Report Trivy version
+      id: version
+      shell: bash
+      run: echo "version=$("$HOME/.local/bin/trivy-bin/trivy" --version | python3 -c 'import sys; print(sys.stdin.read().splitlines()[0].split()[1])')" >> "$GITHUB_OUTPUT"
