@@ -230,9 +230,27 @@ jobs:
       - name: Checkout caller repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
+      - name: Reserve setup checkout path
+        run: test ! -e .sharperflow-security-gates
+
+      # The runner reloads a local composite's action.yml for its post step, so
+      # this checkout stays until the job ends; both Trivy runs skip it.
+      - name: Checkout Sharperflow setup action
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .sharperflow-security-gates
+          persist-credentials: false
+
+      - name: Set up Trivy
+        uses: ./.sharperflow-security-gates/.github/actions/setup-trivy
+
       - name: Run Trivy filesystem scanner
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
+          skip-setup-trivy: true
+          skip-dirs: .sharperflow-security-gates
           scan-type: fs
           scan-ref: .
           scanners: vuln,misconfig
@@ -246,6 +264,8 @@ jobs:
         if: inputs.sbom-format != ''
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
+          skip-setup-trivy: true
+          skip-dirs: .sharperflow-security-gates
           scan-type: fs
           scan-ref: .
           scanners: vuln,misconfig

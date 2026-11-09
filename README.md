@@ -124,6 +124,14 @@ set explicit repo-owned groups and use `--frozen` for CI determinism.
 |---|---|
 | Python + uv | `.github/actions/setup-python-uv` |
 | Bun + Node | `.github/actions/setup-bun-node` |
+| Trivy executable | `.github/actions/setup-trivy` |
+
+When `bun-version` is omitted, setup-bun reads the caller's `packageManager`
+field; an explicit pinned version takes precedence. Pinned Bun executables use
+the upstream executable cache, separate from the Bun dependency cache. The
+Trivy composite installs v0.70.0 with the upstream executable cache; the
+JavaScript security gate uses the same composite for its filesystem scan and
+optional SBOM.
 
 ## Branch protection (org ruleset)
 

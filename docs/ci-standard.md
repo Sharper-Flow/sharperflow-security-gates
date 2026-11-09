@@ -410,7 +410,21 @@ Setup is defined once in this repo and consumed cross-repo, never copy-pasted.
 | Composite | Path | Inputs |
 |---|---|---|
 | Python + uv | `.github/actions/setup-python-uv` | `python-version` (def `3.13`), `sync-args` (def `--all-groups` compatibility default), `sync-enabled` (def `true`), `cache-key-suffix` |
-| Bun + Node | `.github/actions/setup-bun-node` | `node-version` (def `24`), `bun-version`, `install-mode` (`ci`\|`install`) |
+| Bun + Node | `.github/actions/setup-bun-node` | `node-version` (def `24`), `bun-version`, `bun-no-cache` (def `false`), `install-mode` (`ci`\|`install`\|`none`) |
+| Trivy | `.github/actions/setup-trivy` | `cache` (def `true`) |
+
+With no `bun-version`, upstream setup-bun resolves the caller's `packageManager`
+field, falling back to its own default if absent. Explicit pinned versions take
+precedence. The upstream executable cache is separate from the dependency store
+cache; `cache-hit` and `bun-version` outputs report upstream setup results. The
+Trivy composite installs v0.70.0 using the same upstream setup action and binary
+cache as the Trivy scanner action. Its `cache-hit` output reports a lookup of
+the upstream binary cache key before installation, and `version` reports the
+installed binary. The JavaScript filesystem gate uses this composite once before
+its scan and optional SBOM; both scanner invocations skip their own setup and
+skip the gate's `.sharperflow-security-gates` checkout, which must stay on disk
+until the job ends because the runner reloads the local composite for its post
+step.
 
 Consumed from an app workflow. Group names are repo-owned; pick the narrowest
 group set that satisfies the lane. Use `--frozen` so CI fails on stale lockfiles

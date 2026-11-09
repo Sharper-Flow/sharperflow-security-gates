@@ -14,7 +14,7 @@
   ```
 - Ruleset invariant check mirrors `.github/workflows/self-test.yml`: target `branch`, enforcement `active`, `bypass_actors: []`, required check exactly `Sharperflow CI Gate`, strict checks off, squash-only.
 - Shell changes: run `shellcheck scripts/apply-ruleset.sh scripts/resolve-scan-range.sh scripts/gitleaks-scan.sh` for whichever of the three you touch.
-- CI file-existence checks include `README.md`, `docs/ci-standard.md`, `docs/pokeedge-backend-pilot.md`, all three reusable workflows, both setup composites, configs, ruleset JSON, and the scripts under `scripts/`.
+- CI file-existence checks include `README.md`, `docs/ci-standard.md`, `docs/pokeedge-backend-pilot.md`, all three reusable workflows, all three setup composites, configs, ruleset JSON, and the scripts under `scripts/`.
 
 ## CI standard contracts to preserve
 
@@ -31,7 +31,7 @@
   - `.github/workflows/python-security-gate.yml`: Semgrep+Bandit, OSV lockfile scan, Gitleaks, optional Trivy filesystem.
   - `.github/workflows/javascript-security-gate.yml`: Semgrep JS/TS, OSV lockfile scan, Gitleaks, optional Trivy filesystem.
   - `.github/workflows/container-security-gate.yml`: Trivy scan of a supplied image ref only; it does not build/publish images.
-- Shared setup composites: `.github/actions/setup-python-uv` and `.github/actions/setup-bun-node`; apps consume them cross-repo, do not copy-paste setup steps.
+- Shared setup composites: `.github/actions/setup-python-uv`, `.github/actions/setup-bun-node` and `.github/actions/setup-trivy`; apps consume them cross-repo, do not copy-paste setup steps. The JavaScript gate runs `setup-trivy` from its `.sharperflow-security-gates` checkout, which must stay on disk until the job ends.
 - App examples live under `examples/pokeedge-*`; keep PokeEdge-specific wiring there until it is reusable.
 - Org protection lives in `rulesets/sharperflow-app-protection.json` and `scripts/apply-ruleset.sh`. Applying it requires `admin:org` or org `Administration: write`; `GITHUB_TOKEN` is insufficient.
 - Renovate preset is `default.json`; this repo's own `renovate.json` extends it locally.

@@ -11,22 +11,125 @@ permissions:
 
 jobs:
   bun-package-manager:
-    name: Bun packageManager version
+    name: Warm Bun and Trivy executable caches
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Declare a Bun packageManager version
-        run: printf '%s\n' '{"packageManager":"bun@1.2.0"}' > package.json
+        run: |
+          rm -f "$HOME/.bun/bin/bun"
+          rm -rf "$HOME/.local/bin/trivy-bin"
+          printf '%s\n' '{"packageManager":"bun@1.2.0"}' > package.json
 
       - name: Set up Bun without a version input
+        id: bun
         uses: ./.github/actions/setup-bun-node
         with:
           install-mode: none
 
       - name: Assert the declared version
-        run: test "$(bun --version)" = "1.2.0"
+        env:
+          BUN_VERSION: ${{ steps.bun.outputs.bun-version }}
+        run: |
+          test "$BUN_VERSION" = "1.2.0"
+          test "$("$HOME/.bun/bin/bun" --version)" = "1.2.0"
+
+      - name: Set up Trivy
+        id: trivy
+        uses: ./.github/actions/setup-trivy
+
+      - name: Assert Trivy version
+        env:
+          TRIVY_VERSION: ${{ steps.trivy.outputs.version }}
+        run: test "$TRIVY_VERSION" = "0.70.0"
+
+  toolchain-cached-restore:
+    name: Restore toolchains with release assets blocked
+    needs: bun-package-manager
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NO_PROXY: "*"
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Block GitHub release assets and verify both downloads fail
+        run: |
+          set -euo pipefail
+          rm -f "$HOME/.bun/bin/bun"
+          rm -rf "$HOME/.local/bin/trivy-bin"
+          printf '%s\n' '{"packageManager":"bun@1.2.0"}' > package.json
+          # Keep github.com and the Actions cache service reachable for setup.
+          printf '%s\n' '127.0.0.1 release-assets.githubusercontent.com objects.githubusercontent.com get.trivy.dev' \
+            '::1 release-assets.githubusercontent.com objects.githubusercontent.com get.trivy.dev' | sudo tee -a /etc/hosts > /dev/null
+          for url in \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.2.0/bun-linux-x64.zip \
+            https://github.com/aquasecurity/trivy/releases/download/v0.70.0/trivy_0.70.0_Linux-64bit.tar.gz; do
+            location="$(curl --noproxy '*' -fsSI --max-time 15 "$url" | tr -d '\r' | python3 -c 'import sys; print(next((line.split(":", 1)[1].strip() for line in sys.stdin if line.lower().startswith("location:")), ""))')"
+            [[ "$location" == https://release-assets.githubusercontent.com/* || "$location" == https://objects.githubusercontent.com/* ]]
+            status=0
+            curl --noproxy '*' -fsSL --max-time 15 -o /dev/null "$url" || status=$?
+            test "$status" = 7
+          done
+          curl --noproxy '*' -fsS -H 'Accept: application/json' https://github.com/aquasecurity/trivy/releases/v0.70.0 | python3 -c 'import json,sys; assert json.load(sys.stdin)["tag_name"] == "v0.70.0"'
+          status=0
+          curl --noproxy '*' -fsSL --max-time 15 -o /dev/null 'https://get.trivy.dev/trivy?os=Linux&arch=64bit&version=0.70.0&type=tar.gz&client=setup-trivy' || status=$?
+          test "$status" = 7
+
+      - name: Restore Bun
+        id: bun
+        uses: ./.github/actions/setup-bun-node
+        with:
+          install-mode: none
+
+      - name: Restore Trivy
+        id: trivy
+        uses: ./.github/actions/setup-trivy
+
+      - name: Assert cached executable versions
+        env:
+          BUN_CACHE_HIT: ${{ steps.bun.outputs.cache-hit }}
+          BUN_VERSION: ${{ steps.bun.outputs.bun-version }}
+          TRIVY_CACHE_HIT: ${{ steps.trivy.outputs.cache-hit }}
+          TRIVY_VERSION: ${{ steps.trivy.outputs.version }}
+        run: |
+          set -euo pipefail
+          test "$BUN_CACHE_HIT" = true
+          test "$BUN_VERSION" = 1.2.0
+          test "$("$HOME/.bun/bin/bun" --version)" = 1.2.0
+          test "$TRIVY_CACHE_HIT" = true
+          test "$TRIVY_VERSION" = 0.70.0
+          test "$("$HOME/.local/bin/trivy-bin/trivy" --version | python3 -c 'import sys; print(sys.stdin.read().splitlines()[0])')" = 'Version: 0.70.0'
+
+      - name: Remove restored executables
+        run: |
+          rm -f "$HOME/.bun/bin/bun"
+          rm -rf "$HOME/.local/bin/trivy-bin"
+
+      - name: Force Bun cache miss
+        id: bun-miss
+        continue-on-error: true
+        uses: ./.github/actions/setup-bun-node
+        with:
+          install-mode: none
+          bun-no-cache: "true"
+
+      - name: Force Trivy cache miss
+        id: trivy-miss
+        continue-on-error: true
+        uses: ./.github/actions/setup-trivy
+        with:
+          cache: "false"
+
+      - name: Assert both cold setups failed
+        env:
+          BUN_OUTCOME: ${{ steps.bun-miss.outcome }}
+          TRIVY_OUTCOME: ${{ steps.trivy-miss.outcome }}
+        run: |
+          test "$BUN_OUTCOME" = failure
+          test "$TRIVY_OUTCOME" = failure
 
   actionlint:
     name: Actionlint reusable workflows
@@ -66,6 +169,7 @@ jobs:
           # Standard building blocks
           test -f .github/actions/setup-python-uv/action.yml
           test -f .github/actions/setup-bun-node/action.yml
+          test -f .github/actions/setup-trivy/action.yml
           test -f rulesets/sharperflow-app-protection.json
           test -f scripts/apply-ruleset.sh
           test -f scripts/resolve-scan-range.sh
